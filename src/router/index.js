@@ -20,6 +20,17 @@ export default new Router({
                     meta: { title: '系统首页' }
                 },
                 {
+                    path: '/myArticle',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/MyArticle.vue'),
+                    meta: { title: '文章列表' }
+                },
+                {
+                    path: '/editArticle',
+                    name:"EditArticle",
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/EditArticle.vue'),
+                    meta: { title: '修改文章' }
+                },
+                {
                     path: '/icon',
                     component: () => import(/* webpackChunkName: "icon" */ '../components/page/Icon.vue'),
                     meta: { title: '自定义图标' }
@@ -48,6 +59,7 @@ export default new Router({
                 {
                     // markdown组件
                     path: '/markdown',
+                    name:"Markdown",
                     component: () => import(/* webpackChunkName: "markdown" */ '../components/page/Markdown.vue'),
                     meta: { title: 'markdown编辑器' }
                 },

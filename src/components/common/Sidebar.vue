@@ -18,23 +18,13 @@
                             <span slot="title">{{ item.title }}</span>
                         </template>
                         <template v-for="subItem in item.subs">
-                            <el-submenu
-                                v-if="subItem.subs"
-                                :index="subItem.index"
-                                :key="subItem.index"
-                            >
+                            <el-submenu v-if="subItem.subs" :index="subItem.index" :key="subItem.index">
                                 <template slot="title">{{ subItem.title }}</template>
-                                <el-menu-item
-                                    v-for="(threeItem,i) in subItem.subs"
-                                    :key="i"
-                                    :index="threeItem.index"
-                                >{{ threeItem.title }}</el-menu-item>
+                                <el-menu-item v-for="(threeItem, i) in subItem.subs" :key="i" :index="threeItem.index">{{
+                                    threeItem.title
+                                }}</el-menu-item>
                             </el-submenu>
-                            <el-menu-item
-                                v-else
-                                :index="subItem.index"
-                                :key="subItem.index"
-                            >{{ subItem.title }}</el-menu-item>
+                            <el-menu-item v-else :index="subItem.index" :key="subItem.index">{{ subItem.title }}</el-menu-item>
                         </template>
                     </el-submenu>
                 </template>
@@ -61,6 +51,26 @@ export default {
                     index: 'dashboard',
                     title: '系统首页'
                 },
+                {
+                    icon: 'el-icon-lx-home',
+                    index: 'myArticle',
+                    title: '文章列表'
+                },
+                { index: '2',
+                    icon: 'el-icon-lx-home',
+                    title: '编辑文章',
+                    subs: [
+                        {
+                            index: 'editor',
+                            title: '富文本编辑器'
+                        },
+                        {
+                            index: 'markdown',
+                            title: 'markdown编辑器'
+                        }
+                    ]
+                },
+
                 {
                     icon: 'el-icon-lx-cascades',
                     index: 'table',

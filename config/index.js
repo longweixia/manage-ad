@@ -12,23 +12,14 @@ module.exports = {
         proxyTable: {
             // /users/**表示有三级路由
             // 注意，如果新建的代理，调用接口报404，可以npm run dev后再调用
-            '/users/**': {
-                target: 'http://localhost:3000'
-            },
-            '/resumes/**': {
-                target: 'http://localhost:3000'
-            },
-            '/resumeTemplates/**': {
-                target: 'http://localhost:3000'
-            },
-            '/malls/**': {
-                target: 'http://localhost:3000'
-            },
-            '/collections/**': {
-                target: 'http://localhost:3000'
-            },
-            '/articles/**': {
-                target: 'http://localhost:3000'
+            
+            '/api':{
+                //接口以api开头就会进行接口代理，上服务器后改成http://47.103.40.123:3001
+              target:'http://localhost:3001', //接口以api开头就会进行接口代理
+              changeOrigin:true,
+              pathRewrite:{
+                "^/api":"/"
+              }
             }
         },
 

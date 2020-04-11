@@ -33,7 +33,7 @@
                     封面图：
                     <div class="ad-cover-img">
                     <el-upload
-                        action="http://localhost:3001/malls/uploadImg"
+                        :action="uploadImg"
                         list-type="picture-card"
                         :on-preview="handlePictureCardPreview"
                         :on-remove="handleRemove"
@@ -98,7 +98,8 @@ export default {
             levelValue: 5, //优先级
             coverImage: null, //封面图
             dialogImageUrl: '',
-            dialogVisible: false
+            dialogVisible: false,
+            uploadImg:`${this.baseUrl}/malls/uploadImg`
         };
     },
     components: {
@@ -124,7 +125,7 @@ export default {
             formdata.append('file', $file);
             // 这里没有服务器供大家尝试，可将下面上传接口替换为你自己的服务器接口
             this.axios({
-                url: 'http://localhost:3001/malls/uploadImg',
+                url: `${this.baseUrl}/malls/uploadImg`,
                 method: 'post',
                 data: formdata,
                 headers: { 'Content-Type': 'multipart/form-data' }
@@ -155,7 +156,7 @@ export default {
             ];
             // console.log(article);
             this.axios
-                .post('http://localhost:3001/articles/post', {
+                .post(`${this.baseUrl}/articles/post`, {
                     data: {
                         userName: 'longwei',
                         types: this.typeValue,

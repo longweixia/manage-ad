@@ -176,8 +176,9 @@ export default {
         },
         // 获取 easy-mock 的模拟数据
         getData(flag) {
+            console.log(this.baseUrl,99999099)
             this.axios
-                .get('http://localhost:3001/articles/get', {
+                .get(`${this.baseUrl}/articles/get`, {
                     params: {
                         // pageSize: this.pageSize,
                         // currentPage:this.currentPage,
@@ -212,7 +213,7 @@ export default {
             })
                 .then(() => {
                     this.axios
-                        .post('http://localhost:3001/articles/delete', {
+                        .post(`${this.baseUrl}/articles/delete`, {
                             data: {
                                 userName: 'longwei',
                                 id: row.id,

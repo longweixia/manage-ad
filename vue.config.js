@@ -1,5 +1,5 @@
 module.exports = {
-    baseUrl: './',
+    // baseUrl: '//localhost:8082/api',
     assetsDir: 'static',
     productionSourceMap: false,
     // devServer: {

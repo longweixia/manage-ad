@@ -23,8 +23,8 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="id" label="id" width="80" align="center"> </el-table-column>
-                <el-table-column prop="autor" label="用户名" width="100"></el-table-column>
+                <el-table-column prop="id" label="id" width="55" align="center"></el-table-column>
+                <el-table-column prop="autor" label="用户名"></el-table-column>
                 <!-- <el-table-column label="账户余额">
                     <template slot-scope="scope">￥{{scope.row.money}}</template>
                 </el-table-column> -->
@@ -47,11 +47,6 @@
                 </el-table-column> -->
 
                 <el-table-column prop="title" label="标题"></el-table-column>
-                <el-table-column prop="" label="封面">
-                    <template slot-scope="scope">
-                        <img style="width:100%;height:100%" :src="scope.row.coverImage" alt="" />
-                    </template>
-                </el-table-column>
                 <el-table-column prop="Pageview" label="浏览人数"></el-table-column>
                 <el-table-column prop="level" label="优先级"></el-table-column>
                 <!-- <el-table-column prop="content" label="优先级"></el-table-column> -->
@@ -110,7 +105,7 @@
 <script>
 import { fetchData } from '../../api/index';
 export default {
-    name: 'myArticle',
+    name: 'banner',
     data() {
         return {
             query: {
@@ -119,11 +114,7 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            tableData: [
-                {
-                    coverImage: ''
-                }
-            ],
+            tableData: [],
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -164,7 +155,8 @@ export default {
                     type: 'ios-paper',
                     text: '赚钱联盟'
                 }
-            ]
+            ],
+             
         };
     },
     created() {

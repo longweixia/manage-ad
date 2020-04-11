@@ -53,7 +53,7 @@ The scheme as a set of multi-function background frame templates, suitable for m
 
 ## Local development
 
-    // Open server and access http://localhost:8080 in browser
+    // Open server and access http://localhost:8081 in browser
     npm run serve
 
 ## Constructing production

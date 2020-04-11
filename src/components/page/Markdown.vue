@@ -8,10 +8,15 @@
         </div>
         <div class="container">
             <div class="plugins-tips">
-                类别：
-                <el-select v-model="typeValue" clearable placeholder="请选择文章类别">
+                 <div class="ad-title ad-title-top">
+                    标题：<el-input style="width:600px"  placeholder="请输入标题" v-model="inputTitle" clearable> </el-input>
+                </div>
+                <div class="ad-title ad-type">
+                <span class="ad-type-text">类别：</span>
+                <el-select  v-model="typeValue" clearable placeholder="请选择文章类别">
                     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
                 </el-select>
+                </div>
                 <div class="ad-title">
                     作者：<el-input style="width:200px;" placeholder="作者名称" v-model="autoValuer" clearable> </el-input>
                 </div>
@@ -22,22 +27,24 @@
                     文章标记：<el-input style="width:200px;" placeholder="如：顶" v-model="tag" clearable> </el-input>
                 </div>
                 <div class="ad-title">优先级：<el-rate class="ad-level" v-model="levelValue"> </el-rate></div>
+                
+               
                 <div class="ad-title">
                     封面图：
+                    <div class="ad-cover-img">
                     <el-upload
-                        action="https://jsonplaceholder.typicode.com/posts/"
+                        action="http://localhost:3001/malls/uploadImg"
                         list-type="picture-card"
                         :on-preview="handlePictureCardPreview"
                         :on-remove="handleRemove"
+                         :on-success="Resimg"
                     >
                         <i class="el-icon-plus"></i>
                     </el-upload>
                     <el-dialog :visible.sync="dialogVisible">
                         <img width="100%" :src="dialogImageUrl" alt="" />
                     </el-dialog>
-                </div>
-                <div class="ad-title">
-                    标题：<el-input style="width:800px;" placeholder="请输入标题" v-model="inputTitle" clearable> </el-input>
+                    </div>
                 </div>
             </div>
             <mavon-editor v-model="articleContent.content" ref="md" @imgAdd="$imgAdd" @change="change" style="min-height: 600px" />
@@ -85,7 +92,7 @@ export default {
                 }
             ],
             typeValue: 'baidu', //大类的值
-            autoValuer: '龙伟', //作者
+            autoValuer: '手赚联盟N01', //作者
             Pageview: '278', //浏览量
             tag: '置顶', //文章标记，如：顶
             levelValue: 5, //优先级
@@ -98,6 +105,10 @@ export default {
         mavonEditor
     },
     methods: {
+        // 上传封面图成功的回调
+        Resimg(response, file, fileList){
+            this.dialogImageUrl = response.result.url
+        },
         // 删除封面图
         handleRemove(file, fileList) {
             console.log(file, fileList);
@@ -112,13 +123,13 @@ export default {
             var formdata = new FormData();
             formdata.append('file', $file);
             // 这里没有服务器供大家尝试，可将下面上传接口替换为你自己的服务器接口
-            this.$axios({
-                url: '/common/upload',
+            this.axios({
+                url: 'http://localhost:3001/malls/uploadImg',
                 method: 'post',
                 data: formdata,
                 headers: { 'Content-Type': 'multipart/form-data' }
-            }).then(url => {
-                this.$refs.md.$img2Url(pos, url);
+            }).then(res => {
+                this.$refs.md.$img2Url(pos, res.data.result.url);
             });
         },
         change(value, render) {
@@ -132,14 +143,14 @@ export default {
             article[this.typeValue] = [
                 {
                     types: this.typeValue, //文章类型,例如baidu,360,可能同时属于多个标签
-                    times: '12-24 11:34', //文章创作时间
+                    times: '01-12 08:38', //文章创作时间
                     title: this.inputTitle, //文章标题
                     autor: this.autoValuer, //文章作者
                     content: this.articleContent.content, //内容
                     Pageview: this.Pageview, //阅读人数
                     tag: this.tag, //文章标记，如：顶
                     level: this.levelValue, //优先级别
-                    coverImage: 'http://www.shukoe.com/b1.jpg' //封面图
+                    coverImage: this.dialogImageUrl //封面图
                 }
             ];
             // console.log(article);
@@ -171,13 +182,28 @@ export default {
 };
 </script>
 <style scoped>
+.plugins-tips{
+   text-align: justify;
+}
 .editor-btn {
     margin-top: 20px;
 }
 .ad-title {
-    margin: 10px 0 10px;
+    margin: 10px;
+    display: inline-block;
 }
 .ad-level {
+    display: inline-block;
+}
+.ad-type{
+  margin-left: 115px;
+
+}
+.ad-type-text{
+    display: inline-block;
+    width: 50px;
+}
+.ad-cover-img{
     display: inline-block;
 }
 </style>

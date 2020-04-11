@@ -25,6 +25,11 @@ export default new Router({
                     meta: { title: '文章列表' }
                 },
                 {
+                    path: '/banner',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/Banner.vue'),
+                    meta: { title: '轮播图' }
+                },
+                {
                     path: '/editArticle',
                     name:"EditArticle",
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/EditArticle.vue'),

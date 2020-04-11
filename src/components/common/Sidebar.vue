@@ -56,6 +56,11 @@ export default {
                     index: 'myArticle',
                     title: '文章列表'
                 },
+                {
+                    icon: 'el-icon-lx-home',
+                    index: 'banner',
+                    title: '轮播图'
+                },
                 { index: '2',
                     icon: 'el-icon-lx-home',
                     title: '编辑文章',

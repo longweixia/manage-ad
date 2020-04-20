@@ -47,9 +47,18 @@
                 </el-table-column> -->
 
                 <el-table-column prop="title" label="标题"></el-table-column>
-                <el-table-column prop="" label="封面">
+                <!-- <el-table-column prop="" label="封面">
                     <template slot-scope="scope">
                         <img style="width:100%;height:100%" :src="scope.row.coverImage" alt="" />
+                    </template>
+                </el-table-column> -->
+                 <el-table-column label="封面(查看大图)" align="center">
+                    <template slot-scope="scope">
+                        <el-image
+                            class="table-td-thumb"
+                            :src="scope.row.coverImage"
+                            :preview-src-list="[scope.row.coverImage]"
+                        ></el-image>
                     </template>
                 </el-table-column>
                 <el-table-column prop="Pageview" label="浏览人数"></el-table-column>
@@ -307,4 +316,5 @@ export default {
     width: 40px;
     height: 40px;
 }
+
 </style>

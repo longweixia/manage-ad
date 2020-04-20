@@ -2,51 +2,19 @@
     <div>
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item> <i class="el-icon-lx-cascades"></i> 轮播图 </el-breadcrumb-item>
+                <el-breadcrumb-item> <i class="el-icon-lx-cascades"></i> 友情链接 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
-            <h3>添加轮播图</h3>
+            <h3>添加友情链接</h3>
             <div class="ad-title ad-title-top">
-                名称：<el-input style="width:200px;" placeholder="轮播图名称" v-model="bannerObj.name" clearable> </el-input>
+                名称：<el-input style="width:200px;" placeholder="轮播图名称" v-model="linkList.name" clearable> </el-input>
             </div>
-            <!-- <div class="ad-title ad-type">
-                <span class="ad-type-text">类别：</span>
-                <el-select v-model="bannerObj.types" clearable placeholder="请选择文章类别">
-                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                </el-select>
-            </div> -->
             <div class="ad-title">
-                跳转url：<el-input style="width:200px;" placeholder="跳转的url" v-model="bannerObj.routerUrl" clearable> </el-input>
-            </div>
-            <!-- <div class="ad-title">
-                浏览量：<el-input style="width:200px;" placeholder="浏览量，填写数字" v-model="bannerObj.Pageview" clearable>
-                </el-input>
-            </div> -->
-            <div class="ad-title">
-                排序：<el-input style="width:200px;" placeholder="如：1,2,3，小的在前" v-model="bannerObj.sort" clearable> </el-input>
-            </div>
-            <!-- <div class="ad-title">优先级：<el-rate class="ad-level" v-model="bannerObj.level"> </el-rate></div> -->
-
-            <div class="ad-title">
-                图片：
-                <div class="ad-cover-img">
-                    <el-upload
-                        :action="uploadImg"
-                        list-type="picture-card"
-                        :on-preview="handlePictureCardPreview"
-                        :on-remove="handleRemove"
-                        :on-success="addimg"
-                    >
-                        <i class="el-icon-plus"></i>
-                    </el-upload>
-                    <!-- <div class="img-cover">
-                            <img style="width:148px;height:148px;" :src="bannerObj.coverImage" alt="" />
-                        </div> -->
-                </div>
+                跳转url：<el-input style="width:200px;" placeholder="跳转的url" v-model="linkList.url" clearable> </el-input>
             </div>
             <!-- 列表区 -->
-            <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="addBanner">提交</el-button>
+            <el-button type="primary" icon="el-icon-delete" class="handle-del mr10" @click="addLink">提交</el-button>
             <el-table
                 :data="tableData"
                 border
@@ -55,19 +23,13 @@
                 header-cell-class-name="table-header"
                 @selection-change="handleSelectionChange"
             >
-                <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="id" label="id" width="55" align="center"></el-table-column>
-                <el-table-column prop="sort" width="55" label="排序"></el-table-column>
-                <el-table-column prop="show" width="55" label="是否显示"></el-table-column>
+                <el-table-column type="selection" width="150" align="center"></el-table-column>
+                <el-table-column prop="id" label="id" width="150" align="center"></el-table-column>
+                <el-table-column prop="show" width="150" label="是否显示"></el-table-column>
                 <el-table-column prop="name" width="150" label="名称"></el-table-column>
-                <el-table-column prop="times" width="100" label="时间"></el-table-column>
 
-                <el-table-column prop="routerUrl" width="150" label="跳转的url"></el-table-column>
-                <el-table-column label="图片(查看大图)" align="center">
-                    <template slot-scope="scope">
-                        <el-image class="table-td-thumb" :src="scope.row.url" :preview-src-list="[scope.row.url]"></el-image>
-                    </template>
-                </el-table-column>
+                <el-table-column prop="url" width="150" label="跳转的url"></el-table-column>
+
                 <!-- <el-table-column prop="content" label="优先级"></el-table-column> -->
                 <!-- <el-table-column prop="content" label="内容"></el-table-column> -->
                 <el-table-column label="操作" width="180" align="center">
@@ -89,35 +51,19 @@
                 <!-- <el-form-item label="id">
                     <el-input v-model="form.id"></el-input>
                 </el-form-item> -->
-                <el-form-item label="排序">
-                    <el-input v-model="form.sort"></el-input>
-                </el-form-item>
+    
                 <el-form-item label="是否显示">
                     <el-input v-model="form.show"></el-input>
                 </el-form-item>
                 <el-form-item label="名称">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
-                <el-form-item label="时间">
-                    <el-input v-model="form.times"></el-input>
-                </el-form-item>
+
 
                 <el-form-item label="跳转的url">
-                    <el-input v-model="form.routerUrl"></el-input>
+                    <el-input v-model="form.url"></el-input>
                 </el-form-item>
-                <el-form-item label="图片">
-                    <!-- <el-image class="table-td-thumb" :src="form.url"></el-image> -->
-                    <el-upload
-                        class="edit-img"
-                        :action="uploadImg"
-                        list-type="picture-card"
-                        :on-preview="handlePictureCardPreview"
-                        :on-remove="handleRemove"
-                        :on-success="Resimg"
-                    >
-                        <i class="el-icon-plus"></i>
-                    </el-upload>
-                </el-form-item>
+
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
@@ -130,17 +76,14 @@
 <script>
 import { fetchData } from '../../api/index';
 export default {
-    name: 'banner',
+    name: 'friendLink',
     data() {
         return {
             uploadImg: `${this.baseUrl}/malls/uploadImg`,
-            bannerObj: {
+            linkList: {
                 url: '', //图片url
                 name: '', //图片名
-                times: '04 09 12:56', //上传时间
-                routerUrl: '', //跳转url
-                sort: 0, //排序根据数字排序，小的在前面
-                show: true //是否展示
+                show: 1 //是否展示
             }, //文
             tableData: [],
             multipleSelection: [],
@@ -154,14 +97,14 @@ export default {
         };
     },
     created() {
-        this.getData('all');
+        this.getData();
     },
     methods: {
-        // 添加轮播图
-        addBanner() {
+        // 添加
+        addLink() {
             this.axios
-                .post(`${this.baseUrl}/banners/add`, {
-                    data: this.bannerObj
+                .post(`${this.baseUrl}/friendLinks/add`, {
+                    data: this.linkList
                 })
                 .then(res => {
                     if (res.data.status == '0') {
@@ -177,12 +120,12 @@ export default {
         // 上传轮播图成功的回调
         Resimg(response, file, fileList) {
             this.form.url = response.result.url;
-            console.log(this.bannerObj.url, '111111');
+            console.log(this.linkList.url, '111111');
         },
         // 上传轮播图成功的回调
         addimg(response, file, fileList) {
-            this.bannerObj.url = response.result.url;
-            console.log(this.bannerObj.url, '111111');
+            this.linkList.url = response.result.url;
+            console.log(this.linkList.url, '111111');
         },
         // 删除轮播图
         handleRemove(file, fileList) {
@@ -194,14 +137,11 @@ export default {
             this.dialogVisible = true;
         },
 
-        // 获取banner数据
-        getData(flag) {
+        // 获取数据
+        getData() {
             this.axios
-                .get(`${this.baseUrl}/banners/get`, {
-                    params: {
-                        flag: flag
-                    }
-                })
+                .get(`${this.baseUrl}/friendLinks/get`
+                )
                 .then(res => {
                     this.tableData = res.data.resulet;
                 })
@@ -220,7 +160,7 @@ export default {
             })
                 .then(() => {
                     this.axios
-                        .post(`${this.baseUrl}/banners/delete`, {
+                        .post(`${this.baseUrl}/friendLinks/delete`, {
                  
                                 id: row.id
                          
@@ -254,14 +194,14 @@ export default {
             this.$router.push({
                 name: 'Markdown',
                 params: {
-                    bannerObj: row
+                    linkList: row
                 }
             });
         },
         // 保存编辑
         saveEdit(id, list) {
             this.axios
-                .post(`${this.baseUrl}/banners/edit`, {
+                .post(`${this.baseUrl}/friendLinks/edit`, {
                     data: { id: id, list: list }
                 })
                 .then(res => {

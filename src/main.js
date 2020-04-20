@@ -12,7 +12,8 @@ import 'babel-polyfill';
 import axios from 'axios'
 // Vue.prototype.baseUrl = process.env.API_ROOT//接口的基础url
 // 改2 这里
-Vue.prototype.baseUrl = "//localhost:8082/api"//接口的基础url
+// http://47.103.40.123:3001  服务器
+Vue.prototype.baseUrl = "//localhost:3001"//接口的基础url
 Vue.prototype.axios = axios
 Vue.config.productionTip = false;
 Vue.use(VueI18n);

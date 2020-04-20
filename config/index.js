@@ -14,13 +14,12 @@ module.exports = {
             // 注意，如果新建的代理，调用接口报404，可以npm run dev后再调用
             
             '/api':{
-                //改 1 接口以api开头就会进行接口代理，上服务器后改成http://47.103.40.123:3001
-                // 改 2 main.js的baseurl  2个地方
-              target:'http://localhost:3001', //接口以api开头就会进行接口代理
-              changeOrigin:true,
-              pathRewrite:{
-                "^/api":"/"
-              }
+                // 上服务器后改成http://47.103.40.123:3001
+                target:'http://localhost:3001', //接口以api开头就会进行接口代理，
+                changeOrigin:true,
+                pathRewrite:{
+                  "^/api":"/"
+                }
             }
         },
 

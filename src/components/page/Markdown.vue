@@ -8,42 +8,43 @@
         </div>
         <div class="container">
             <div class="plugins-tips">
-                 <div class="ad-title ad-title-top">
-                    标题：<el-input style="width:600px"  placeholder="请输入标题" v-model="inputTitle" clearable> </el-input>
+                <div class="ad-title ad-title-top">
+                    标题：<el-input style="width:600px;" placeholder="作者名称" v-model="articleContent.title" clearable> </el-input>
                 </div>
                 <div class="ad-title ad-type">
-                <span class="ad-type-text">类别：</span>
-                <el-select  v-model="typeValue" clearable placeholder="请选择文章类别">
-                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                </el-select>
+                    <span class="ad-type-text">类别：</span>
+                    <el-select v-model="articleContent.types" clearable placeholder="请选择文章类别">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                    </el-select>
                 </div>
                 <div class="ad-title">
-                    作者：<el-input style="width:200px;" placeholder="作者名称" v-model="autoValuer" clearable> </el-input>
+                    作者：<el-input style="width:200px;" placeholder="作者名称" v-model="articleContent.autor" clearable> </el-input>
                 </div>
                 <div class="ad-title">
-                    浏览量：<el-input style="width:200px;" placeholder="浏览量，填写数字" v-model="Pageview" clearable> </el-input>
+                    浏览量：<el-input style="width:200px;" placeholder="浏览量，填写数字" v-model="articleContent.Pageview" clearable>
+                    </el-input>
                 </div>
                 <div class="ad-title">
-                    文章标记：<el-input style="width:200px;" placeholder="如：顶" v-model="tag" clearable> </el-input>
+                    文章标记：<el-input style="width:200px;" placeholder="如：顶" v-model="articleContent.tag" clearable> </el-input>
                 </div>
-                <div class="ad-title">优先级：<el-rate class="ad-level" v-model="levelValue"> </el-rate></div>
-                
-               
+                <div class="ad-title">优先级：<el-rate class="ad-level" v-model="articleContent.level"> </el-rate></div>
+
                 <div class="ad-title">
                     封面图：
                     <div class="ad-cover-img">
-                    <el-upload
-                        :action="uploadImg"
-                        list-type="picture-card"
-                        :on-preview="handlePictureCardPreview"
-                        :on-remove="handleRemove"
-                         :on-success="Resimg"
-                    >
-                        <i class="el-icon-plus"></i>
-                    </el-upload>
-                    <el-dialog :visible.sync="dialogVisible">
-                        <img width="100%" :src="dialogImageUrl" alt="" />
-                    </el-dialog>
+                       
+                        <el-upload
+                            :action="uploadImg"
+                            list-type="picture-card"
+                            :on-preview="handlePictureCardPreview"
+                            :on-remove="handleRemove"
+                            :on-success="Resimg"
+                        >
+                            <i class="el-icon-plus"></i>
+                        </el-upload>
+                        <!-- <div class="img-cover">
+                            <img style="width:148px;height:148px;" :src="articleContent.coverImage" alt="" />
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -61,12 +62,19 @@ export default {
     data: function() {
         return {
             articleContent: {
+                title: '', //输入标题
+                types: 'baidu', //大类的值
+                autor: '手赚联盟N01', //作者
+                Pageview: '278', //浏览量
+                tag: '置顶', //文章标记，如：顶
+                level: 5, //优先级
+                coverImage: null //封面图
                 // content:"",//不声明content的话，v-model articleContent.content会报错
             }, //文章对象
             html: '',
             configs: {},
             // types: 'baidu', //文章所属的大类
-            inputTitle: '中国对打的', //输入标题
+
             // 大类
             options: [
                 //文章大类数据
@@ -91,15 +99,11 @@ export default {
                     label: '推广'
                 }
             ],
-            typeValue: 'baidu', //大类的值
-            autoValuer: '手赚联盟N01', //作者
-            Pageview: '278', //浏览量
-            tag: '置顶', //文章标记，如：顶
-            levelValue: 5, //优先级
-            coverImage: null, //封面图
-            dialogImageUrl: '',
+
+            coverImage: '',
             dialogVisible: false,
-            uploadImg:`${this.baseUrl}/malls/uploadImg`
+            // uploadImg: `${this.baseUrl}/malls/uploadImg`
+            uploadImg: "http://47.103.40.123:3001/malls/uploadImg"
         };
     },
     components: {
@@ -107,8 +111,8 @@ export default {
     },
     methods: {
         // 上传封面图成功的回调
-        Resimg(response, file, fileList){
-            this.dialogImageUrl = response.result.url
+        Resimg(response, file, fileList) {
+            this.articleContent.coverImage = response.result.url;
         },
         // 删除封面图
         handleRemove(file, fileList) {
@@ -116,7 +120,7 @@ export default {
         },
         //   放大封面图
         handlePictureCardPreview(file) {
-            this.dialogImageUrl = file.url;
+            this.coverImage = file.url;
             this.dialogVisible = true;
         },
         // 将图片上传到服务器，返回地址替换到md中
@@ -141,25 +145,13 @@ export default {
             // 如果id存在就是修改，如果id不存在就是新增
             // 拼装article数据
             let article = {};
-            article[this.typeValue] = [
-                {
-                    types: this.typeValue, //文章类型,例如baidu,360,可能同时属于多个标签
-                    times: '01-12 08:38', //文章创作时间
-                    title: this.inputTitle, //文章标题
-                    autor: this.autoValuer, //文章作者
-                    content: this.articleContent.content, //内容
-                    Pageview: this.Pageview, //阅读人数
-                    tag: this.tag, //文章标记，如：顶
-                    level: this.levelValue, //优先级别
-                    coverImage: this.dialogImageUrl //封面图
-                }
-            ];
+            article[this.articleContent.types] = [this.articleContent];
             // console.log(article);
             this.axios
                 .post(`${this.baseUrl}/articles/post`, {
                     data: {
                         userName: 'longwei',
-                        types: this.typeValue,
+                        types: this.articleContent.types,
                         id: this.articleContent.id,
                         article: article
                     }
@@ -177,14 +169,22 @@ export default {
         }
     },
     mounted() {
-        this.articleContent = this.$route.params.articleContent ? this.$route.params.articleContent : {};
+        if (this.$route.params.articleContent) {
+            this.articleContent = this.$route.params.articleContent;
+            this.dialogVisible = true;
+        } else {
+            this.articleContent = {};
+            this.dialogVisible = false;
+        }
+
+        // this.coverImage = this.$route.params.articleContent ? this.$route.params.articleContent.coverImage : '';
         console.log(this.articleContent, 99999, this.articleContent.id);
     }
 };
 </script>
 <style scoped>
-.plugins-tips{
-   text-align: justify;
+.plugins-tips {
+    text-align: justify;
 }
 .editor-btn {
     margin-top: 20px;
@@ -196,15 +196,18 @@ export default {
 .ad-level {
     display: inline-block;
 }
-.ad-type{
-  margin-left: 115px;
-
+.ad-type {
+    margin-left: 115px;
 }
-.ad-type-text{
+.ad-type-text {
     display: inline-block;
     width: 50px;
 }
-.ad-cover-img{
+.ad-cover-img {
     display: inline-block;
+    position: relative;
+}
+.img-cover {
+    position: absolute;
 }
 </style>

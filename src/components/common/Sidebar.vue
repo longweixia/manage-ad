@@ -51,10 +51,19 @@ export default {
                     index: 'dashboard',
                     title: '系统首页'
                 },
-                {
+                { index: '1',
                     icon: 'el-icon-lx-home',
-                    index: 'myArticle',
-                    title: '文章列表'
+                    title: '文章',
+                    subs: [
+                        {
+                            index: 'myArticle',
+                            title: '文章列表'
+                        },
+                        {
+                            index: 'markdown',
+                            title: '编辑文章-markdown编辑器'
+                        }
+                    ]
                 },
                 {
                     icon: 'el-icon-lx-home',
@@ -63,18 +72,32 @@ export default {
                 },
                 { index: '2',
                     icon: 'el-icon-lx-home',
-                    title: '编辑文章',
+                    title: '侧边栏广告',
                     subs: [
                         {
-                            index: 'editor',
-                            title: '富文本编辑器'
+                            index: 'sidebarAdImg',
+                            title: '侧边图'
                         },
                         {
-                            index: 'markdown',
-                            title: 'markdown编辑器'
+                            index: 'friendLink',
+                            title: '友情链接'
                         }
                     ]
                 },
+                // { index: '2',
+                //     icon: 'el-icon-lx-home',
+                //     title: '编辑文章',
+                //     subs: [
+                //         {
+                //             index: 'editor',
+                //             title: '富文本编辑器'
+                //         },
+                //         {
+                //             index: 'markdown',
+                //             title: 'markdown编辑器'
+                //         }
+                //     ]
+                // },
 
                 {
                     icon: 'el-icon-lx-cascades',

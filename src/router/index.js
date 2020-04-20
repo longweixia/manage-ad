@@ -36,6 +36,18 @@ export default new Router({
                     meta: { title: '修改文章' }
                 },
                 {
+                    path: '/sidebarAdImg',
+                    name:"EidebarAdImg",
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/SidebarAdImg.vue'),
+                    meta: { title: '侧边图' }
+                },
+                {
+                    path: '/friendLink',
+                    name:"FriendLink",
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/FriendLink.vue'),
+                    meta: { title: '友情链接' }
+                },
+                {
                     path: '/icon',
                     component: () => import(/* webpackChunkName: "icon" */ '../components/page/Icon.vue'),
                     meta: { title: '自定义图标' }

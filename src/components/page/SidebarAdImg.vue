@@ -2,31 +2,34 @@
     <div>
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item> <i class="el-icon-lx-cascades"></i> 轮播图 </el-breadcrumb-item>
+                <el-breadcrumb-item> <i class="el-icon-lx-cascades"></i> 侧边栏广告图 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
-            <h3>添加轮播图</h3>
+            <h3>添加侧边栏广告图</h3>
             <div class="ad-title ad-title-top">
-                名称：<el-input style="width:200px;" placeholder="轮播图名称" v-model="bannerObj.name" clearable> </el-input>
+                名称：<el-input style="width:200px;" placeholder="轮播图名称" v-model="sideImgList.name" clearable> </el-input>
             </div>
             <!-- <div class="ad-title ad-type">
                 <span class="ad-type-text">类别：</span>
-                <el-select v-model="bannerObj.types" clearable placeholder="请选择文章类别">
+                <el-select v-model="sideImgList.types" clearable placeholder="请选择文章类别">
                     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
                 </el-select>
             </div> -->
             <div class="ad-title">
-                跳转url：<el-input style="width:200px;" placeholder="跳转的url" v-model="bannerObj.routerUrl" clearable> </el-input>
+                跳转url：<el-input style="width:200px;" placeholder="跳转的url" v-model="sideImgList.routerUrl" clearable> </el-input>
             </div>
             <!-- <div class="ad-title">
-                浏览量：<el-input style="width:200px;" placeholder="浏览量，填写数字" v-model="bannerObj.Pageview" clearable>
+                浏览量：<el-input style="width:200px;" placeholder="浏览量，填写数字" v-model="sideImgList.Pageview" clearable>
                 </el-input>
             </div> -->
-            <div class="ad-title">
-                排序：<el-input style="width:200px;" placeholder="如：1,2,3，小的在前" v-model="bannerObj.sort" clearable> </el-input>
-            </div>
-            <!-- <div class="ad-title">优先级：<el-rate class="ad-level" v-model="bannerObj.level"> </el-rate></div> -->
+            <div class="ad-title ad-type">
+                    <span class="ad-type-text">类别：</span>
+                    <el-select v-model="sideImgList.types" clearable placeholder="请选择广告图的展示位置">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                    </el-select>
+                </div>
+            <!-- <div class="ad-title">优先级：<el-rate class="ad-level" v-model="sideImgList.level"> </el-rate></div> -->
 
             <div class="ad-title">
                 图片：
@@ -41,7 +44,7 @@
                         <i class="el-icon-plus"></i>
                     </el-upload>
                     <!-- <div class="img-cover">
-                            <img style="width:148px;height:148px;" :src="bannerObj.coverImage" alt="" />
+                            <img style="width:148px;height:148px;" :src="sideImgList.coverImage" alt="" />
                         </div> -->
                 </div>
             </div>
@@ -56,8 +59,8 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="id" label="id" width="55" align="center"></el-table-column>
-                <el-table-column prop="sort" width="55" label="排序"></el-table-column>
+                <el-table-column prop="ids" label="ids" width="55" align="center"></el-table-column>
+                <!-- <el-table-column prop="sort" width="55" label="排序"></el-table-column> -->
                 <el-table-column prop="show" width="55" label="是否显示"></el-table-column>
                 <el-table-column prop="name" width="150" label="名称"></el-table-column>
                 <el-table-column prop="times" width="100" label="时间"></el-table-column>
@@ -89,9 +92,6 @@
                 <!-- <el-form-item label="id">
                     <el-input v-model="form.id"></el-input>
                 </el-form-item> -->
-                <el-form-item label="排序">
-                    <el-input v-model="form.sort"></el-input>
-                </el-form-item>
                 <el-form-item label="是否显示">
                     <el-input v-model="form.show"></el-input>
                 </el-form-item>
@@ -121,7 +121,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit(form.id, form)">确 定</el-button>
+                <el-button type="primary" @click="saveEdit(form.ids, form)">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -130,18 +130,29 @@
 <script>
 import { fetchData } from '../../api/index';
 export default {
-    name: 'banner',
+    name: 'sidebarAdImg',
     data() {
         return {
             uploadImg: `${this.baseUrl}/malls/uploadImg`,
-            bannerObj: {
+            sideImgList: {
                 url: '', //图片url
                 name: '', //图片名
                 times: '04 09 12:56', //上传时间
                 routerUrl: '', //跳转url
-                sort: 0, //排序根据数字排序，小的在前面
-                show: true //是否展示
+                show: 1, //是否展示
+                types:"top",//top表示上方广告栏,buttom表示下方
             }, //文
+             options: [
+                //文章大类数据
+                {
+                    value: 'top',
+                    label: '上方广告'
+                },
+                {
+                    value: 'buttom',
+                    label: '下方广告'
+                }
+             ],
             tableData: [],
             multipleSelection: [],
             delList: [],
@@ -157,11 +168,11 @@ export default {
         this.getData('all');
     },
     methods: {
-        // 添加轮播图
+        // 添加广告图
         addBanner() {
             this.axios
-                .post(`${this.baseUrl}/banners/add`, {
-                    data: this.bannerObj
+                .post(`${this.baseUrl}/sidebarAdImgs/add`, {
+                    data: this.sideImgList
                 })
                 .then(res => {
                     if (res.data.status == '0') {
@@ -177,12 +188,12 @@ export default {
         // 上传轮播图成功的回调
         Resimg(response, file, fileList) {
             this.form.url = response.result.url;
-            console.log(this.bannerObj.url, '111111');
+            console.log(this.sideImgList.url, '111111');
         },
         // 上传轮播图成功的回调
         addimg(response, file, fileList) {
-            this.bannerObj.url = response.result.url;
-            console.log(this.bannerObj.url, '111111');
+            this.sideImgList.url = response.result.url;
+            console.log(this.sideImgList.url, '111111');
         },
         // 删除轮播图
         handleRemove(file, fileList) {
@@ -197,7 +208,7 @@ export default {
         // 获取banner数据
         getData(flag) {
             this.axios
-                .get(`${this.baseUrl}/banners/get`, {
+                .get(`${this.baseUrl}/sidebarAdImgs/get`, {
                     params: {
                         flag: flag
                     }
@@ -213,16 +224,17 @@ export default {
         },
 
         // 删除操作
-        handleDelete(index, row) {
+        handleDelete(index,row) {
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
             })
                 .then(() => {
                     this.axios
-                        .post(`${this.baseUrl}/banners/delete`, {
+                        .post(`${this.baseUrl}/sidebarAdImgs/delete`, {
                  
-                                id: row.id
+                                ids: row.ids,
+                                types:row.types
                          
                         })
                         .then(res => {
@@ -254,15 +266,15 @@ export default {
             this.$router.push({
                 name: 'Markdown',
                 params: {
-                    bannerObj: row
+                    sideImgList: row
                 }
             });
         },
         // 保存编辑
-        saveEdit(id, list) {
+        saveEdit(ids, list) {
             this.axios
-                .post(`${this.baseUrl}/banners/edit`, {
-                    data: { id: id, list: list }
+                .post(`${this.baseUrl}/sidebarAdImgs/edit`, {
+                    data: { ids: ids, list: list }
                 })
                 .then(res => {
                     if (res.data.status == '0') {

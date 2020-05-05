@@ -1,28 +1,12 @@
 <template>
-    <div>
-        <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-lx-calendar"></i> 表单</el-breadcrumb-item>
-                <el-breadcrumb-item>markdown编辑器</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
-        <div class="container">
-              <mdArticle></mdArticle>
-            <mavon-editor v-model="articleContent.content" ref="md" @imgAdd="$imgAdd" @change="change" style="min-height: 600px" />
-            <el-button class="editor-btn" type="primary" @click="submit">提交</el-button>
-        </div>
-    </div>
+<div class="container">
+            1
+</div>
 </template>
 
 <script>
-import { mavonEditor } from 'mavon-editor';
-import 'mavon-editor/dist/css/index.css';
-import mdArticle from "../common/mdArticle";
 export default {
-    name: 'markdown',
-     components: {
-        mavonEditor,mdArticle
-    },
+  name: 'mdApp',
     data: function() {
         return {
             articleContent: {
@@ -38,6 +22,7 @@ export default {
             html: '',
             configs: {},
             // types: 'baidu', //文章所属的大类
+
             // 大类
             options: [
                 //文章大类数据
@@ -62,13 +47,14 @@ export default {
                     label: '推广'
                 }
             ],
+
             coverImage: '',
             dialogVisible: false,
             // uploadImg: `${this.baseUrl}/malls/uploadImg`
             uploadImg: "http://47.103.40.123:3001/malls/uploadImg"
         };
     },
-   
+
     methods: {
         // 上传封面图成功的回调
         Resimg(response, file, fileList) {
@@ -136,6 +122,7 @@ export default {
             this.articleContent = {};
             this.dialogVisible = false;
         }
+
         // this.coverImage = this.$route.params.articleContent ? this.$route.params.articleContent.coverImage : '';
         console.log(this.articleContent, 99999, this.articleContent.id);
     }

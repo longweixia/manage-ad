@@ -60,8 +60,30 @@ export default {
                             title: '文章列表'
                         },
                         {
+                            index: 'comment',
+                            title: '评论管理'
+                        },
+                        {
                             index: 'markdown',
                             title: '编辑文章-markdown编辑器'
+                        }
+                    ]
+                },
+                { index: '2',
+                    icon: 'el-icon-lx-home',
+                    title: '应用',
+                    subs: [
+                        {
+                            index: "appList",
+                            title: '应用列表'
+                        },
+                        // {
+                        //     index: 'comment',
+                        //     title: '应用管理'
+                        // },
+                        {
+                            index: 'markdownApp',
+                            title: '编辑应用-markdown编辑器'
                         }
                     ]
                 },
@@ -70,7 +92,7 @@ export default {
                     index: 'banner',
                     title: '轮播图'
                 },
-                { index: '2',
+                { index: '3',
                     icon: 'el-icon-lx-home',
                     title: '侧边栏广告',
                     subs: [
@@ -111,7 +133,7 @@ export default {
                 },
                 {
                     icon: 'el-icon-lx-calendar',
-                    index: '3',
+                    index: '4',
                     title: '表单相关',
                     subs: [
                         {
@@ -119,7 +141,7 @@ export default {
                             title: '基本表单'
                         },
                         {
-                            index: '3-2',
+                            index: '4-2',
                             title: '三级菜单',
                             subs: [
                                 {

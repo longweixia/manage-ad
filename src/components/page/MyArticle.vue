@@ -20,8 +20,7 @@
                 class="table"
                 ref="multipleTable"
                 header-cell-class-name="table-header"
-                @selection-change="handleSelectionChange"
-            >
+                @selection-change="handleSelectionChange" >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="id" width="80" align="center"> </el-table-column>
                 <el-table-column prop="autor" label="用户名" width="100"></el-table-column>
@@ -143,35 +142,45 @@ export default {
             types: 'all', //选择的大类
             typesList: [
                 //大类下拉数据
-                {
+                 {
                     name: 'all',
                     type: 'ios-navigate',
                     text: '首页导航'
                 },
                 {
-                    name: 'sougou',
+                    name: 'tb',
                     type: 'ios-keypad',
-                    text: '搜狗联盟'
+                    text: '淘宝赚'
                 },
                 {
-                    name: 'baidu',
+                    name: 'wx',
                     type: 'ios-analytics',
-                    text: '百度联盟'
+                    text: '微信赚'
                 },
                 {
-                    name: 'sanliuling',
+                    name: 'az',
                     type: 'ios-paper',
-                    text: '360联盟'
+                    text: '安卓赚'
                 },
                 {
-                    name: 'gogle',
+                    name: 'ios',
                     type: 'ios-paper',
-                    text: '谷歌联盟'
+                    text: '苹果(ios)赚'
                 },
                 {
-                    name: 'tuiguang',
+                    name: 'xb',
                     type: 'ios-paper',
-                    text: '赚钱联盟'
+                    text: '线报赚'
+                },
+                {
+                    name: 'gj',
+                    type: 'ios-paper',
+                    text: '高级赚'
+                },
+                {
+                    name: 'cg',
+                    type: 'ios-paper',
+                    text: '草根汇'
                 }
             ]
         };

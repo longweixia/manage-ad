@@ -25,6 +25,16 @@ export default new Router({
                     meta: { title: '文章列表' }
                 },
                 {
+                    path: '/comment',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/Comment.vue'),
+                    meta: { title: '文章评论' }
+                },
+                {
+                    path: '/appList',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/AppList.vue'),
+                    meta: { title: '应用列表' }
+                },
+                {
                     path: '/banner',
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/Banner.vue'),
                     meta: { title: '轮播图' }
@@ -78,7 +88,14 @@ export default new Router({
                     path: '/markdown',
                     name:"Markdown",
                     component: () => import(/* webpackChunkName: "markdown" */ '../components/page/Markdown.vue'),
-                    meta: { title: 'markdown编辑器' }
+                    meta: { title: 'markdown编辑器-文章' }
+                },
+                {
+                    // markdown组件
+                    path: '/markdownApp',
+                    name:"MarkdownApp",
+                    component: () => import(/* webpackChunkName: "markdown" */ '../components/page/MarkdownApp.vue'),
+                    meta: { title: 'markdown编辑器-应用' }
                 },
                 {
                     // 图片上传组件

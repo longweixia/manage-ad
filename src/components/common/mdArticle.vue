@@ -1,28 +1,52 @@
 <template>
-    <div>
-        <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-lx-calendar"></i> 表单</el-breadcrumb-item>
-                <el-breadcrumb-item>markdown编辑器</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
-        <div class="container">
-              <mdArticle></mdArticle>
-            <mavon-editor v-model="articleContent.content" ref="md" @imgAdd="$imgAdd" @change="change" style="min-height: 600px" />
-            <el-button class="editor-btn" type="primary" @click="submit">提交</el-button>
-        </div>
-    </div>
+<div class="container">
+           <div class="plugins-tips">
+                <div class="ad-title ad-title-top">
+                    标题：<el-input style="width:600px;" placeholder="作者名称" v-model="articleContent.title" clearable> </el-input>
+                </div>
+                <div class="ad-title ad-type">
+                    <span class="ad-type-text">类别：</span>
+                    <el-select v-model="articleContent.types" clearable placeholder="请选择文章类别">
+                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                    </el-select>
+                </div>
+                <div class="ad-title">
+                    作者：<el-input style="width:200px;" placeholder="作者名称" v-model="articleContent.autor" clearable> </el-input>
+                </div>
+                <div class="ad-title">
+                    浏览量：<el-input style="width:200px;" placeholder="浏览量，填写数字" v-model="articleContent.Pageview" clearable>
+                    </el-input>
+                </div>
+                <div class="ad-title">
+                    文章标记：<el-input style="width:200px;" placeholder="如：顶" v-model="articleContent.tag" clearable> </el-input>
+                </div>
+                <div class="ad-title">优先级：<el-rate class="ad-level" v-model="articleContent.level"> </el-rate></div>
+
+                <div class="ad-title">
+                    封面图：
+                    <div class="ad-cover-img">
+                       
+                        <el-upload
+                            :action="uploadImg"
+                            list-type="picture-card"
+                            :on-preview="handlePictureCardPreview"
+                            :on-remove="handleRemove"
+                            :on-success="Resimg"
+                        >
+                            <i class="el-icon-plus"></i>
+                        </el-upload>
+                        <!-- <div class="img-cover">
+                            <img style="width:148px;height:148px;" :src="articleContent.coverImage" alt="" />
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+</div>
 </template>
 
 <script>
-import { mavonEditor } from 'mavon-editor';
-import 'mavon-editor/dist/css/index.css';
-import mdArticle from "../common/mdArticle";
 export default {
-    name: 'markdown',
-     components: {
-        mavonEditor,mdArticle
-    },
+  name: 'mdArticle',
     data: function() {
         return {
             articleContent: {
@@ -38,6 +62,7 @@ export default {
             html: '',
             configs: {},
             // types: 'baidu', //文章所属的大类
+
             // 大类
             options: [
                 //文章大类数据
@@ -62,13 +87,14 @@ export default {
                     label: '推广'
                 }
             ],
+
             coverImage: '',
             dialogVisible: false,
             // uploadImg: `${this.baseUrl}/malls/uploadImg`
             uploadImg: "http://47.103.40.123:3001/malls/uploadImg"
         };
     },
-   
+
     methods: {
         // 上传封面图成功的回调
         Resimg(response, file, fileList) {
@@ -136,6 +162,7 @@ export default {
             this.articleContent = {};
             this.dialogVisible = false;
         }
+
         // this.coverImage = this.$route.params.articleContent ? this.$route.params.articleContent.coverImage : '';
         console.log(this.articleContent, 99999, this.articleContent.id);
     }

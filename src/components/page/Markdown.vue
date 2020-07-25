@@ -7,7 +7,52 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-              <mdArticle></mdArticle>
+              <div class="plugins-tips">
+            <div class="ad-title ad-title-top">
+                标题：<el-input style="width:600px;" placeholder="作者名称" v-model="articleContent.title" clearable> </el-input>
+            </div>
+            <div class="ad-title ad-type">
+                <span class="ad-type-text">类别：</span>
+                <el-select v-model="articleContent.types" clearable placeholder="请选择文章类别">
+                    <el-option v-for="item in options" :key="item.name" :label="item.text" :value="item.name"> </el-option>
+                </el-select>
+            </div>
+            <div class="ad-title ad-type">
+                <span class="ad-type-text">是否显示：</span>
+                <el-select v-model="articleContent.show" clearable placeholder="请选择显示或否">
+                    <el-option v-for="item in showOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                </el-select>
+            </div>
+            <div class="ad-title">
+                作者：<el-input style="width:200px;" placeholder="作者名称" v-model="articleContent.autor" clearable> </el-input>
+            </div>
+            <div class="ad-title">
+                浏览量：<el-input style="width:200px;" placeholder="浏览量，填写数字" v-model="articleContent.Pageview" clearable>
+                </el-input>
+            </div>
+            <div class="ad-title">
+                文章标记：<el-input style="width:200px;" placeholder="如：顶" v-model="articleContent.tag" clearable> </el-input>
+            </div>
+            <div class="ad-title">优先级：<el-rate class="ad-level" v-model="articleContent.level"> </el-rate></div>
+
+            <div class="ad-title">
+                封面图：
+                <div class="ad-cover-img">
+                    <el-upload
+                        :action="uploadImg"
+                        list-type="picture-card"
+                        :on-preview="handlePictureCardPreview"
+                        :on-remove="handleRemove"
+                        :on-success="Resimg"
+                    >
+                        <i class="el-icon-plus"></i>
+                    </el-upload>
+                    <!-- <div class="img-cover">
+                            <img style="width:148px;height:148px;" :src="articleContent.coverImage" alt="" />
+                        </div> -->
+                </div>
+            </div>
+              </div>
             <mavon-editor v-model="articleContent.content" ref="md" @imgAdd="$imgAdd" @change="change" style="min-height: 600px" />
             <el-button class="editor-btn" type="primary" @click="submit">提交</el-button>
         </div>
@@ -25,13 +70,25 @@ export default {
     },
     data: function() {
         return {
+             showOptions: [
+                //文章大类数据
+                {
+                    value: 0,
+                    label: '隐藏'
+                },
+                {
+                    value: 1,
+                    label: '显示'
+                }
+            ],
             articleContent: {
-                title: '', //输入标题
-                types: 'baidu', //大类的值
+                title: '11111', //输入标题
+                types: 'tb', //大类的值
                 autor: '手赚联盟N01', //作者
                 Pageview: '278', //浏览量
                 tag: '置顶', //文章标记，如：顶
                 level: 5, //优先级
+                show:0,//显示
                 coverImage: null //封面图
                 // content:"",//不声明content的话，v-model articleContent.content会报错
             }, //文章对象
@@ -41,25 +98,40 @@ export default {
             // 大类
             options: [
                 //文章大类数据
-                {
-                    value: 'baidu',
-                    label: '百度'
+               {
+                    name: 'tb',
+                    type: 'ios-analytics',
+                    text: '淘宝赚'
+                },
+                 {
+                    name: 'wx',
+                    type: 'ios-analytics',
+                    text: '微信赚'
                 },
                 {
-                    value: 'gogle',
-                    label: '谷歌'
+                    name: 'az',
+                    type: 'ios-paper',
+                    text: '安卓赚'
                 },
                 {
-                    value: 'sanliuling',
-                    label: '360'
+                    name: 'ios',
+                    type: 'ios-paper',
+                    text: '苹果(ios)赚'
                 },
                 {
-                    value: 'sougou',
-                    label: '搜狗'
+                    name: 'xb',
+                    type: 'ios-paper',
+                    text: '线报赚'
                 },
                 {
-                    value: 'tuiguang',
-                    label: '推广'
+                    name: 'gj',
+                    type: 'ios-paper',
+                    text: '高级赚'
+                },
+                {
+                    name: 'cg',
+                    type: 'ios-paper',
+                    text: '草根汇'
                 }
             ],
             coverImage: '',
@@ -89,7 +161,7 @@ export default {
             formdata.append('file', $file);
             // 这里没有服务器供大家尝试，可将下面上传接口替换为你自己的服务器接口
             this.axios({
-                url: `${this.baseUrl}/malls/uploadImg`,
+                url: ' http://47.103.40.123:3001/malls/uploadImg',
                 method: 'post',
                 data: formdata,
                 headers: { 'Content-Type': 'multipart/form-data' }
@@ -133,7 +205,7 @@ export default {
             this.articleContent = this.$route.params.articleContent;
             this.dialogVisible = true;
         } else {
-            this.articleContent = {};
+            // this.articleContent = {};
             this.dialogVisible = false;
         }
         // this.coverImage = this.$route.params.articleContent ? this.$route.params.articleContent.coverImage : '';

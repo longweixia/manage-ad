@@ -1,61 +1,67 @@
 <template>
-<div class="container">
-           <div class="plugins-tips">
-                <div class="ad-title ad-title-top">
-                    标题：<el-input style="width:600px;" placeholder="作者名称" v-model="articleContent.title" clearable> </el-input>
-                </div>
-                <div class="ad-title ad-type">
-                    <span class="ad-type-text">类别：</span>
-                    <el-select v-model="articleContent.types" clearable placeholder="请选择文章类别">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                    </el-select>
-                </div>
-                <div class="ad-title">
-                    作者：<el-input style="width:200px;" placeholder="作者名称" v-model="articleContent.autor" clearable> </el-input>
-                </div>
-                <div class="ad-title">
-                    浏览量：<el-input style="width:200px;" placeholder="浏览量，填写数字" v-model="articleContent.Pageview" clearable>
-                    </el-input>
-                </div>
-                <div class="ad-title">
-                    文章标记：<el-input style="width:200px;" placeholder="如：顶" v-model="articleContent.tag" clearable> </el-input>
-                </div>
-                <div class="ad-title">优先级：<el-rate class="ad-level" v-model="articleContent.level"> </el-rate></div>
+    <div class="container">
+        <div class="plugins-tips">
+            <div class="ad-title ad-title-top">
+                标题：<el-input style="width:600px;" placeholder="作者名称" v-model="articleContent.title" clearable> </el-input>
+            </div>
+            <div class="ad-title ad-type">
+                <span class="ad-type-text">类别：</span>
+                <el-select v-model="articleContent.types" clearable placeholder="请选择文章类别">
+                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                </el-select>
+            </div>
+            <div class="ad-title ad-type">
+                <span class="ad-type-text">是否显示：</span>
+                <el-select v-model="articleContent.show" clearable placeholder="请选择显示或否">
+                    <el-option v-for="item in showOptions" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+                </el-select>
+            </div>
+            <div class="ad-title">
+                作者：<el-input style="width:200px;" placeholder="作者名称" v-model="articleContent.autor" clearable> </el-input>
+            </div>
+            <div class="ad-title">
+                浏览量：<el-input style="width:200px;" placeholder="浏览量，填写数字" v-model="articleContent.Pageview" clearable>
+                </el-input>
+            </div>
+            <div class="ad-title">
+                文章标记：<el-input style="width:200px;" placeholder="如：顶" v-model="articleContent.tag" clearable> </el-input>
+            </div>
+            <div class="ad-title">优先级：<el-rate class="ad-level" v-model="articleContent.level"> </el-rate></div>
 
-                <div class="ad-title">
-                    封面图：
-                    <div class="ad-cover-img">
-                       
-                        <el-upload
-                            :action="uploadImg"
-                            list-type="picture-card"
-                            :on-preview="handlePictureCardPreview"
-                            :on-remove="handleRemove"
-                            :on-success="Resimg"
-                        >
-                            <i class="el-icon-plus"></i>
-                        </el-upload>
-                        <!-- <div class="img-cover">
+            <div class="ad-title">
+                封面图：
+                <div class="ad-cover-img">
+                    <el-upload
+                        :action="uploadImg"
+                        list-type="picture-card"
+                        :on-preview="handlePictureCardPreview"
+                        :on-remove="handleRemove"
+                        :on-success="Resimg"
+                    >
+                        <i class="el-icon-plus"></i>
+                    </el-upload>
+                    <!-- <div class="img-cover">
                             <img style="width:148px;height:148px;" :src="articleContent.coverImage" alt="" />
                         </div> -->
-                    </div>
                 </div>
             </div>
-</div>
+        </div>
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'mdArticle',
+    name: 'mdArticle',
     data: function() {
         return {
             articleContent: {
-                title: '', //输入标题
-                types: 'baidu', //大类的值
+                title: '22222', //输入标题
+                types: 'tb', //大类的值
                 autor: '手赚联盟N01', //作者
                 Pageview: '278', //浏览量
                 tag: '置顶', //文章标记，如：顶
                 level: 5, //优先级
+                show: 1, //显示
                 coverImage: null //封面图
                 // content:"",//不声明content的话，v-model articleContent.content会报错
             }, //文章对象
@@ -63,6 +69,17 @@ export default {
             configs: {},
             // types: 'baidu', //文章所属的大类
 
+            showOptions: [
+                //文章大类数据
+                {
+                    value: 0,
+                    label: '隐藏'
+                },
+                {
+                    value: 1,
+                    label: '显示'
+                }
+            ],
             // 大类
             options: [
                 //文章大类数据
@@ -91,7 +108,7 @@ export default {
             coverImage: '',
             dialogVisible: false,
             // uploadImg: `${this.baseUrl}/malls/uploadImg`
-            uploadImg: "http://47.103.40.123:3001/malls/uploadImg"
+            uploadImg: 'http://47.103.40.123:3001/malls/uploadImg'
         };
     },
 
@@ -159,12 +176,12 @@ export default {
             this.articleContent = this.$route.params.articleContent;
             this.dialogVisible = true;
         } else {
-            this.articleContent = {};
+            // this.articleContent = {};
             this.dialogVisible = false;
         }
 
         // this.coverImage = this.$route.params.articleContent ? this.$route.params.articleContent.coverImage : '';
-        console.log(this.articleContent, 99999, this.articleContent.id);
+        // console.log(this.articleContent, 99999, this.articleContent.id);
     }
 };
 </script>

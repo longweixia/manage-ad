@@ -142,17 +142,12 @@ export default {
             types: 'all', //选择的大类
             typesList: [
                 //大类下拉数据
-                 {
-                    name: 'all',
-                    type: 'ios-navigate',
-                    text: '首页导航'
-                },
-                {
+                  {
                     name: 'tb',
-                    type: 'ios-keypad',
+                    type: 'ios-analytics',
                     text: '淘宝赚'
                 },
-                {
+                 {
                     name: 'wx',
                     type: 'ios-analytics',
                     text: '微信赚'

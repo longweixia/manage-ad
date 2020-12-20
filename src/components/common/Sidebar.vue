@@ -51,22 +51,40 @@ export default {
                     index: 'dashboard',
                     title: '系统首页'
                 },
+                // { index: '1',
+                //     icon: 'el-icon-lx-home',
+                //     title: '文章',
+                //     subs: [
+                //         {
+                //             index: 'myArticle',
+                //             title: '文章列表'
+                //         },
+                //         {
+                //             index: 'comment',
+                //             title: '评论管理'
+                //         },
+                //         {
+                //             index: 'markdown',
+                //             title: '编辑文章-markdown编辑器'
+                //         }
+                //     ]
+                // },
                 { index: '1',
                     icon: 'el-icon-lx-home',
-                    title: '文章',
+                    title: '明星管理',
                     subs: [
                         {
-                            index: 'myArticle',
-                            title: '文章列表'
+                            index: 'starList',
+                            title: '明星列表'
                         },
                         {
-                            index: 'comment',
-                            title: '评论管理'
+                            index: 'rankList',
+                            title: '榜单排名'
                         },
-                        {
-                            index: 'markdown',
-                            title: '编辑文章-markdown编辑器'
-                        }
+                        // {
+                        //     index: 'markdown',
+                        //     title: '编辑文章-markdown编辑器'
+                        // }
                     ]
                 },
                 { index: '2',

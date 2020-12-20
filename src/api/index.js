@@ -1,9 +1,20 @@
-// import request from '../utils/request';
+import Service from '../utils/Service';
 
-// export const fetchData = query => {
-//     return request({
-//         url: './table.json',
-//         method: 'get',
-//         params: query
-//     });
-// };
+export function getConfigsByProductId(productId) {
+    return Service({
+        url: '/manager/getConfigsByProductId',
+        params: { productId: productId }
+    })
+}
+export function getAllAndroidPlugins() {
+    return Service({
+        url: '/manager/getAndroidPlugin ',
+        method: 'get'
+    })
+}
+export function addNewAndroidPlugin(data) {
+    return Service({
+        url: '/manager/addAndroidPlguin',
+        data: JSON.stringify(data)
+    })
+}

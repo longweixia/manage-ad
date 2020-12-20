@@ -10,10 +10,29 @@ import './assets/css/icon.css';
 import './components/common/directives';
 import 'babel-polyfill';
 import axios from 'axios'
+import ViewUI from 'view-design';
+
+// import style
+import 'view-design/dist/styles/iview.css';
+
+Vue.use(ViewUI);
+axios.defaults.baseURL = "https://123.207.120.31:18001" //接口的基础url
+axios.interceptors.request.use(
+    config => {
+        console.log(config);
+        if (localStorage.getItem("Authorization")) {
+            config.headers.Authorization = localStorage.getItem("Authorization"); //把localStorage的token放在Authorization里
+        }
+        return config;
+    },
+    function(err) {
+        console.log("失败信息" + err);
+    }
+);
 // Vue.prototype.baseUrl = process.env.API_ROOT//接口的基础url
 // 改2 这里
 // http://47.103.40.123:3001  服务器
-Vue.prototype.baseUrl = "//localhost:3001"//接口的基础url
+
 Vue.prototype.axios = axios
 Vue.config.productionTip = false;
 Vue.use(VueI18n);

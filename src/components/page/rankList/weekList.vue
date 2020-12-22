@@ -1,14 +1,13 @@
 <template>
-    <div>
-        <!-- <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item> <i class="el-icon-lx-cascades"></i> 基础表格 </el-breadcrumb-item>
-            </el-breadcrumb>
-        </div> -->
-        <Button type="primary" @click="getToken">获取token</Button>
+    <div>     
         <div class="container">
             <div class="handle-box">
-                <Form :label-width="50" inline :model="query" class="demo-form-inline" ref="ruleForm">
+                <Form :label-width="60" inline :model="query" class="demo-form-inline" ref="ruleForm">
+                     <FormItem  label="周列表" prop="time">
+                       <Select v-model="query.time" style="width:150px" clearable>
+                            <Option v-for="item in TimeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                        </Select>
+                    </FormItem >
                     <FormItem  label="姓名" prop="name">
                         <Input  v-model="query.name" placeholder="姓名" clearable></Input >
                     </FormItem >
@@ -53,7 +52,7 @@
 </template>
 
 <script>
-import {getConfigsByProductId,addNewAndroidPlugin}  from '../../api/index.js';
+
 export default {
     name: 'myArticle',
     data() {
@@ -62,30 +61,41 @@ export default {
              homeImg:"", //首页轮播图
              detailImg:"", //详情页
              hitPopupImg:"",  //打榜弹窗图
+             time:"",
+             TimeList: [
+                    {
+                        value: '2020/12/22',
+                        label: '2020/12/29'
+                    },
+                    {
+                        value: '2020/12/29',
+                        label: '2021/01/05'
+                    },
+             ],
             query: {
                 id: "",
                 name: '',
                 pageIndex: 1,
-                pageSize: 10
+                pageSize: 10,
+                time:""
             },
             table:{
                 data:[],
                 columns: [
                     {
-                        title: 'ID',
+                        title: '周时间段',
                         key: 'id',
-                        sortable: true,
                         align:'center',
-                        width:80
+                        width:100
                     },
                     {
-                        title: '姓名',
+                        title: '明星',
                         key: 'name',
                         align:'center',
-                         width:80
+                         width:100
                     },
                     {
-                        title: '相片',
+                        title: '明星ID',
                         key: 'avatar',
                         sortable: true,
                         align:'center',
@@ -116,9 +126,10 @@ export default {
                          }
                     },
                     {
-                        title: '周/月冠军次数',
+                        title: '排名',
                         key: 'address',
                         align:'center',
+                          sortable: true,
                          width:150,
                          render:(h,params)=>{
                              let {rankWeekChampionNum,rankMonthChampionNum} = params.row
@@ -127,54 +138,7 @@ export default {
                              return h("div",[week,month])
                          }
                     },
-                     {
-                        title: '周/月亚军次数',
-                        key: 'name',
-                        align:'center',
-                         width:150,
-                          render:(h,params)=>{
-                             let {rankWeekSecondNum,rankMonthSecondNum} = params.row
-                             let week = h('div',rankWeekSecondNum+"/")
-                             let month = h('div',rankMonthSecondNum)
-                             return h("div",[week,month])
-                         }
-                    },
-                     {
-                        title: '周/月季军次数',
-                        key: 'name',
-                        align:'center',
-                         width:150,
-                            render:(h,params)=>{
-                             let {rankWeekThirdNum,rankWeekChampionNum} = params.row
-                             let week = h('div',rankWeekThirdNum+"/")
-                             let month = h('div',rankWeekChampionNum)
-                             return h("div",[week,month])
-                         }
-                    },
-                     {
-                        title: '当前周排名',
-                        key: 'thisWeekRank',
-                        align:'center',
-                         width:150
-                    },
-                     {
-                        title: '当前月排名',
-                        key: 'thisMonthRank',
-                        align:'center',
-                         width:150
-                    },
-                     {
-                        title: '标签',
-                        key: 'tags',
-                        align:'center',
-                         width:100
-                    },
-                     {
-                        title: '添加时间',
-                        key: 'createTime',
-                        align:'center',
-                         width:100
-                    },
+                     
                      {
                         title: '操作',
                         key: 'name',

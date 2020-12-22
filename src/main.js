@@ -16,7 +16,7 @@ import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
 
 Vue.use(ViewUI);
-axios.defaults.baseURL = "https://123.207.120.31:18001" //接口的基础url
+axios.defaults.baseURL = "http://123.207.120.31:18001" //接口的基础url
 axios.interceptors.request.use(
     config => {
         console.log(config);

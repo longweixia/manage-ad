@@ -33,15 +33,24 @@ export default new Router({
                 },
                 {
                     path: '/starList',
+                    name: "starList",
                     component: () =>
-                        import ( /* webpackChunkName: "dashboard" */ '../components/page/starList.vue'),
+                        import ('../components/page/starList.vue'),
                     meta: { title: '明星列表' }
                 },
                 {
-                    path: '/rankList',
+                    path: '/starDetail',
+                    name: "starDetail",
                     component: () =>
-                        import ( /* webpackChunkName: "dashboard" */ '../components/page/rankList.vue'),
-                    meta: { title: '榜单列表' }
+                        import ('../components/page/starDetail.vue'),
+                    meta: { title: '明星详情' }
+                },
+                {
+                    path: '/rankList',
+                    name: 'rankList',
+                    component: () =>
+                        import ( /* webpackChunkName: "dashboard" */ '../components/page/rankList/index.vue'),
+                    meta: { title: '榜单排名' }
                 },
                 // {
                 //     path: '/comment',

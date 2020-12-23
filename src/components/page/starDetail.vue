@@ -8,7 +8,7 @@
         <div class="container">
             <div class="card-area">
                 <div class="row-text">姓名</div>
-                <Input v-model="form.name" placeholder="姓名" style="width:200px" clearable></Input>
+                <Input v-model="form.name" placeholder="姓名" style="width: 200px" clearable></Input>
             </div>
             <div class="card-area">
                 <div class="row-text">图片</div>
@@ -30,36 +30,41 @@
                     </div>
                 </div>
             </div>
-             <div class="card-area">
+            <div class="card-area">
                 <div class="row-text">头像</div>
                 <Button type="primary" @click="uploadImg">上传头像</Button>
                 <div class="card-header">
-    
-                        <img :src="imgHeader" />
-                    </div>
+                    <img :src="imgHeader" />
+                </div>
             </div>
             <div class="card-area">
                 <div>
-                     <div class="row-text tag-text" >设置标签</div>
+                    <div class="row-text tag-text">设置标签</div>
                     <span class="addTag-text" @click="addTag">新增标签</span>
-                    <div class='tips'>标签可在发布资源时选择，便于快速关联明星</div>
+                    <div class="tips">标签可在发布资源时选择，便于快速关联明星</div>
                 </div>
                 <div class="tag-area">
                     <Tag class="tag" checkable color="primary">标签一</Tag>
-                    <Tag class="tag" checkable color="primary" v-for='(item,index) in tagList' :key="index"  closable @on-close="handleClose">
-                        {{item.name}}
+                    <Tag
+                        class="tag"
+                        checkable
+                        color="primary"
+                        v-for="(item, index) in tagList"
+                        :key="index"
+                        closable
+                        @on-close="handleClose"
+                    >
+                        {{ item.name }}
                     </Tag>
                 </div>
-               
             </div>
-                <div class="card-area">
+            <div class="card-area">
                 <div class="row-text">小程序开屏图(选填)</div>
-                <div class='tips'>添加明星时可不上传，可等该明星开屏资源快要满足时上传</div>
+                <div class="tips">添加明星时可不上传，可等该明星开屏资源快要满足时上传</div>
                 <Button class="card-screen-btn" type="primary" @click="uploadImg">上传开屏图</Button>
                 <div class="card-screen">
-    
-                        <img :src="imgHeader" />
-                    </div>
+                    <img :src="imgHeader" />
+                </div>
             </div>
         </div>
     </div>
@@ -67,22 +72,18 @@
 
 <script>
 export default {
-    data: function() {
+    data: function () {
         return {
             form: {
-                name: '', //姓名
+                name: '' //姓名
             },
-            imgObj:{
-                homeImg:"", //首页轮播图
-                detailImg:"", //详情页
-                hitPopupImg:"",  //打榜弹窗图
-            },//轮播图等
-            imgHeader:"",//头像url
-            tagList:[
-                {name:'标签2'},
-                {name:'标签3'},
-                {name:'标签4'},
-            ],//标签集合
+            imgObj: {
+                homeImg: '', //首页轮播图
+                detailImg: '', //详情页
+                hitPopupImg: '' //打榜弹窗图
+            }, //轮播图等
+            imgHeader: '', //头像url
+            tagList: [{ name: '标签2' }, { name: '标签3' }, { name: '标签4' }] //标签集合
         };
     },
     methods: {
@@ -92,10 +93,8 @@ export default {
         addTag() {},
         //关闭标签
         handleClose(event, name) {
-            
-                const index = this.tagList.indexOf(name);
-                this.tagList.splice(index, 1);
-            
+            const index = this.tagList.indexOf(name);
+            this.tagList.splice(index, 1);
         },
         loadData(search) {
             this.axios
@@ -105,11 +104,11 @@ export default {
                     pageNum: 1,
                     pageSize: 20
                 })
-                .then(res => {
+                .then((res) => {
                     this.table.data = res.data.data.list;
                     this.total = res.data.data.total;
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log('err', err);
                 });
         }
@@ -119,7 +118,7 @@ export default {
 <style lang="less" scoped>
 .container {
     .card-area {
-        margin-bottom: 20px;    
+        margin-bottom: 20px;
         .row-text {
             margin-top: 10px;
             margin-bottom: 10px;
@@ -149,53 +148,49 @@ export default {
                 }
             }
         }
-        .card-header{
-            width:100px;
+        .card-header {
+            width: 100px;
             height: 100px;
-           border-radius: 50px;
-           margin-top: 10px;
-            img{
-                width:100%;
+            border-radius: 50px;
+            margin-top: 10px;
+            img {
+                width: 100%;
                 height: 100%;
                 border-radius: 50px;
             }
         }
-        .tag-text{
+        .tag-text {
             display: inline-block;
-            margin-bottom:5px;
-            
+            margin-bottom: 5px;
         }
-        .addTag-text{
+        .addTag-text {
             color: blue;
             cursor: pointer;
             margin-left: 20px;
         }
         // 标签
-        .tag-area{
-            .tag{
+        .tag-area {
+            .tag {
                 cursor: pointer;
                 margin-right: 10px;
             }
-
         }
         // 开屏
-        .card-screen{
-              width:200px;
+        .card-screen {
+            width: 200px;
             height: 200px;
-           margin-top: 10px;
-            img{
-                width:100%;
+            margin-top: 10px;
+            img {
+                width: 100%;
                 height: 100%;
             }
-
         }
-        .card-screen-btn{
+        .card-screen-btn {
             margin-top: 5px;
         }
-
     }
 }
-.tips{
+.tips {
     color: #a7a7a7;
 }
 </style>

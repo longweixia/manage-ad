@@ -47,11 +47,45 @@ export default new Router({
                 },
                 {
                     path: '/rankList',
-                    name: 'rankList',
+                    name: "rankList",
                     component: () =>
-                        import ( /* webpackChunkName: "dashboard" */ '../components/page/rankList/index.vue'),
+                        import ('../components/page/rankList/index.vue'),
                     meta: { title: '榜单排名' }
                 },
+                {
+                    path: '/fenManage',
+                    name: 'fenManage',
+                    component: () =>
+                        import ( /* webpackChunkName: "dashboard" */ '../components/page/fenManage.vue'),
+                    meta: { title: '粉丝管理' }
+                },
+                {
+                    path: '/givRecord',
+                    name: 'givRecord',
+                    component: () =>
+                        import ( /* webpackChunkName: "dashboard" */ '../components/page/givRecord.vue'),
+                    meta: { title: '赠送记录' }
+                },
+                {
+                    path: '/hotSetting',
+                    name: 'hotSetting',
+                    component: () =>
+                        import ( /* webpackChunkName: "dashboard" */ '../components/page/hotSetting/index.vue'),
+                    meta: { title: '热力设置' }
+                },
+                {
+                    path: '/banner',
+                    component: () =>
+                        import ( /* webpackChunkName: "dashboard" */ '../components/page/Banner.vue'),
+                    meta: { title: '轮播设置' }
+                },
+                {
+                    path: '/resource',
+                    component: () =>
+                        import ( /* webpackChunkName: "dashboard" */ '../components/page/resource/index.vue'),
+                    meta: { title: '资源管理' }
+                },
+                 
                 // {
                 //     path: '/comment',
                 //     component: () =>
@@ -64,12 +98,7 @@ export default new Router({
                         import ( /* webpackChunkName: "dashboard" */ '../components/page/AppList.vue'),
                     meta: { title: '应用列表' }
                 },
-                {
-                    path: '/banner',
-                    component: () =>
-                        import ( /* webpackChunkName: "dashboard" */ '../components/page/Banner.vue'),
-                    meta: { title: '轮播图' }
-                },
+                
                 {
                     path: '/editArticle',
                     name: "EditArticle",

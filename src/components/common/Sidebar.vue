@@ -87,6 +87,24 @@ export default {
                         // }
                     ]
                 },
+                { index: 'fenManage',
+                    icon: 'el-icon-lx-home',
+                    title: '粉丝管理',
+                },
+                { index: 'hotSetting',
+                    icon: 'el-icon-lx-home',
+                    title: '热力设置',
+                },
+                 {
+                    icon: 'el-icon-lx-home',
+                    index: 'banner',
+                    title: '轮播设置'
+                },
+                 {
+                    icon: 'el-icon-lx-home',
+                    index: 'resource',
+                    title: '资源管理'
+                },
                 { index: '2',
                     icon: 'el-icon-lx-home',
                     title: '应用',
@@ -105,11 +123,7 @@ export default {
                         }
                     ]
                 },
-                {
-                    icon: 'el-icon-lx-home',
-                    index: 'banner',
-                    title: '轮播图'
-                },
+               
                 { index: '3',
                     icon: 'el-icon-lx-home',
                     title: '侧边栏广告',

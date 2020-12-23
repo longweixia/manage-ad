@@ -11,15 +11,21 @@
         <!-- 表格区 -->
         <!-- 周榜 -->
         <WeekList v-if="activeIndex === 0"></WeekList>
+        <MonthList v-if="activeIndex === 1"></MonthList>
+        <Total v-if="activeIndex === 2"></Total>
     </div>
 </template>
 
 <script>
 import WeekList from './weekList';
+import MonthList from './monthList';
+import Total from './total';
 export default {
     name: 'myArticle',
     components: {
-        WeekList
+        WeekList,
+        MonthList,
+        Total
     },
     data() {
         return {

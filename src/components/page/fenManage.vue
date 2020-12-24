@@ -3,226 +3,249 @@
         <div class="container">
             <div class="handle-box">
                 <Form :label-width="50" inline :model="query" class="demo-form-inline" ref="ruleForm">
-           
-                    <FormItem  label="id" prop="id">
-                        <Input type="number"  v-model="query.id" placeholder="ID" clearable></Input >
-                    </FormItem >
+                    <FormItem label="id" prop="id">
+                        <!-- todo  id 搜索不匹配 -->
+                        <InputNumber  v-model="query.id" placeholder="ID" clearable></InputNumber>
+                    </FormItem>
 
-                    <FormItem >
+                    <FormItem>
                         <Button type="primary" @click="handleSearch">搜索</Button>
                         <Button @click="resetForm('ruleForm')">重置</Button>
-                    </FormItem >
-                    <div >
-                        <Button type="primary" @click="handleSearch">批量赠送</Button>
+                    </FormItem>
+                    <div>
+                        <Button type="primary" @click="batchModal">批量赠送</Button>
                         <Button style="float:right" @click="seeGivRecord">赠送记录</Button>
-                        
                     </div>
                 </Form>
             </div>
-            
-           <Table border :columns="table.columns" :data="table.data"></Table>
-       <Page class="page-content" :total="total"  show-elevator show-sizer />
+
+            <Table border :columns="table.columns" :data="table.data"></Table>
+            <Page class="page-content" :total="total" show-elevator show-sizer />
         </div>
         <!-- 赠送活力值 -->
-         <Modal
-        v-model="modalOne"
-        title="赠送活力值"
-        @on-ok="ok"
-        @on-cancel="cancel" width="600">
-        <div class="card-content">
-                 <div class="card">
-                     <div class="text">粉丝：XXXXX，ID：XXXXX</div>
-                    <Input />
-                     <!-- <img :src="homeImg"/> -->
+        <Modal v-model="modalOne" title="赠送活力值" @on-ok="ok" @on-cancel="cancel" width="600">
+            <div class="card-content">
+                <div class="card">
+                    <div class="text">
+                        粉丝：
+                        <span style="font-weight:normal">{{ modalOneData.nickName }}</span>
+                        ，ID：
+                        <span style="font-weight:normal">{{ modalOneData.fensId }}</span>
+                    </div>
+                    <Input v-model="vigourVal" />
+                    <!-- <img :src="homeImg"/> -->
                 </div>
-               
-             
-          
-        </div>
-         <div slot="footer" style="text-align:center">
-             <Button type="primary" @click='submitOne'>提交</Button>
-             </div>
-    </Modal>
-     
-
+            </div>
+            <div slot="footer" style="text-align:center">
+                <Button type="primary" @click="submitOne">提交</Button>
+            </div>
+        </Modal>
+        <!-- 批量导入 -->
+        <!-- 批量导入 -->
+        <ExcelUploadModal :upload-model.sync="uploadModel" @success="handleExcelUploadModalSuccess"></ExcelUploadModal>
     </div>
 </template>
 
 <script>
-import {getConfigsByProductId,addNewAndroidPlugin}  from '../../api/index.js';
+// import { getConfigsByProductId, addNewAndroidPlugin } from '../../api/index.js';
+import ExcelUploadModal from '../common/ExcelUploadModal.vue';
+
 export default {
     name: 'myArticle',
+    components: {
+        ExcelUploadModal
+    },
     data() {
         return {
+            modalOneData: {}, //选择单行的数据
+            uploadModel: false, //批量导入
+            vigourVal: null, //赠送的热力数量
             modalOne: false,
-             homeImg:"", //首页轮播图
-             detailImg:"", //详情页
-             hitPopupImg:"",  //打榜弹窗图
+            homeImg: '', //首页轮播图
+            detailImg: '', //详情页
+            hitPopupImg: '', //打榜弹窗图
             query: {
-                id: "",
-                name: '',
+                id: null,
                 pageIndex: 1,
                 pageSize: 10
             },
-            table:{
-                data:[],
+            table: {
+                data: [],
                 columns: [
                     {
                         title: 'ID',
-                        key: 'id',
-                        sortable: true,
-                        align:'center',
-                        minWidth:80
+                        key: 'fensId',
+                        align: 'center',
+                        minWidth: 80
                     },
                     {
                         title: '昵称',
-                        key: 'name',
-                        align:'center',
-                         minWidth:80
+                        key: 'nickName',
+                        align: 'center',
+                        minWidth: 80
                     },
                     {
                         title: '性别',
-                        key: 'avatar',
-                        
-                        align:'center',
-                        minWidth:100
-                        
+                        key: 'gender',
+                        align: 'center',
+                        minWidth: 100, // todo  男女值分别为什么
+                        render: (h, params) => {
+                            let { gender } = params.row;
+                            let text = '无';
+                            if (gender === 0) {
+                                text = '女';
+                            } else if (gender === 1) {
+                                text = '男';
+                            }
+
+                            return h('div', text);
+                        }
                     },
                     {
                         title: '手机号',
-                        key: 'address',
-                        align:'center',
-                         minWidth:150,
-                    
+                        key: 'phone',
+                        align: 'center',
+                        minWidth: 150
                     },
-                     {
+                    {
                         title: '累计活力值',
                         key: 'name',
-                        align:'center',
+                        align: 'center',
                         sortable: true,
-                         minWidth:150,
-                         
+                        minWidth: 150
                     },
-                     {
+                    {
                         title: '消耗活力值',
-                        key: 'name',
-                        align:'center',
+                        key: 'totalVigourVal',
+                        align: 'center',
                         sortable: true,
-                         minWidth:150,
-                         
+                        minWidth: 150
                     },
-                     {
+                    {
                         title: '当前活力值',
-                        key: 'name',
-                        align:'center',
+                        key: 'vigourVal',
+                        align: 'center',
                         sortable: true,
-                         minWidth:150,
-                         
+                        minWidth: 150
                     },
-                  
-                     {
+
+                    {
                         title: '注册时间',
-                        key: 'thisWeekRank',
-                        align:'center',
-                         minWidth:150
+                        key: 'addTime',
+                        align: 'center',
+                        minWidth: 150
                     },
-                     {
+                    {
                         title: '最后登录时间',
-                        key: 'thisMonthRank',
-                        align:'center',
-                         minWidth:150
+                        key: 'lastVisitTime', //todo 时间需要格式化
+                        align: 'center',
+                        minWidth: 150
                     },
-                     
-                     {
+
+                    {
                         title: '操作',
                         key: 'name',
-                        align:'center',
-                         minWidth:100,
-                          render:(h,params)=>{
-                             let clickBtn = h('div',{
-                                 style:{
-                                     color:"blue",
-                                     cursor:'pointer'
-                                 },
-                                 on:{
-                                     'click':()=>{
-                                        this.modalOne = true
-                                     }
-                                     
-                                 }
-                             },'赠送活力值')
-                             return h("div",[clickBtn])
-                         }
-                    },
-                ],
-
+                        align: 'center',
+                        minWidth: 100,
+                        render: (h, params) => {
+                            let clickBtn = h(
+                                'div',
+                                {
+                                    style: {
+                                        color: 'blue',
+                                        cursor: 'pointer'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.modalOneData = params.row;
+                                            this.showModalOne();
+                                        }
+                                    }
+                                },
+                                '赠送活力值'
+                            );
+                            return h('div', [clickBtn]);
+                        }
+                    }
+                ]
             },
             tableData: [
                 {
                     coverImage: ''
                 }
             ],
-            total:0,
-   
+            total: 0
         };
     },
-    created() {
-       
-    },
+    created() {},
     mounted() {
-        this.loadData()
+        this.loadData();
     },
     methods: {
-        ok(){
-
+        // 赠送活力值
+        showModalOne() {
+            this.modalOne = true;
         },
-        cancel(){
-
+        // 批量赠送
+        batchModal() {
+            this.uploadModel = true;
         },
+        // 批量导入弹窗成功
+        handleExcelUploadModalSuccess(res) {
+            this.loadData(true);
+            this.$nextTick(() => {
+                // if (res.data.length) {
+                // // 有提示时显示返回信息
+                // this.resInfoModal.show = true
+                // this.resInfoModal.res = res.data
+                // }
+            });
+        },
+        ok() {},
+        cancel() {},
         //去详情
-    goDetail(){
-        this.$router.push({
-            name:"starDetail"
-        })
-    },
-        //去赠送记录
-    seeGivRecord(){
-        this.$router.push({
-            name:"givRecord"
-        })
-    },
-        // 单个提交
-        submitOne(){
-            this.modalOne = false
+        goDetail() {
+            this.$router.push({
+                name: 'starDetail'
+            });
         },
-
- 
-        // 获取token
-        getToken() {
-             this.axios.post(`/common/testLogin?id=1`).then(res => {
-                    let token = res.data.data.token;
-                    localStorage.setItem('Authorization', token);
+        //去赠送记录
+        seeGivRecord() {
+            this.$router.push({
+                name: 'givRecord'
+            });
+        },
+        // 单个提交
+        submitOne() {
+            let id = this.modalOneData.fensId,
+            vigourVal = Number(this.vigourVal);
+            this.axios
+                .post(`/fens/giveVigourVal?id=${id}&vigourVal=${vigourVal}`)
+                .then(res => {
+                    if (res.data.code == 200) {
+                        this.$Message.success('赠送成功');
+                        this.modalOne = false;
+                    }
                 })
                 .catch(err => {
                     console.log('err', err);
                 });
         },
+
         // 重置
         resetForm(formName) {
             this.$refs[formName].resetFields();
         },
         loadData(search) {
             this.axios
-                .post(`/star/star/list`, {
-                    id: search?this.query.id:'',
-                    name: search?this.query.name:'',
+                .post(`/fens/selectFensPage`, {
+                    id: search ? this.query.id : '',
                     pageNum: 1,
                     pageSize: 20
                 })
                 .then(res => {
                     this.table.data = res.data.data.list;
                     this.total = res.data.data.total;
-                   
                 })
                 .catch(err => {
                     console.log('err', err);
@@ -232,9 +255,7 @@ export default {
         handleSearch() {
             // this.$set(this.query, 'pageIndex', 1);
             this.loadData(true);
-        },
- 
-    
+        }
     }
 };
 </script>
@@ -268,20 +289,20 @@ export default {
     width: 40px;
     height: 40px;
 }
-.card-content{
+.card-content {
     display: flex;
     justify-content: center;
     align-items: center;
-    .card{
-        width:300px;
+    .card {
+        width: 300px;
         margin-right: 20px;
-        .text{
+        .text {
             text-align: center;
             font-size: 14px;
             font-weight: bold;
             margin-bottom: 10px;
         }
-        img{
+        img {
             width: 100%;
             height: 100%;
             padding: 5px;
@@ -289,7 +310,7 @@ export default {
         }
     }
 }
-.page-content{
+.page-content {
     text-align: right;
     margin-top: 40px;
 }

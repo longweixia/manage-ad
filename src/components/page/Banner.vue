@@ -1,16 +1,11 @@
 <template>
     <div>
-  
         <div class="container">
-
-
-
              <div class="card-area">
                 <div class="row-text">开启轮播图 <i-Switch size="large">
                         <span slot="open">开启</span>
                         <span slot="close">关闭</span>
                     </i-Switch>
-                    
                 </div>
                 <div>
                    轮播图按下方顺序展示在首页，最多配置两个，本页配置会顶替月榜周榜轮播（如有），下方播完周榜月榜继续

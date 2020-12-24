@@ -76,20 +76,20 @@ export default {
                         key: 'id',
                         sortable: true,
                         align:'center',
-                        width:80
+                        minWidth:80
                     },
                     {
                         title: '姓名',
                         key: 'name',
                         align:'center',
-                         width:80
+                         minWidth:80
                     },
                     {
                         title: '相片',
                         key: 'avatar',
                         sortable: true,
                         align:'center',
-                         width:100,
+                         minWidth:100,
                          render:(h,params)=>{
                             //  homeImg 首页轮播图
                             //  detailImg 详情页
@@ -119,7 +119,7 @@ export default {
                         title: '周/月冠军次数',
                         key: 'address',
                         align:'center',
-                         width:150,
+                         minWidth:150,
                          render:(h,params)=>{
                              let {rankWeekChampionNum,rankMonthChampionNum} = params.row
                              let week = h('div',rankWeekChampionNum+"/")
@@ -131,7 +131,7 @@ export default {
                         title: '周/月亚军次数',
                         key: 'name',
                         align:'center',
-                         width:150,
+                         minWidth:150,
                           render:(h,params)=>{
                              let {rankWeekSecondNum,rankMonthSecondNum} = params.row
                              let week = h('div',rankWeekSecondNum+"/")
@@ -143,7 +143,7 @@ export default {
                         title: '周/月季军次数',
                         key: 'name',
                         align:'center',
-                         width:150,
+                         minWidth:150,
                             render:(h,params)=>{
                              let {rankWeekThirdNum,rankWeekChampionNum} = params.row
                              let week = h('div',rankWeekThirdNum+"/")
@@ -155,31 +155,31 @@ export default {
                         title: '当前周排名',
                         key: 'thisWeekRank',
                         align:'center',
-                         width:150
+                         minWidth:150
                     },
                      {
                         title: '当前月排名',
                         key: 'thisMonthRank',
                         align:'center',
-                         width:150
+                         minWidth:150
                     },
                      {
                         title: '标签',
                         key: 'tags',
                         align:'center',
-                         width:100
+                         minWidth:100
                     },
                      {
                         title: '添加时间',
                         key: 'createTime',
                         align:'center',
-                         width:100
+                         minWidth:100
                     },
                      {
                         title: '操作',
                         key: 'name',
                         align:'center',
-                         width:100,
+                         minWidth:100,
                           render:(h,params)=>{
                              let clickBtn = h('div',{
                                  style:{
@@ -233,6 +233,8 @@ export default {
              this.axios.post(`/common/testLogin?id=1`).then(res => {
                     let token = res.data.data.token;
                     localStorage.setItem('Authorization', token);
+                 
+              
                 })
                 .catch(err => {
                     console.log('err', err);

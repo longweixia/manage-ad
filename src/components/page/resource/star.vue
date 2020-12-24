@@ -2,21 +2,20 @@
     <div>
         <div class="container">
             <div class="handle-box">
-                <Form :label-width="60" inline :model="query" class="demo-form-inline" ref="ruleForm">
+                <Form :label-width="100" inline :model="query" class="demo-form-inline" ref="ruleForm">
                     <FormItem label="有效期" prop="time">
-                          <DatePicker type="daterange" placeholder="Select date" style="width: 200px"></DatePicker>
+                        <DatePicker @on-change="changeDate" type="daterange" placeholder="Select date" style="width: 200px"></DatePicker>
                     </FormItem>
-                    <FormItem label="资源类型" prop="starName">   
-                        <Select v-model="query.startTime" style="width: 150px" clearable>
-                            <Option v-for="item in TimeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    <FormItem label="资源类型" prop="type">
+                        <Select v-model="query.type" style="width: 150px" clearable>
+                            <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                         </Select>
                     </FormItem>
-                    <FormItem label="状态" prop="starName">   
-                        <Select v-model="query.startTime" style="width: 150px" clearable>
-                            <Option v-for="item in TimeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    <FormItem label="状态" prop="status">
+                        <Select v-model="query.status" style="width: 150px" clearable>
+                            <Option v-for="item in statusList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                         </Select>
                     </FormItem>
-                
 
                     <FormItem>
                         <el-button type="primary" @click="handleSearch">搜索</el-button>
@@ -25,7 +24,7 @@
                 </Form>
             </div>
 
-            <Table border :columns="table.columns" :data="table.data" style="width:100%"></Table>
+            <Table border :columns="table.columns" :data="table.data" style="width: 100%"></Table>
             <Page class="page-content" :total="total" show-elevator show-sizer />
         </div>
         <Modal v-model="modalImg" title="查看图片" @on-ok="ok" @on-cancel="cancel" width="1000">
@@ -57,36 +56,45 @@ export default {
             detailImg: '', //详情页
             hitPopupImg: '', //打榜弹窗图
             time: '',
-            TimeList: [
+            typeList: [
                 {
-                    value: '2020/12/22',
-                    label: '2020/12/29'
+                    value: 1,
+                    label: '后援金'
                 },
                 {
-                    value: '2020/12/29',
-                    label: '2021/01/05'
+                    value: 2,
+                    label: '小程序开屏'
+                },
+                 {
+                    value: 3,
+                    label: '首页轮播'
+                },
+                {
+                    value: 4,
+                    label: '户外大屏'
+                }
+            ],
+            statusList: [
+                {
+                    value: 2,
+                    label: '进行中'
+                },
+                {
+                    value: 1,
+                    label: '待开始'
+                },
+                {
+                    value: 3,
+                    label: '已结束'
                 }
             ],
             query: {
-                endTime: '', //周结束时间
-
-                hitListType: 0, //榜单类型 0：周榜；1：月榜；2：总榜
-
-                listType: 1, //列表类型 默认空， 0：本周；1：近三个月周时间段；2：具体某个月份
-
-                monthNum: '', //具体月份值
-
-                pageNum: 1, //当前页码
-
-                pageSize: 20, //页面数量
-
-                sortType: 0, //排序 0：正序；1：倒序；
-
-                starId: '', //明星ID
-
-                starName: '', //明星姓名
-
-                startTime: '' //周开始时间
+                beginTime: '',//开始时间
+                endTime: '',//结束时间
+                pageNum: 1,
+                pageSize: 20,
+                status: null,//1-待开始 2-进行中 3-已结束
+                type: null//资源类型(1-后援金 2-小程序开屏 3-首页轮播 4-户外大屏)
             },
             table: {
                 data: [],
@@ -191,6 +199,12 @@ export default {
         this.loadData();
     },
     methods: {
+        // 改变时间
+        changeDate(e){
+            console.log(e)
+            this.query.beginTime = e[0]+" 00:00:00"
+            this.query.endTime = e[1]+" 23:59:59"
+        },
         ok() {},
         cancel() {},
         //去详情
@@ -206,7 +220,7 @@ export default {
         },
         loadData(search) {
             this.axios
-                .post(`/star/hitList/rankList`, this.query)
+                .post(`/resources/selectResourcesPage`, this.query)
                 .then((res) => {
                     this.table.data = res.data.data.list;
                     this.total = res.data.data.total;

@@ -3,21 +3,47 @@
         <div class="container">
             <div class="card-area">
                 <div class="row-text">
-                    周榜奖励
-                    <i-Switch size="large" v-model="switchValWeek">
-                        <span slot="open">开启</span>
-                        <span slot="close">关闭</span>
-                    </i-Switch>
+                    资源类型
                 </div>
                 <div>
-                    开启后在小程序-个人中心显示“榜单奖励”按钮，点击按钮显示宣传页
+                    <Select v-model="selectHotVal" style="width: 150px" clearable>
+                        <Option v-for="item in selectHotList" :value="item.value" :key="item.value">{{ item.name }}</Option>
+                    </Select>
+                </div>
+                <div class="tips">
+                    参与方式都为看视频，资源展示在明星详细页“资源”中，后援金和户外大屏需输入金额和大屏名称
                 </div>
             </div>
             <div class="card-area">
                 <div>
-                    <div class="row-text tag-text">使用资源</div>
+                    <div class="row-text tag-text">目标人数</div>
+                    <div>
+                        <Input style="width:200px" v-model="tarGetVal" />
+                    </div>
 
-                    <div class="tips">小程序开屏和首页轮播在第1名产生后自动生成，后援金和户外大屏线下发放</div>
+                    <div class="tips">只需输入目标人数，参与人数和达成人数将自动计算，达成人数等于目标人数则完成任务</div>
+                </div>
+            </div>
+
+            <div class="card-area">
+                <div class="row-text">
+                    设定倒计时
+                </div>
+
+                <div style="margin-top:20px">
+                    从<DatePicker type="date" :options="selectDate" placeholder="选择开始日" style="width: 100px"></DatePicker> 开始，往后
+                    <Input placeholder="输入数字" style="width:200px" v-model="valueHot" />天
+                </div>
+                <div class="tips">
+                    系统在开始日00:00:01自动发起，开始日在当天需扣除已过时间，例：倒计时7天，在开始日01点发起，扣去1小时则倒计时为：6天23时59分59秒
+                </div>
+            </div>
+            <div class="card-area">
+                <div class="row-text">
+                    关联明星
+                </div>
+                <div>
+                    选择明星标签
                 </div>
                 <div class="tag-area">
                     <Tag
@@ -33,121 +59,68 @@
                     </Tag>
                 </div>
             </div>
-
-            <div class="card-area">
-                <div class="row-text tag-text">宣传页</div>
-                <div>图片格式必须为：png,bmp,jpeg,jpg,gif；不可大于2M</div>
-
-                <Button type="primary" @click="uploadImg">上传图片</Button>
-
-                <div class="upload-area">
-                    <upload :value.sync="imgUrl" @upImageUrl="getImageUrl" ref="upload" :fileFormat="true"></upload>
-                </div>
-            </div>
             <div class="card-area">
                 <div class="row-text">
-                    最低热力值
-                    <i-Switch size="large"  v-model="switchValHot">
-                        <span slot="open">开启</span>
-                        <span slot="close">关闭</span>
-                    </i-Switch>
+                    输入明星ID
                 </div>
-                <div>
-                    为避免以极低热力值获得冠军导致发起方亏损，可设置热力值阈值，低于阈值即使获得冠军仍不能得到奖励
-                </div>
-                <div style="margin-top:20px">
-                    低于 <Input placeholder="输入数字，最多8位" style="width:200px" v-model="valueHot" /> 热力值无法获得奖励
-                </div>
+
+                <div><Input placeholder="输入数字" style="width:200px" v-model="valueHot" /></div>
             </div>
             <div>
                 <Button type="primary" @click="save">保存</Button>
+                <Button type="primary" @click="preview">样式预览</Button>
             </div>
         </div>
+        <Preview :uploadImgModel.sync="uploadImgModel"></Preview>
     </div>
 </template>
 
 <script>
-import upload from '../../common/upload/index.vue';
+import Preview from './preview.vue';
 export default {
     components: {
-        upload
+        Preview
     },
     data() {
         return {
-            switchValWeek: false, //周榜奖励默认关闭
+            uploadImgModel: false,
+            tarGetVal: '', //目标人数
             switchValHot: false, //最低热力值默认关闭
-            valueHot:"",//热力值
-            imgUrl: '', //图片url
-            img:"",//上传时的图片url
-            flieData: null, //图片文件
-            imgObj: {
-                homeImg: '', //首页轮播图
-                detailImg: '', //详情页
-                hitPopupImg: '' //打榜弹窗图
-            }, //轮播图等
+            valueHot: '', //热力值
+            img: '', //上传时的图片url
             selectHotVal: '', //选择的热力下拉框的值
             selectHotList: [
-                {
-                    value: '2020/12/22',
-                    label: '2020/12/29'
-                },
-                {
-                    value: '2020/12/29',
-                    label: '2021/01/05'
-                }
+                { name: '后援金', value: 1, checked: false },
+                { name: '小程序开屏', value: 2, checked: false },
+                { name: '首页轮播', value: 3, checked: false },
+                { name: '户外大屏', value: 4, checked: false }
             ],
-            numList: [
-                { name: '', value: '' },
-                { name: '', value: '' }
-            ],
-            limitVal: '', //每日限制次数
-            form: {
-                name: '' //姓名
-            },
-            imgObj: {
-                homeImg: '', //首页轮播图
-                detailImg: '', //详情页
-                hitPopupImg: '' //打榜弹窗图
-            }, //轮播图等
-            imgHeader: '', //头像url
             tagList: [
                 { name: '小程序开屏', value: 2, checked: false },
                 { name: '首页轮播', value: 3, checked: false },
                 { name: '后援金', value: 1, checked: false },
                 { name: '户外大屏', value: 4, checked: false }
-            ] //标签集合
+            ], //标签集合
+            selectDate: {
+                disabledDate(date) {
+                    return date && date.valueOf() < Date.now() - 86400000;
+                }
+            }
         };
     },
     methods: {
-        getImageUrl(data) {
-            this.imgUrl = data[0];
-            this.flieData = data[1];
+        // 预览
+        preview() {
+            this.uploadImgModel = true
         },
-        // 上传文件，保存时才上传
-        uploadFile() {
-            //
-            if (this.flieData) {
-                const formData = new FormData();
-                formData.append('file', this.flieData);  //todo 接口类型错误，应该是file不是string
-                this.axios
-                    .post(`/common/upload`,
-                        formData
-                    )
-                    .then(res => {
-                        this.img = res.data.data.img;
-                    })
-                    .catch(err => {
-                        console.log('err', err);
-                    });
-            }
-        },
+
         // 保存
         save() {
-            if (!this.switchValHot&&this.valueHot) {
-                this.$Message.error('输入热力值前，需要先开启最低热力值按钮');
-                return false
-            }
-            this.uploadFile()
+            // if (!this.switchValHot && this.valueHot) {
+            //     this.$Message.error('输入热力值前，需要先开启最低热力值按钮');
+            //     return false;
+            // }
+
             let tagArry = []; //选中的tag
             this.tagList.forEach((item, index) => {
                 if (item.checked) {
@@ -159,21 +132,16 @@ export default {
                     code: 'WEEK', //WEEK:周榜 MONTH-月榜
                     img: this.img, //宣传页
                     minVal: this.valueHot, //最低热力值
-                    open: this.switchValWeek, //是否开启
+
                     openMin: this.switchValHot, //是否开启最低热力值
                     type: tagArry //1-后援金 2-小程序开屏 3-首页轮播 4-户外大屏  todo type应该是一个数组
                 })
-                .then(res => {
-                   
-                })
+                .then(res => {})
                 .catch(err => {
                     console.log('err', err);
                 });
         },
-        // 上传图片
-        uploadImg() {
-              this.$refs.upload.clickFile();
-        },
+
         //新增标签
         addTag() {},
         //关闭标签

@@ -3,10 +3,10 @@
         <div class="container">
             <div class="handle-box">
                 <Form :label-width="100" inline :model="query" class="demo-form-inline" ref="ruleForm">
-                    <FormItem label="有效期" prop="time">
-                        <DatePicker @on-change="changeDate" type="daterange" placeholder="Select date" style="width: 200px"></DatePicker>
+                      <FormItem label="姓名" prop="starName">
+                        <Input v-model="query.starName" placeholder="姓名" clearable></Input>
                     </FormItem>
-                    <FormItem label="资源类型" prop="type">
+                    <FormItem label="账号" prop="type">
                         <Select v-model="query.type" style="width: 150px" clearable>
                             <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                         </Select>
@@ -24,7 +24,7 @@
                 </Form>
             </div>
             <div class="addBtn">
-                    <Button type="primary" @click="addResouce">添加资源</Button>
+                    <Button type="primary" @click="addResouce">新增账号</Button>
             </div>
 
             <Table border :columns="table.columns" :data="table.data" style="width: 100%"></Table>
@@ -80,15 +80,11 @@ export default {
             statusList: [
                 {
                     value: 2,
-                    label: '进行中'
+                    label: '已启用'
                 },
                 {
                     value: 1,
-                    label: '待开始'
-                },
-                {
-                    value: 3,
-                    label: '已结束'
+                    label: '已禁用'
                 }
             ],
             query: {
@@ -107,127 +103,20 @@ export default {
                     }
                 ],
                 columns: [
+                 
                     {
-                        title: '资源类型',
-                        key: 'type',
-                        align: 'center',
-                        minWidth: 100,
-                        render: (h, params) => {
-                            let { type } = params.row, text;
-                            if(type){
-                              text = this.typeList.find((item) => {return item.value == type}).label
-                            }else{
-                                text = "无"
-                            }
-                            return h('div', text);
-                        }
-                    },
-                    {
-                        title: '目标人数',
+                        title: '姓名',
                         key: 'target',
                         align: 'center',
                         minWidth: 100
                     },
                     {
-                        title: '有效期',
-                        key: 'beginTime',
-                        sortable: true,
+                        title: '账号',
+                        key: 'target',
                         align: 'center',
-                        minWidth: 150,
-                        render: (h, params) => {
-                            let { beginTime, endTime } = params.row, text;
-                            let time = h(
-                                'div',
-                                {
-                                    style: {
-                                        color: 'blue',
-                                        cursor: 'pointer'
-                                    },
-                                 
-                                },
-                               beginTime+"-"+endTime
-                            );
-                            // 计算倒计时
-                            let countDownText= "1天"
-
-                            let countDown = h(
-                                'div',
-                                {
-                                    style: {
-                                        color: 'blue',
-                                        cursor: 'pointer'
-                                    },
-                                 
-                                },
-                               `倒计时:${countDownText}`
-                            );
-                            return h('div', [time,countDown]);
-                        }
+                        minWidth: 100
                     },
-                    {
-                        title: '关联明星',
-                        key: 'relationStar',
-                        align: 'center',
-                        sortable: true,
-                        minWidth: 150,
-                        render: (h, params) => {
-                            let { relationStar } = params.row;
-                            let text='';
-                            relationStar.forEach((item,i)=>{
-                                if(!text){
-                                    text = text+item
-                                }else{
-                                     text = text+'，'+item
-                                }
-                    
-                            })
-                            let countDown = h(
-                                'div',
-                                {
-                                    style: {
-                                        color: 'blue',
-                                        cursor: 'pointer'
-                                    },
-                                 
-                                },
-                               text
-                            );
-                       
-                            return h('div', [countDown]);
-                        }
-                    },
-                    {
-                        title: '已完成',
-                        key: 'completeStar',
-                        align: 'center',
-                        sortable: true,
-                        minWidth: 150,
-                        render: (h, params) => {
-                            let { completeStar } = params.row;
-                            let text='';
-                            completeStar.forEach((item,i)=>{
-                                if(!text){
-                                    text = text+item
-                                }else{
-                                     text = text+'，'+item
-                                }
-                    
-                            })
-                            let countDown = h(
-                                'div',
-                                {
-                                    style: {
-                                        color: 'blue',
-                                        cursor: 'pointer'
-                                    },
-                                 
-                                },
-                               text
-                            );
-                       
-                            return h('div', [countDown]);
-                        }
-                    },
+                   
                     {
                         title: '状态',
                         key: 'status',
@@ -261,7 +150,6 @@ export default {
                         align: 'center',
                         sortable: true,
                         minWidth: 150,
-                   
                     },
 
                     {
@@ -270,7 +158,40 @@ export default {
                         align: 'center',
                         minWidth: 100,
                         render: (h, params) => {
-                            let clickBtn = h(
+
+                            let disableBtn = h(
+                                'div',
+                                {
+                                    style: {
+                                        color: 'blue',
+                                        cursor: 'pointer'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.goDetail();
+                                        }
+                                    }
+                                },
+                                '禁用'
+                            )
+
+                            let deleteBtn = h(
+                                'div',
+                                {
+                                    style: {
+                                        color: 'blue',
+                                        cursor: 'pointer'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.goDetail();
+                                        }
+                                    }
+                                },
+                                '删除'
+                            )
+
+                            let detail = h(
                                 'div',
                                 {
                                     style: {
@@ -285,7 +206,8 @@ export default {
                                 },
                                 '详情'
                             );
-                            return h('div', [clickBtn]);
+                          
+                            return h('div', [disableBtn,deleteBtn,detail]);
                         }
                     }
                 ]
@@ -305,9 +227,7 @@ export default {
     methods: {
         // 添加资源
         addResouce(){
-            this.$router.push({
-                name:'addResouce'
-            })
+           this.modalImg = true
 
         },
         // 改变时间

@@ -105,6 +105,11 @@ export default {
                     index: 'resource',
                     title: '资源管理'
                 },
+                 {
+                    icon: 'el-icon-lx-home',
+                    index: 'account',
+                    title: '账号管理'
+                },
                 { index: '2',
                     icon: 'el-icon-lx-home',
                     title: '应用',

@@ -53,6 +53,13 @@ export default new Router({
                     meta: { title: '榜单排名' }
                 },
                 {
+                    path: '/fensGiveDetail',
+                    name: "fensGiveDetail",
+                    component: () =>
+                        import ('../components/page/rankList/fensGive/index.vue'),
+                    meta: { title: '榜单排名' }
+                },
+                {
                     path: '/fenManage',
                     name: 'fenManage',
                     component: () =>
@@ -84,6 +91,19 @@ export default new Router({
                     component: () =>
                         import ( /* webpackChunkName: "dashboard" */ '../components/page/resource/index.vue'),
                     meta: { title: '资源管理' }
+                },
+                {
+                    path: '/addResouce',
+                    name: 'addResouce',
+                    component: () =>
+                        import ( /* webpackChunkName: "dashboard" */ '../components/page/resource/addResouce.vue'),
+                    meta: { title: '添加资源' }
+                },
+                {
+                    path: '/account',
+                    component: () =>
+                        import ( /* webpackChunkName: "dashboard" */ '../components/page/account/index.vue'),
+                    meta: { title: '账号管理' }
                 },
                  
                 // {

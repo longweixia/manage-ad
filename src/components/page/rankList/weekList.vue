@@ -86,7 +86,11 @@ export default {
                 startTime: '' //周开始时间
             },
             table: {
-                data: [],
+                data: [
+                    {
+                        id:1
+                    }
+                ],
                 columns: [
                     {
                         title: '周时间段',
@@ -103,7 +107,6 @@ export default {
                     {
                         title: '明星ID',
                         key: 'avatar',
-                        sortable: true,
                         align: 'center',
                         minWidth: 100,
                         render: (h, params) => {
@@ -164,13 +167,28 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.goDetail();
+                                            this.goDetail('star');
                                         }
                                     }
                                 },
-                                '详情'
+                                '明星详情'
                             );
-                            return h('div', [clickBtn]);
+                            let fensBtn = h(
+                                'div',
+                                {
+                                    style: {
+                                        color: 'blue',
+                                        cursor: 'pointer'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.goDetail('fensGive');
+                                        }
+                                    }
+                                },
+                                '粉丝贡献'
+                            );
+                            return h('div', [clickBtn,fensBtn]);
                         }
                     }
                 ]
@@ -190,10 +208,10 @@ export default {
     methods: {
         ok() {},
         cancel() {},
-        //去详情
-        goDetail() {
+        //去详情-粉丝贡献
+        goDetail(name) {
             this.$router.push({
-                name: 'starDetail'
+                name: `${name}Detail`
             });
         },
 
@@ -205,7 +223,7 @@ export default {
             this.axios
                 .post(`/star/hitList/rankList`, this.query)
                 .then((res) => {
-                    this.table.data = res.data.data.list;
+                    // this.table.data = res.data.data.list;
                     this.total = res.data.data.total;
                 })
                 .catch((err) => {

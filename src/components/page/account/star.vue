@@ -30,22 +30,25 @@
             <Table border :columns="table.columns" :data="table.data" style="width: 100%"></Table>
             <Page class="page-content" :total="total" show-elevator show-sizer />
         </div>
-        <Modal v-model="modalImg" title="查看图片" @on-ok="ok" @on-cancel="cancel" width="1000">
-            <div class="card-content">
-                <div class="card">
-                    <div class="text">首页轮播图预览</div>
-                    <img :src="homeImg" />
-                </div>
-                <div class="card">
-                    <div class="text">明星详细页预览</div>
-                    <img :src="detailImg" />
-                </div>
-                <div class="card">
-                    <div class="text">打榜弹窗预览</div>
-                    <img :src="hitPopupImg" />
-                </div>
-            </div>
-        </Modal>
+        <Modal v-model="modalImg" title="新增账号" @on-ok="ok" @on-cancel="cancel" width="600">
+            <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="80">
+            <FormItem label="姓名" prop="name" style="width:400px">
+                <Input v-model="formCustom.name"></Input>
+            </FormItem>
+        
+              <FormItem label="手机" prop="phone" style="width:400px">
+                <Input v-model="formCustom.phone"></Input>
+            </FormItem>
+                <FormItem label="密码" prop="passwdCheck" style="width:400px">
+                <Input v-model="formCustom.passwdCheck"></Input>
+            </FormItem>
+            
+            <FormItem>
+                <Button type="primary" @click="handleSubmit('formCustom')">提交</Button>
+
+            </FormItem>
+        </Form>
+            </Modal>
     </div>
 </template>
 
@@ -53,7 +56,65 @@
 export default {
     name: 'myArticle',
     data() {
+         const validateName = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入姓名'));
+                } else {
+                    // if (this.formCustom.passwdCheck !== '') {
+                    //     // 对第二个密码框单独验证
+                    //     this.$refs.formCustom.validateField('passwdCheck');
+                    // }
+                    callback();
+                }
+            };
+            const validatePhome = (rule, value, callback) => {
+                if (!value) {
+                    callback(new Error('请输入手机号'));
+                } 
+                // else if (value !== this.formCustom.passwd) {
+                //     callback(new Error('The two input passwords do not match!'));
+                // }
+                 else {
+                    callback();
+                }
+            };
+            const validatePassWord = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('请输入密码'));
+                }
+                 else {
+                    callback();
+                }
+                // // 模拟异步验证效果
+                // setTimeout(() => {
+                //     if (!Number.isInteger(value)) {
+                //         callback(new Error('Please enter a numeric value'));
+                //     } else {
+                //         if (value < 18) {
+                //             callback(new Error('Must be over 18 years of age'));
+                //         } else {
+                //             callback();
+                //         }
+                //     }
+                // }, 1000);
+            };
         return {
+             formCustom: {
+                    name: '',
+                    passwdCheck: '',
+                    passwdCheck: ''
+                },
+                ruleCustom: {
+                    name: [
+                        { validator: validateName, trigger: 'blur' }
+                    ],
+                    phone: [
+                        { validator: validatePhome, trigger: 'blur' }
+                    ],
+                    passwdCheck: [
+                        { validator: validatePassWord, trigger: 'blur' }
+                    ]
+                },
             modalImg: false,
             homeImg: '', //首页轮播图
             detailImg: '', //详情页
@@ -225,6 +286,18 @@ export default {
         this.loadData();
     },
     methods: {
+         handleSubmit (name) {
+                this.$refs[name].validate((valid) => {
+                    if (valid) {
+                        this.$Message.success('Success!');
+                    } else {
+                        this.$Message.error('Fail!');
+                    }
+                })
+            },
+            handleReset (name) {
+                this.$refs[name].resetFields();
+            },
         // 添加资源
         addResouce(){
            this.modalImg = true

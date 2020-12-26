@@ -3,7 +3,7 @@
         <div class="container">
             <div class="handle-box">
                 <Form :label-width="100" inline :model="query" class="demo-form-inline" ref="ruleForm">
-                      <FormItem label="姓名" prop="starName">
+                    <FormItem label="姓名" prop="starName">
                         <Input v-model="query.starName" placeholder="姓名" clearable></Input>
                     </FormItem>
                     <FormItem label="账号" prop="type">
@@ -24,7 +24,7 @@
                 </Form>
             </div>
             <div class="addBtn">
-                    <Button type="primary" @click="addResouce">新增账号</Button>
+                <Button type="primary" @click="addResouce">新增账号</Button>
             </div>
 
             <Table border :columns="table.columns" :data="table.data" style="width: 100%"></Table>
@@ -32,23 +32,22 @@
         </div>
         <Modal v-model="modalImg" title="新增账号" @on-ok="ok" @on-cancel="cancel" width="600">
             <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="80">
-            <FormItem label="姓名" prop="name" style="width:400px">
-                <Input v-model="formCustom.name"></Input>
-            </FormItem>
-        
-              <FormItem label="手机" prop="phone" style="width:400px">
-                <Input v-model="formCustom.phone"></Input>
-            </FormItem>
-                <FormItem label="密码" prop="passwdCheck" style="width:400px">
-                <Input v-model="formCustom.passwdCheck"></Input>
-            </FormItem>
-            
-            <FormItem>
-                <Button type="primary" @click="handleSubmit('formCustom')">提交</Button>
+                <FormItem label="姓名" prop="name" style="width:400px">
+                    <Input v-model="formCustom.name"></Input>
+                </FormItem>
 
-            </FormItem>
-        </Form>
-            </Modal>
+                <FormItem label="手机" prop="account" style="width:400px">
+                    <Input v-model="formCustom.account"></Input>
+                </FormItem>
+                <FormItem label="密码" prop="pwd" style="width:400px">
+                    <Input v-model="formCustom.pwd"></Input>
+                </FormItem>
+
+                <FormItem>
+                    <Button type="primary" @click="handleSubmit('formCustom')">提交</Button>
+                </FormItem>
+            </Form>
+        </Modal>
     </div>
 </template>
 
@@ -56,65 +55,58 @@
 export default {
     name: 'myArticle',
     data() {
-         const validateName = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请输入姓名'));
-                } else {
-                    // if (this.formCustom.passwdCheck !== '') {
-                    //     // 对第二个密码框单独验证
-                    //     this.$refs.formCustom.validateField('passwdCheck');
-                    // }
-                    callback();
-                }
-            };
-            const validatePhome = (rule, value, callback) => {
-                if (!value) {
-                    callback(new Error('请输入手机号'));
-                } 
-                // else if (value !== this.formCustom.passwd) {
-                //     callback(new Error('The two input passwords do not match!'));
+        const validateName = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请输入姓名'));
+            } else {
+                // if (this.formCustom.passwdCheck !== '') {
+                //     // 对第二个密码框单独验证
+                //     this.$refs.formCustom.validateField('passwdCheck');
                 // }
-                 else {
-                    callback();
-                }
-            };
-            const validatePassWord = (rule, value, callback) => {
-                if (!value) {
-                    return callback(new Error('请输入密码'));
-                }
-                 else {
-                    callback();
-                }
-                // // 模拟异步验证效果
-                // setTimeout(() => {
-                //     if (!Number.isInteger(value)) {
-                //         callback(new Error('Please enter a numeric value'));
-                //     } else {
-                //         if (value < 18) {
-                //             callback(new Error('Must be over 18 years of age'));
-                //         } else {
-                //             callback();
-                //         }
-                //     }
-                // }, 1000);
-            };
+                callback();
+            }
+        };
+        const validatePhome = (rule, value, callback) => {
+            if (!value) {
+                callback(new Error('请输入手机号'));
+            }
+            // else if (value !== this.formCustom.passwd) {
+            //     callback(new Error('The two input passwords do not match!'));
+            // }
+            else {
+                callback();
+            }
+        };
+        const validatePassWord = (rule, value, callback) => {
+            if (!value) {
+                return callback(new Error('请输入密码'));
+            } else {
+                callback();
+            }
+            // // 模拟异步验证效果
+            // setTimeout(() => {
+            //     if (!Number.isInteger(value)) {
+            //         callback(new Error('Please enter a numeric value'));
+            //     } else {
+            //         if (value < 18) {
+            //             callback(new Error('Must be over 18 years of age'));
+            //         } else {
+            //             callback();
+            //         }
+            //     }
+            // }, 1000);
+        };
         return {
-             formCustom: {
-                    name: '',
-                    passwdCheck: '',
-                    passwdCheck: ''
-                },
-                ruleCustom: {
-                    name: [
-                        { validator: validateName, trigger: 'blur' }
-                    ],
-                    phone: [
-                        { validator: validatePhome, trigger: 'blur' }
-                    ],
-                    passwdCheck: [
-                        { validator: validatePassWord, trigger: 'blur' }
-                    ]
-                },
+            formCustom: {
+                name: '',
+                pwd: '',
+                account: ''
+            },
+            ruleCustom: {
+                name: [{ validator: validateName, trigger: 'blur' }],
+                account: [{ validator: validatePhome, trigger: 'blur' }],
+                pwd: [{ validator: validatePassWord, trigger: 'blur' }]
+            },
             modalImg: false,
             homeImg: '', //首页轮播图
             detailImg: '', //详情页
@@ -129,7 +121,7 @@ export default {
                     value: 2,
                     label: '小程序开屏'
                 },
-                 {
+                {
                     value: 3,
                     label: '首页轮播'
                 },
@@ -149,59 +141,53 @@ export default {
                 }
             ],
             query: {
-                beginTime: '',//开始时间
-                endTime: '',//结束时间
+                beginTime: '', //开始时间
+                endTime: '', //结束时间
                 pageNum: 1,
                 pageSize: 20,
-                status: '',//1-待开始 2-进行中 3-已结束
-                type: ''//资源类型(1-后援金 2-小程序开屏 3-首页轮播 4-户外大屏)
+                status: '', //1-待开始 2-进行中 3-已结束
+                type: '' //资源类型(1-后援金 2-小程序开屏 3-首页轮播 4-户外大屏)
             },
             table: {
                 data: [
-                    {type:2,target:2,beginTime:'2020/11/16',endTime:'2020/12/27',
-                    relationStar:['邓超','小王','小li'],completeStar:['邓超','小王','小搞'],status:2,
-                    addTime:'2020/11/16'
-                    }
                 ],
                 columns: [
-                 
                     {
                         title: '姓名',
-                        key: 'target',
+                        key: 'name',
                         align: 'center',
                         minWidth: 100
                     },
                     {
                         title: '账号',
-                        key: 'target',
+                        key: 'account',
                         align: 'center',
                         minWidth: 100
                     },
-                   
+
                     {
-                        title: '状态',
+                        title: '状态',  //todo 状态的枚举是什么呢
                         key: 'status',
                         align: 'center',
                         sortable: true,
                         minWidth: 150,
                         render: (h, params) => {
-                            // 1-待开始 2-进行中 3-已结束
-                            let { status} = params.row,text;
+                            // 1-启用 2-禁用
+                            let { status } = params.row,
+                                text;
                             switch (status) {
                                 case 1:
-                                    text = '待开始'
+                                    text = '启用';
                                     break;
                                 case 2:
-                                    text = '进行中'
+                                    text = '禁用';
                                     break;
-                                case 3:
-                                    text = '已结束'
-                                    break;
-                            
+
+
                                 default:
                                     break;
                             }
-                            
+
                             return h('div', text);
                         }
                     },
@@ -210,7 +196,7 @@ export default {
                         key: 'addTime',
                         align: 'center',
                         sortable: true,
-                        minWidth: 150,
+                        minWidth: 150
                     },
 
                     {
@@ -219,7 +205,6 @@ export default {
                         align: 'center',
                         minWidth: 100,
                         render: (h, params) => {
-
                             let disableBtn = h(
                                 'div',
                                 {
@@ -234,7 +219,7 @@ export default {
                                     }
                                 },
                                 '禁用'
-                            )
+                            );
 
                             let deleteBtn = h(
                                 'div',
@@ -250,7 +235,7 @@ export default {
                                     }
                                 },
                                 '删除'
-                            )
+                            );
 
                             let detail = h(
                                 'div',
@@ -267,8 +252,8 @@ export default {
                                 },
                                 '详情'
                             );
-                          
-                            return h('div', [disableBtn,deleteBtn,detail]);
+
+                            return h('div', [disableBtn, deleteBtn, detail]);
                         }
                     }
                 ]
@@ -286,28 +271,38 @@ export default {
         this.loadData();
     },
     methods: {
-         handleSubmit (name) {
-                this.$refs[name].validate((valid) => {
-                    if (valid) {
-                        this.$Message.success('Success!');
-                    } else {
-                        this.$Message.error('Fail!');
-                    }
-                })
-            },
-            handleReset (name) {
-                this.$refs[name].resetFields();
-            },
+        handleSubmit(name) {
+            this.$refs[name].validate(valid => {
+                if (valid) {
+                    this.axios
+                        .post(`/user/addUser`, this.formCustom)
+                        .then(res => {
+                            this.$Message.success("新增成功")
+                            this.modalImg = false
+                            this.loadData()
+                            // this.table.data = res.data.data.list;
+                            // this.total = res.data.data.total;
+                        })
+                        .catch(err => {
+                            console.log('err', err);
+                        });
+                } else {
+                    this.$Message.error('Fail!');
+                }
+            });
+        },
+        handleReset(name) {
+            this.$refs[name].resetFields();
+        },
         // 添加资源
-        addResouce(){
-           this.modalImg = true
-
+        addResouce() {
+            this.modalImg = true;
         },
         // 改变时间
-        changeDate(e){
-            console.log(e)
-            this.query.beginTime = e[0]+" 00:00:00"
-            this.query.endTime = e[1]+" 23:59:59"
+        changeDate(e) {
+            console.log(e);
+            this.query.beginTime = e[0] + ' 00:00:00';
+            this.query.endTime = e[1] + ' 23:59:59';
         },
         ok() {},
         cancel() {},
@@ -324,12 +319,12 @@ export default {
         },
         loadData(search) {
             this.axios
-                .post(`/resources/selectResourcesPage`, this.query)
-                .then((res) => {
-                    // this.table.data = res.data.data.list;
+                .post(`/user/selectPage`, this.query)
+                .then(res => {
+                    this.table.data = res.data.data.list;
                     this.total = res.data.data.total;
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log('err', err);
                 });
         },
@@ -398,7 +393,7 @@ export default {
     text-align: right;
     margin-top: 40px;
 }
-.addBtn{
+.addBtn {
     margin-bottom: 10px;
 }
 </style>

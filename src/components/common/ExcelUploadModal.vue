@@ -91,7 +91,7 @@ export default {
             this.axios
                 .get(`/fens/downModel`, { responseType: 'arraybuffer' })
                 .then(res => {
-                    let data = res.data;
+                    let data = res;
                     let blob = new Blob([data], { type: 'application/vnd.ms-excel' }); //res 就是文件流了
                     let a = document.createElement('a');
                     a.download = '批量赠送活力值';

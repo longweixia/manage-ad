@@ -1,13 +1,13 @@
 <template>
-    <div>
+    <div class="rank-list-month-tablelist">
         <div class="container">
             <div class="handle-box">
-                <Form :label-width="60" inline :model="query" class="demo-form-inline" ref="ruleForm">
+                <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
 
                     <FormItem label="明星" prop="starName">
                         <Input v-model="query.starName" placeholder="明星" clearable></Input>
                     </FormItem>
-                    <FormItem label="id" prop="starId">
+                    <FormItem label="ID" prop="starId">
                         <Input type="number" v-model="query.starId" placeholder="ID" clearable></Input>
                     </FormItem>
 
@@ -63,9 +63,9 @@ export default {
             query: {
                 endTime: '', //周结束时间
 
-                hitListType: 1, //榜单类型 0：周榜；1：月榜；2：总榜
+                hitListType: 2, //榜单类型 0：周榜；1：月榜；2：总榜
 
-                listType: 1, //列表类型 默认空， 0：本周；1：近三个月周时间段；2：具体某个月份
+                listType: '', //列表类型 默认空， 0：本周；1：近三个月周时间段；2：具体某个月份
 
                 monthNum: '', //具体月份值
 
@@ -89,27 +89,27 @@ export default {
     
                     {
                         title: '明星',
-                        key: 'name',
+                        key: 'starName',
                         align: 'center',
                         minWidth: 100
                     },
                     {
                         title: 'ID',
-                        key: 'ID',
-                        sortable: true,
+                        key: 'starId',
+
                         align: 'center',
                         minWidth: 100
                     },
                     {
                         title: '活力值',
-                        key: 'address',
+                        key: 'totalVigourVal',
                         align: 'center',
-                        sortable: true,
+      
                         minWidth: 150
                     },
                     {
                         title: '排名',
-                        key: 'address',
+                        key: 'rank',
                         align: 'center',
                         sortable: true,
                         minWidth: 150
@@ -130,7 +130,7 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.goDetail();
+                                            this.goDetail(params.row);
                                         }
                                     }
                                 },
@@ -158,9 +158,13 @@ export default {
         ok() {},
         cancel() {},
         //去详情
-        goDetail() {
+        goDetail(data) {
             this.$router.push({
-                name: 'starDetail'
+                name: 'starDetail',
+                 query: {
+                    id: data.starId,
+                    // data: data
+                }
             });
         },
 
@@ -172,8 +176,8 @@ export default {
             this.axios
                 .post(`/star/hitList/rankList`, this.query)
                 .then((res) => {
-                    this.table.data = res.data.data.list;
-                    this.total = res.data.data.total;
+                    this.table.data = res.data.list;
+                    this.total = res.data.total;
                 })
                 .catch((err) => {
                     console.log('err', err);
@@ -189,6 +193,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.rank-list-month-tablelist{
 .handle-box {
     margin-bottom: 20px;
 }
@@ -244,4 +249,9 @@ export default {
     text-align: right;
     margin-top: 40px;
 }
+   .ivu-form .ivu-form-item-label,
+    .ivu-form-item-content {
+        display: inline-block;
+    }
+    }
 </style>

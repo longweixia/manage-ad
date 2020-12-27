@@ -23,7 +23,7 @@
             <Page class="page-content" :total="total" show-elevator show-sizer />
         </div>
         <!-- 赠送活力值 -->
-        <Modal v-model="modalOne" title="赠送活力值" @on-ok="ok" @on-cancel="cancel" width="600">
+        <Modal v-model="modalOne" title="赠送活力值" @on-ok="ok" @on-cancel="cancel" width="400">
             <div class="card-content">
                 <div class="card">
                     <div class="text">
@@ -32,12 +32,12 @@
                         ，ID：
                         <span style="font-weight:normal">{{ modalOneData.fensId }}</span>
                     </div>
-                    <Input v-model="vigourVal" />
+                    <Input v-model="vigourVal" style="margin-top:10px" />
                     <!-- <img :src="homeImg"/> -->
                 </div>
             </div>
             <div slot="footer" style="text-align:center">
-                <Button type="primary" @click="submitOne">提交</Button>
+                <Button type="primary" style="width:100px" @click="submitOne">提交</Button>
             </div>
         </Modal>
         <!-- 批量导入 -->
@@ -77,7 +77,7 @@ export default {
                         title: 'ID',
                         key: 'fensId',
                         align: 'center',
-                        minWidth: 80
+                        minWidth: 100
                     },
                     {
                         title: '昵称',
@@ -110,24 +110,24 @@ export default {
                     },
                     {
                         title: '累计活力值',
-                        key: 'name',
-                        align: 'center',
-                        sortable: true,
-                        minWidth: 100
-                    },
-                    {
-                        title: '消耗活力值',
                         key: 'totalVigourVal',
                         align: 'center',
                         sortable: true,
-                        minWidth: 100
+                        minWidth: 130
+                    },
+                    {
+                        title: '消耗活力值',
+                        key: 'consumeVigourVal',
+                        align: 'center',
+                        sortable: true,
+                        minWidth: 130
                     },
                     {
                         title: '当前活力值',
                         key: 'vigourVal',
                         align: 'center',
                         sortable: true,
-                        minWidth: 100
+                        minWidth: 130
                     },
 
                     {

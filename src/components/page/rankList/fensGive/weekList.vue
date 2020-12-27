@@ -1,21 +1,23 @@
 <template>
-    <div>
+    <div class="fens-give-tablelist">
         <div class="container">
             <div class="handle-box">
-                <Form :label-width="60" inline :model="query" class="demo-form-inline" ref="ruleForm">
-              
-                    <FormItem label="id" prop="starId">
-                        <Input type="number" v-model="query.starId" placeholder="ID" clearable></Input>
+                <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
+                    <FormItem label="ID" prop="fensId">
+                        <Input type="number" v-model="query.fensId" placeholder="ID" clearable></Input>
                     </FormItem>
 
                     <FormItem>
                         <el-button type="primary" @click="handleSearch">搜索</el-button>
                         <el-button @click="resetForm('ruleForm')">重置</el-button>
                     </FormItem>
+                    <div>
+                        周时间段：{{weekTimes}}  明星：{{query.starName}}  排名：{{rankNum}}
+                    </div>
                 </Form>
             </div>
 
-            <Table border :columns="table.columns" :data="table.data" style="width:100%"></Table>
+            <Table border :columns="table.columns" :data="table.data" style="width: 100%"></Table>
             <Page class="page-content" :total="total" show-elevator show-sizer />
         </div>
         <Modal v-model="modalImg" title="查看图片" @on-ok="ok" @on-cancel="cancel" width="1000">
@@ -42,6 +44,8 @@ export default {
     name: 'myArticle',
     data() {
         return {
+            rankNum:null,
+            weekTimes:'',
             modalImg: false,
             homeImg: '', //首页轮播图
             detailImg: '', //详情页
@@ -72,7 +76,7 @@ export default {
 
                 sortType: 0, //排序 0：正序；1：倒序；
 
-                starId: '', //明星ID
+                starId: null, //明星ID
 
                 starName: '', //明星姓名
 
@@ -81,43 +85,36 @@ export default {
             table: {
                 data: [
                     {
-                        id:1
+                        id: 1
                     }
                 ],
                 columns: [
                     {
                         title: '粉丝名称',
-                        key: 'id',
+                        key: 'fensName',
                         align: 'center',
                         minWidth: 100
                     },
                     {
                         title: 'ID',
-                        key: 'id',
+                        key: 'fensId',
                         align: 'center',
                         minWidth: 100
                     },
                     {
                         title: '贡献值',
-                        key: 'avatar',
+                        key: 'totalVigourVal',
                         align: 'center',
-                        minWidth: 100,
+                        minWidth: 100
                     },
                     {
                         title: '贡献排名',
-                        key: 'address',
+                        key: 'rank',
                         align: 'center',
                         sortable: true,
                         minWidth: 150,
-                        render: (h, params) => {
-                            let { rankWeekChampionNum, rankMonthChampionNum } = params.row;
-                            let week = h('div', rankWeekChampionNum + '/');
-                            let month = h('div', rankMonthChampionNum);
-                            return h('div', [week, month]);
-                        }
-                    },
-
-                 
+                      
+                    }
                 ]
             },
             tableData: [
@@ -130,7 +127,17 @@ export default {
     },
     created() {},
     mounted() {
-        this.loadData();
+       
+        this.query.starId = this.$route.query.data.starId
+        this.weekTimes = this.$route.query.data.weekTime
+        this.query.starName = this.$route.query.data.starName
+        this.rankNum = this.$route.query.data.rank
+        let timeArr = this.$route.query.data.weekTime.split('~')
+        this.query.startTime = timeArr[0]
+        this.query.endTime = timeArr[1]
+
+        console.log(this.query.starId)
+         this.loadData();
     },
     methods: {
         ok() {},
@@ -148,10 +155,10 @@ export default {
         },
         loadData(search) {
             this.axios
-                .post(`/star/hitList/rankList`, this.query)
+                .post(`/star/fensMark/rankList`, this.query)
                 .then((res) => {
-                    // this.table.data = res.data.data.list;
-                    this.total = res.data.data.total;
+                    this.table.data = res.data.list;
+                    this.total = res.data.total;
                 })
                 .catch((err) => {
                     console.log('err', err);
@@ -166,60 +173,66 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.handle-box {
-    margin-bottom: 20px;
-}
+<style lang="less">
+.fens-give-tablelist {
+    .handle-box {
+        margin-bottom: 20px;
+    }
 
-.handle-select {
-    width: 120px;
-}
+    .handle-select {
+        width: 120px;
+    }
 
-.handle-input {
-    width: 300px;
-    display: inline-block;
-}
-.table {
-    width: 100%;
-    font-size: 14px;
-}
-.red {
-    color: #ff0000;
-}
-.mr10 {
-    margin-right: 10px;
-}
-.table-td-thumb {
-    display: block;
-    margin: auto;
-    width: 40px;
-    height: 40px;
-}
-.card-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 350px;
-    .card {
+    .handle-input {
         width: 300px;
-        height: 300px;
-        margin-right: 20px;
-        .text {
-            text-align: center;
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        img {
-            width: 100%;
-            height: 100%;
-            padding: 5px;
-            background: #ddd;
+        display: inline-block;
+    }
+    .table {
+        width: 100%;
+        font-size: 14px;
+    }
+    .red {
+        color: #ff0000;
+    }
+    .mr10 {
+        margin-right: 10px;
+    }
+    .table-td-thumb {
+        display: block;
+        margin: auto;
+        width: 40px;
+        height: 40px;
+    }
+    .card-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 350px;
+        .card {
+            width: 300px;
+            height: 300px;
+            margin-right: 20px;
+            .text {
+                text-align: center;
+                font-size: 14px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            img {
+                width: 100%;
+                height: 100%;
+                padding: 5px;
+                background: #ddd;
+            }
         }
     }
-}
-.page-content {
-    text-align: right;
-    margin-top: 40px;
+    .page-content {
+        text-align: right;
+        margin-top: 40px;
+    }
+    .ivu-form .ivu-form-item-label,
+    .ivu-form-item-content {
+        display: inline-block;
+    }
 }
 </style>

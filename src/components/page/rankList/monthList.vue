@@ -1,8 +1,8 @@
 <template>
-    <div>
+       <div class='rank-list-month-tablelist'>
         <div class="container">
             <div class="handle-box">
-                <Form :label-width="60" inline :model="query" class="demo-form-inline" ref="ruleForm">
+                <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
                     <FormItem label="选择月" prop="time">
                         <Select v-model="query.startTime" style="width: 150px" clearable>
                             <Option v-for="item in TimeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -11,7 +11,7 @@
                     <FormItem label="姓名" prop="starName">
                         <Input v-model="query.starName" placeholder="姓名" clearable></Input>
                     </FormItem>
-                    <FormItem label="id" prop="starId">
+                    <FormItem label="ID" prop="starId">
                         <Input type="number" v-model="query.starId" placeholder="ID" clearable></Input>
                     </FormItem>
 
@@ -69,9 +69,9 @@ export default {
 
                 hitListType: 1, //榜单类型 0：周榜；1：月榜；2：总榜
 
-                listType: 1, //列表类型 默认空， 0：本周；1：近三个月周时间段；2：具体某个月份
+                listType: 2, //列表类型 默认空， 0：本周；1：近三个月周时间段；2：具体某个月份
 
-                monthNum: '', //具体月份值
+                monthNum: 12, //具体月份值
 
                 pageNum: 1, //当前页码
 
@@ -188,8 +188,8 @@ export default {
             this.axios
                 .post(`/star/hitList/rankList`, this.query)
                 .then((res) => {
-                    this.table.data = res.data.data.list;
-                    this.total = res.data.data.total;
+                    this.table.data = res.data.list;
+                    this.total = res.data.total;
                 })
                 .catch((err) => {
                     console.log('err', err);
@@ -204,7 +204,8 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
+.rank-list-month-tablelist{
 .handle-box {
     margin-bottom: 20px;
 }
@@ -259,5 +260,10 @@ export default {
 .page-content {
     text-align: right;
     margin-top: 40px;
+}
+   .ivu-form .ivu-form-item-label,
+    .ivu-form-item-content {
+        display: inline-block;
+    }
 }
 </style>

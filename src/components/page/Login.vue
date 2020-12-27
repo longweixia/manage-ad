@@ -3,16 +3,16 @@
         <div class="ms-login">
             <div class="ms-title">后台管理系统</div>
             <el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
-                <el-form-item prop="username">
-                    <el-input v-model="param.username" placeholder="username">
+                <el-form-item prop="account">
+                    <el-input v-model="param.account" placeholder="请输入手机号">
                         <el-button slot="prepend" icon="el-icon-lx-people"></el-button>
                     </el-input>
                 </el-form-item>
-                <el-form-item prop="password">
+                <el-form-item prop="pwd">
                     <el-input
-                        type="password"
-                        placeholder="password"
-                        v-model="param.password"
+                        type="pwd"
+                        placeholder="请输入密码"
+                        v-model="param.pwd"
                         @keyup.enter.native="submitForm()"
                     >
                         <el-button slot="prepend" icon="el-icon-lx-lock"></el-button>
@@ -21,7 +21,7 @@
                 <div class="login-btn">
                     <el-button type="primary" @click="submitForm()">登录</el-button>
                 </div>
-                <p class="login-tips">Tips : 用户名和密码随便填。</p>
+                <!-- <p class="login-tips">Tips : 用户名和密码随便填。</p> -->
             </el-form>
         </div>
     </div>
@@ -32,12 +32,12 @@ export default {
     data: function() {
         return {
             param: {
-                username: 'admin',
-                password: '123123',
+                account: '',
+                pwd: '',
             },
             rules: {
-                username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-                password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+                account: [{ required: true, message: '手机号不能为空', trigger: 'blur' }],
+                pwd: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
             },
         };
     },
@@ -45,16 +45,27 @@ export default {
         submitForm() {
             this.$refs.login.validate(valid => {
                 if (valid) {
-                    this.$message.success('登录成功');
-                    localStorage.setItem('ms_username', this.param.username);
-                    this.$router.push('/');
+                    this.login()
                 } else {
-                    this.$message.error('请输入账号和密码');
-                    console.log('error submit!!');
+                    this.$message.error('请输入手机号和密码');
                     return false;
                 }
             });
         },
+        login(){
+              this.axios
+                .post(`/common/login`, this.param)
+                .then((res) => {
+                  this.$message.success('登录成功');
+                    localStorage.setItem('Authorization', res.data.token);
+                    localStorage.setItem('ms_username', this.param.account);
+                    this.$router.push('/');
+                })
+                .catch((err) => {
+                
+                        this.$Message.error(err);
+                });
+        }
     },
 };
 </script>

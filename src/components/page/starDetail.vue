@@ -74,6 +74,7 @@
 export default {
     data: function () {
         return {
+            id:null, //明星id
             form: {
                 name: '' //姓名
             },
@@ -86,6 +87,10 @@ export default {
             tagList: [{ name: '标签2' }, { name: '标签3' }, { name: '标签4' }] //标签集合
         };
     },
+      mounted() {
+        this.id = this.$route.query.id
+        this.loadData()
+    },
     methods: {
         // 上传图片
         uploadImg() {},
@@ -96,20 +101,16 @@ export default {
             const index = this.tagList.indexOf(name);
             this.tagList.splice(index, 1);
         },
-        loadData(search) {
+        loadData() {
             this.axios
-                .post(`/star/star/list`, {
-                    id: search ? this.query.id : '',
-                    name: search ? this.query.name : '',
-                    pageNum: 1,
-                    pageSize: 20
-                })
+                .get(`/starDetail/selectStarInfo`, {params:{
+                    id: this.id  
+                }})
                 .then((res) => {
-                    this.table.data = res.data.data.list;
-                    this.total = res.data.data.total;
+               
                 })
                 .catch((err) => {
-                    console.log('err', err);
+                    this.$Message.error(err);
                 });
         }
     }

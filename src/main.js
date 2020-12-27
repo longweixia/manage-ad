@@ -41,12 +41,14 @@ axios.interceptors.response.use((response) => {
       return  Promise.reject(response.data.message)
     //   router.push("/login")
     //其余错误状态处理    
-    } else if (response.data.code != 200) {
+    } else if (response.data.code == '10001') {
         return  Promise.reject(response.data.message)
     //请求成功
     } else if(response.data.code == 200){
       //将我们请求到的信息返回页面中请求的逻辑
       return response.data;
+    }else{
+        return response.data;
     }
    //......
   

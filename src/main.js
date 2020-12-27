@@ -20,19 +20,50 @@ import 'viewerjs/dist/viewer.css'
 Vue.use(ViewUI);
 
 Vue.use(Viewer)
-axios.defaults.baseURL = "http://123.207.120.31:18001" //接口的基础url
+axios.defaults.baseURL = "https://123.207.120.31:18001" //接口的基础url
+// 请求拦截
 axios.interceptors.request.use(
     config => {
-        console.log(config);
+ 
         if (localStorage.getItem("Authorization")) {
             config.headers.Authorization = localStorage.getItem("Authorization"); //把localStorage的token放在Authorization里
         }
         return config;
     },
     function(err) {
-        console.log("失败信息" + err);
+        Promise.reject(err)
     }
 );
+// 响应拦截
+axios.interceptors.response.use((response) => {
+    //特殊错误处理，状态为401时为登录超时
+    if (response.data.code =='401') {
+      return  Promise.reject(response.data.message)
+    //   router.push("/login")
+    //其余错误状态处理    
+    } else if (response.data.code != 200) {
+        return  Promise.reject(response.data.message)
+    //请求成功
+    } else if(response.data.code == 200){
+      //将我们请求到的信息返回页面中请求的逻辑
+      return response.data;
+    }
+   //......
+  
+  }, function (error) {
+    if (error.response) {
+        switch (error.response.status) {
+          case 401:
+            return Promise.reject('登录失效');
+             
+          default:
+              break;
+        }
+    }else{
+         return Promise.reject(error);
+    }
+   
+  });
 // Vue.prototype.baseUrl = process.env.API_ROOT//接口的基础url
 // 改2 这里
 // http://47.103.40.123:3001  服务器

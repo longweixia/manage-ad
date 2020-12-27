@@ -10,7 +10,7 @@
         >
         <!-- 表格区 -->
         <!-- 周榜 -->
-        <Star v-if="activeIndex === 0"></Star>
+        <StarList v-if="activeIndex === 0"></StarList>
         <Week v-if="activeIndex === 1"></Week>
         <Month v-if="activeIndex === 2"></Month>
        
@@ -18,14 +18,14 @@
 </template>
 
 <script>
-import Star from './star';
+import StarList from './starList';
 import Week from './week';
 import Month from './month';
 
 export default {
     name: 'myArticle',
     components: {
-        Star,
+        StarList,
         Week,
         Month,
        

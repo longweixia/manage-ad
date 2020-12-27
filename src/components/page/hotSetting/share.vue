@@ -1,96 +1,67 @@
 <template>
     <div>
-  
         <div class="container">
             <div class="card-area">
                 <div class="row-text">分享微信获得热力值</div>
                 <div class="row-text">需对方点击分享内容进入小程序才算完成</div>
-                 
-                 <div>
-                     每日最高
-                     <Input v-model="limitVal" placeholder="数值" style="width:200px" clearable></Input>次
-                 </div>
-                
-                 <div>
-                     每次获得
-                     <Input v-model="limitVal" placeholder="数值" style="width:200px" clearable></Input>热力值
-                 </div>
-                
+
+                <div>
+                    每日最高
+                    <Input v-model="shareMaxNum" placeholder="数值" style="width: 200px" clearable></Input>次
+                </div>
+
+                <div>
+                    每次获得
+                    <Input v-model="vigourShareNum" placeholder="数值" style="width: 200px" clearable></Input>热力值
+                </div>
             </div>
-         
+
             <div>
-                <Button type="primary">保存</Button>
+                <Button type="primary" @click="save">保存</Button>
             </div>
-            
-          
-       
-             
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    data: function() {
+    data: function () {
         return {
-            selectHotVal:"",//选择的热力下拉框的值
-              selectHotList: [
-                {
-                    value: '2020/12/22',
-                    label: '2020/12/29'
-                },
-                {
-                    value: '2020/12/29',
-                    label: '2021/01/05'
-                }
-            ],
-            numList:[
-                {name:"",value:""},
-                {name:"",value:""},
-            ],
-            limitVal:"",//每日限制次数
+            shareMaxNum: '', //每日限制次数
+            vigourShareNum: '', //每日限制次数
             form: {
-                name: '', //姓名
-            },
-            imgObj:{
-                homeImg:"", //首页轮播图
-                detailImg:"", //详情页
-                hitPopupImg:"",  //打榜弹窗图
-            },//轮播图等
-            imgHeader:"",//头像url
-            tagList:[
-                {name:'标签2'},
-                {name:'标签3'},
-                {name:'标签4'},
-            ],//标签集合
+                name: '' //姓名
+            }
         };
     },
+    mounted() {
+        this.loadData();
+    },
     methods: {
-        // 上传图片
-        uploadImg() {},
-        //新增标签
-        addTag() {},
-        //关闭标签
-        handleClose(event, name) {
-            
-                const index = this.tagList.indexOf(name);
-                this.tagList.splice(index, 1);
-            
-        },
-        loadData(search) {
+        loadData() {
             this.axios
-                .post(`/star/star/list`, {
-                    id: search ? this.query.id : '',
-                    name: search ? this.query.name : '',
-                    pageNum: 1,
-                    pageSize: 20
+                .get(`/hitSettings/select`)
+                .then((res) => {
+                    this.shareMaxNum = res.data.shareMaxNum;
+                    this.vigourShareNum = res.data.vigourShareNum;
                 })
-                .then(res => {
-                    this.table.data = res.data.data.list;
-                    this.total = res.data.data.total;
+                .catch((err) => {
+                    this.$Message.error(err);
+                });
+        },
+
+        save() {
+            let pramas = {
+                shareMaxNum: Number(this.shareMaxNum),
+                vigourShareNum: Number(this.vigourShareNum)
+            };
+            this.axios
+                .post(`/hitSettings/edit`, pramas)
+                .then((res) => {
+                    this.$Message.success('保存成功');
                 })
-                .catch(err => {
-                    console.log('err', err);
+                .catch((err) => {
+                    this.$Message.error(err);
                 });
         }
     }
@@ -99,7 +70,7 @@ export default {
 <style lang="less" scoped>
 .container {
     .card-area {
-        margin-bottom: 20px;    
+        margin-bottom: 20px;
         .row-text {
             margin-top: 10px;
             margin-bottom: 10px;
@@ -129,56 +100,52 @@ export default {
                 }
             }
         }
-        .card-header{
-            width:100px;
+        .card-header {
+            width: 100px;
             height: 100px;
-           border-radius: 50px;
-           margin-top: 10px;
-            img{
-                width:100%;
+            border-radius: 50px;
+            margin-top: 10px;
+            img {
+                width: 100%;
                 height: 100%;
                 border-radius: 50px;
             }
         }
-        .tag-text{
+        .tag-text {
             display: inline-block;
-            margin-bottom:5px;
-            
+            margin-bottom: 5px;
         }
-        .addTag-text{
+        .addTag-text {
             color: blue;
             cursor: pointer;
             margin-left: 20px;
         }
         // 标签
-        .tag-area{
-            .tag{
+        .tag-area {
+            .tag {
                 cursor: pointer;
                 margin-right: 10px;
             }
-
         }
         // 开屏
-        .card-screen{
-              width:200px;
+        .card-screen {
+            width: 200px;
             height: 200px;
-           margin-top: 10px;
-            img{
-                width:100%;
+            margin-top: 10px;
+            img {
+                width: 100%;
                 height: 100%;
             }
-
         }
-        .card-screen-btn{
+        .card-screen-btn {
             margin-top: 5px;
         }
-
     }
 }
-.tips{
+.tips {
     color: #a7a7a7;
 }
-.num-list{
+.num-list {
     display: inline-block;
     margin-right: 10px;
 }

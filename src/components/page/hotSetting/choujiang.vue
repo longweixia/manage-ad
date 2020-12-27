@@ -1,51 +1,45 @@
 <template>
     <div>
-  
         <div class="container">
             <div class="card-area">
                 <div class="row-text">数值设置</div>
-                <div v-for="(item,index) in numList" :key="index" class="num-list">
-                    <Input v-model="item.value" placeholder="数值" style="width:200px" clearable></Input>
+                <div v-for="(item, index) in drawFieldNums" :key="index" class="num-list">
+                    <Input v-model="drawFieldNums[index]" placeholder="数值" style="width: 200px" clearable></Input>
                 </div>
-                
             </div>
             <div class="card-area">
                 <div class="row-text">每日限制次数</div>
-                 <Input v-model="limitVal" placeholder="数值" style="width:200px" clearable></Input>次
+                <Input v-model="form.deawMaxNum" placeholder="数值" style="width: 200px" clearable></Input>次
             </div>
             <div class="card-area">
-                <div class="row-text">高分值策略 <i-Switch size="large">
+                <div class="row-text">
+                    高分值策略
+                    <i-Switch size="large" v-model="scoreStrategyFlag">
                         <span slot="open">开启</span>
                         <span slot="close">关闭</span>
                     </i-Switch>
-                    
                 </div>
                 <div>
                     单个粉丝累计抽奖
-                     <Input v-model="limitVal" placeholder="数值" style="width:200px" clearable></Input>次，
-                     获得超过（含）
-                     <Select v-model="selectHotVal" style="width: 150px" clearable>
-                            <Option v-for="item in selectHotList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                        </Select>
-                     以上的随机热力值
+                    <Input v-model="form.strategyDeawMinNum" placeholder="数值" style="width: 200px" clearable></Input>次， 获得超过（含）
+                    <Select v-model="form.drawFieldNums" style="width: 150px" clearable>
+                        <Option v-for="item in drawFieldNums" :value="item" :key="item">{{ item }}</Option>
+                    </Select>
+                    以上的随机热力值
                 </div>
-               
-
-                 
-                 
             </div>
-       
-             
+            <div>
+                <Button type="primary" @click='save'>保存</Button>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    data: function() {
+    data: function () {
         return {
-            selectHotVal:"",//选择的热力下拉框的值
-              selectHotList: [
+            selectHotList: [
                 {
                     value: '2020/12/22',
                     label: '2020/12/29'
@@ -55,53 +49,65 @@ export default {
                     label: '2021/01/05'
                 }
             ],
-            numList:[
-                {name:"",value:""},
-                {name:"",value:""},
+            numList: [
+                { name: '', value: '' },
+                { name: '', value: '' }
             ],
-            limitVal:"",//每日限制次数
+
             form: {
-                name: '', //姓名
+                deawMaxNum: null, //每日抽奖最高次数
+                strategyDeawMinNum: '', //单个粉丝累计抽奖次数
+                scoreStrategyFlag: 0, //高分值策略开关  0：关闭；1开启；
+                drawFieldNums: null //热力抽奖8栏位数值 例：11,13,43,55,22
             },
-            imgObj:{
-                homeImg:"", //首页轮播图
-                detailImg:"", //详情页
-                hitPopupImg:"",  //打榜弹窗图
-            },//轮播图等
-            imgHeader:"",//头像url
-            tagList:[
-                {name:'标签2'},
-                {name:'标签3'},
-                {name:'标签4'},
-            ],//标签集合
+            drawFieldNums: [11, 22, 33, 44, 55, 66, 77, 88], //热力抽奖8栏位数值
+            scoreStrategyFlag: false //高分值策略
         };
     },
+    mounted() {
+        this.loadData();
+    },
     methods: {
-        // 上传图片
-        uploadImg() {},
-        //新增标签
-        addTag() {},
-        //关闭标签
-        handleClose(event, name) {
-            
-                const index = this.tagList.indexOf(name);
-                this.tagList.splice(index, 1);
-            
+        // 随机热力值赠送方式 0：超过（含）具体值；1：超过（含）当前八档数值；
+        changeInP(data) {
+            let inpVal = this.form.strategyDeawMinNum;
+
+            this.form.drawFieldNums[8] = inpVal;
         },
-        loadData(search) {
+        save() {
+            let pramas = Object.assign({}, this.form);
+            // 处理高分值策略
+            if (this.scoreStrategyFlag) {
+                pramas.scoreStrategyFlag = 1;
+            } else {
+                pramas.scoreStrategyFlag = 0;
+            }
+            // vigourSendType //随机热力值赠送方式 0：超过（含）具体值；1：超过（含）当前八档数值；
+
             this.axios
-                .post(`/star/star/list`, {
-                    id: search ? this.query.id : '',
-                    name: search ? this.query.name : '',
-                    pageNum: 1,
-                    pageSize: 20
+                .post(`/hitSettings/edit`, pramas)
+                .then((res) => {
+                    this.$Message.success('保存成功');
                 })
-                .then(res => {
-                    this.table.data = res.data.data.list;
-                    this.total = res.data.data.total;
+                .catch((err) => {
+                    this.$Message.error(err);
+                });
+        },
+        loadData() {
+            this.axios
+                .get(`/hitSettings/select`)
+                .then((res) => {
+                    this.form = res.data;
+                    // 处理高分值策略
+                    if (res.data.scoreStrategyFlag) {
+                        this.scoreStrategyFlag = true;
+                    } else {
+                        this.scoreStrategyFlag = false;
+                    }
+                    this.drawFieldNums = res.data.drawFieldNums;
                 })
-                .catch(err => {
-                    console.log('err', err);
+                .catch((err) => {
+                    this.$Message.error(err);
                 });
         }
     }
@@ -110,7 +116,7 @@ export default {
 <style lang="less" scoped>
 .container {
     .card-area {
-        margin-bottom: 20px;    
+        margin-bottom: 20px;
         .row-text {
             margin-top: 10px;
             margin-bottom: 10px;
@@ -140,56 +146,52 @@ export default {
                 }
             }
         }
-        .card-header{
-            width:100px;
+        .card-header {
+            width: 100px;
             height: 100px;
-           border-radius: 50px;
-           margin-top: 10px;
-            img{
-                width:100%;
+            border-radius: 50px;
+            margin-top: 10px;
+            img {
+                width: 100%;
                 height: 100%;
                 border-radius: 50px;
             }
         }
-        .tag-text{
+        .tag-text {
             display: inline-block;
-            margin-bottom:5px;
-            
+            margin-bottom: 5px;
         }
-        .addTag-text{
+        .addTag-text {
             color: blue;
             cursor: pointer;
             margin-left: 20px;
         }
         // 标签
-        .tag-area{
-            .tag{
+        .tag-area {
+            .tag {
                 cursor: pointer;
                 margin-right: 10px;
             }
-
         }
         // 开屏
-        .card-screen{
-              width:200px;
+        .card-screen {
+            width: 200px;
             height: 200px;
-           margin-top: 10px;
-            img{
-                width:100%;
+            margin-top: 10px;
+            img {
+                width: 100%;
                 height: 100%;
             }
-
         }
-        .card-screen-btn{
+        .card-screen-btn {
             margin-top: 5px;
         }
-
     }
 }
-.tips{
+.tips {
     color: #a7a7a7;
 }
-.num-list{
+.num-list {
     display: inline-block;
     margin-right: 10px;
 }

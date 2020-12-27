@@ -1,15 +1,13 @@
 <template>
-    <div>
+    <div class="account-TableList">
         <div class="container">
             <div class="handle-box">
-                <Form :label-width="100" inline :model="query" class="demo-form-inline" ref="ruleForm">
-                    <FormItem label="姓名" prop="starName">
-                        <Input v-model="query.starName" placeholder="姓名" clearable></Input>
+                <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
+                    <FormItem label="姓名" prop="name">
+                        <Input v-model="query.name" placeholder="姓名" clearable></Input>
                     </FormItem>
-                    <FormItem label="账号" prop="type">
-                        <Select v-model="query.type" style="width: 150px" clearable>
-                            <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                        </Select>
+                    <FormItem label="账号" prop="account">
+                        <Input v-model="query.account" placeholder="姓名" clearable></Input>
                     </FormItem>
                     <FormItem label="状态" prop="status">
                         <Select v-model="query.status" style="width: 150px" clearable>
@@ -17,10 +15,10 @@
                         </Select>
                     </FormItem>
 
-                    <FormItem>
+                    <div style="display: inline-block; margin-left: 20px">
                         <Button type="primary" @click="handleSearch">搜索</Button>
-                        <Button @click="resetForm('ruleForm')">重置</Button>
-                    </FormItem>
+                        <Button @click="resetForm('ruleForm')" class="btn-right">重置</Button>
+                    </div>
                 </Form>
             </div>
             <div class="addBtn">
@@ -30,23 +28,59 @@
             <Table border :columns="table.columns" :data="table.data" style="width: 100%"></Table>
             <Page class="page-content" :total="total" show-elevator show-sizer />
         </div>
+        <!-- 新增账号弹窗 -->
         <Modal v-model="modalImg" title="新增账号" @on-ok="ok" @on-cancel="cancel" width="600">
             <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="80">
-                <FormItem label="姓名" prop="name" style="width:400px">
+                <FormItem label="姓名" prop="name" style="width: 400px">
                     <Input v-model="formCustom.name"></Input>
+                    <div style="color: #a3a3a3; font-size: 12px; height: 22px">用户姓名</div>
                 </FormItem>
 
-                <FormItem label="手机" prop="account" style="width:400px">
+                <FormItem label="手机" prop="account" style="width: 400px">
                     <Input v-model="formCustom.account"></Input>
+                    <div style="color: #a3a3a3; font-size: 12px; height: 22px">大陆11位手机号，使用手机号登录</div>
                 </FormItem>
-                <FormItem label="密码" prop="pwd" style="width:400px">
+                <FormItem label="密码" prop="pwd" style="width: 400px">
                     <Input v-model="formCustom.pwd"></Input>
-                </FormItem>
-
-                <FormItem>
-                    <Button type="primary" @click="handleSubmit('formCustom')">提交</Button>
+                    <div style="color: #a3a3a3; font-size: 12px; height: 22px">字母与数字组合，最少8位，区分大小写</div>
                 </FormItem>
             </Form>
+            <div slot="footer" style="text-align: center">
+                <Button type="primary" style="width: 100px" @click="handleSubmit('formCustom')">提交</Button>
+            </div>
+        </Modal>
+        <!-- 修改密码弹窗 -->
+        <Modal v-model="modalPassWord" title="新增账号" @on-ok="ok" @on-cancel="cancel" width="600">
+            <Form ref="formPassWord" :model="formPassWord" :rules="ruleCustom" :label-width="80">
+                <!-- <FormItem label="姓名" prop="name" style="width: 400px">
+                    <Input v-model="formPassWord.name"></Input>
+                </FormItem> -->
+
+                <FormItem label="手机" prop="account" style="width: 400px">
+                    <Input v-model="formPassWord.account"></Input>
+                </FormItem>
+                <FormItem label="旧密码" prop="oldPassword" style="width: 400px">
+                    <Input v-model="formPassWord.oldPassword"></Input>
+                </FormItem>
+                <FormItem label="新密码" prop="newPassword" style="width: 400px">
+                    <Input v-model="formPassWord.newPassword"></Input>
+                </FormItem>
+            </Form>
+            <div slot="footer" style="text-align: center">
+                <Button type="primary" style="width: 100px" @click="changePassWord('formPassWord')">提交</Button>
+            </div>
+        </Modal>
+        <!-- 删除禁用弹窗 -->
+        <Modal v-model="modalDel" width="360">
+            <p slot="header" style="text-align: left">
+                <span>{{ modalTitle }}</span>
+            </p>
+            <div style="text-align: center">
+                <p>{{ modalContent }}</p>
+            </div>
+            <div slot="footer" style="text-align: center">
+                <Button type="primary" style="width: 100px" :loading="modal_loading" @click="del">确定</Button>
+            </div>
         </Modal>
     </div>
 </template>
@@ -77,6 +111,17 @@ export default {
                 callback();
             }
         };
+        const validatenewPassWord = (rule, value, callback) => {
+            if (!value) {
+                callback(new Error('请输入新密码'));
+            }
+            // else if (value !== this.formCustom.passwd) {
+            //     callback(new Error('The two input passwords do not match!'));
+            // }
+            else {
+                callback();
+            }
+        };
         const validatePassWord = (rule, value, callback) => {
             if (!value) {
                 return callback(new Error('请输入密码'));
@@ -97,18 +142,35 @@ export default {
             // }, 1000);
         };
         return {
+            // 弹窗的数据
             formCustom: {
                 name: '',
                 pwd: '',
                 account: ''
             },
+            // 修改密码弹窗的数据
+            formPassWord: {
+                name: '',
+                newPassword: '',
+                oldPassword: '',
+                account: ''
+            },
             ruleCustom: {
                 name: [{ validator: validateName, trigger: 'blur' }],
                 account: [{ validator: validatePhome, trigger: 'blur' }],
-                pwd: [{ validator: validatePassWord, trigger: 'blur' }]
+                pwd: [{ validator: validatePassWord, trigger: 'blur' }],
+                newPassword: [{ validator: validatenewPassWord, trigger: 'blur' }],
+                oldPassword: [{ validator: validatePassWord, trigger: 'blur' }]
             },
             modalImg: false,
+            modalDel: false, //删除禁用弹窗
+            modalPassWord: false, //修改密码弹窗
             homeImg: '', //首页轮播图
+            modal_loading: false,
+            modalData: {}, //删除禁用弹窗 - 行数据
+            modalTitle: '', //删除禁用弹窗标题
+            modalContent: '', //删除禁用弹窗内容文字
+            modalType: '',
             detailImg: '', //详情页
             hitPopupImg: '', //打榜弹窗图
             time: '',
@@ -132,25 +194,26 @@ export default {
             ],
             statusList: [
                 {
-                    value: 2,
+                    value: 1,
                     label: '已启用'
                 },
                 {
-                    value: 1,
+                    value: 0,
                     label: '已禁用'
                 }
             ],
+            // 表单的数据
             query: {
-                beginTime: '', //开始时间
-                endTime: '', //结束时间
+                name: '',
+                account: '',
+                name: '',
                 pageNum: 1,
                 pageSize: 20,
                 status: '', //1-待开始 2-进行中 3-已结束
                 type: '' //资源类型(1-后援金 2-小程序开屏 3-首页轮播 4-户外大屏)
             },
             table: {
-                data: [
-                ],
+                data: [],
                 columns: [
                     {
                         title: '姓名',
@@ -166,10 +229,10 @@ export default {
                     },
 
                     {
-                        title: '状态',  //todo 状态的枚举是什么呢
+                        title: '状态', //todo 状态的枚举是什么呢
                         key: 'status',
                         align: 'center',
-                        sortable: true,
+
                         minWidth: 150,
                         render: (h, params) => {
                             // 1-启用 2-禁用
@@ -179,11 +242,9 @@ export default {
                                 case 1:
                                     text = '启用';
                                     break;
-                                case 2:
+                                case 0:
                                     text = '禁用';
                                     break;
-
-
                                 default:
                                     break;
                             }
@@ -195,16 +256,23 @@ export default {
                         title: '添加时间',
                         key: 'addTime',
                         align: 'center',
-                        sortable: true,
+
                         minWidth: 150
                     },
-
                     {
                         title: '操作',
                         key: 'name',
                         align: 'center',
                         minWidth: 100,
                         render: (h, params) => {
+                            let { status } = params.row;
+                            let firstBTn;
+                            // 使用
+                            if (status === 1) {
+                                firstBTn = '禁用';
+                            } else if (status === 0) {
+                                firstBTn = '启用';
+                            }
                             let disableBtn = h(
                                 'div',
                                 {
@@ -214,11 +282,11 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.goDetail();
+                                            this.showdelModal(params.row, status == 1 ? 'prohibit' : 'enable');
                                         }
                                     }
                                 },
-                                '禁用'
+                                firstBTn
                             );
 
                             let deleteBtn = h(
@@ -230,7 +298,7 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.goDetail();
+                                            this.showdelModal(params.row, 'del');
                                         }
                                     }
                                 },
@@ -246,11 +314,12 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.goDetail();
+                                            this.modalPassWord = true;
+                                            this.formPassWord = params.row;
                                         }
                                     }
                                 },
-                                '详情'
+                                '修改'
                             );
 
                             return h('div', [disableBtn, deleteBtn, detail]);
@@ -271,19 +340,96 @@ export default {
         this.loadData();
     },
     methods: {
+        showdelModal(data, name) {
+            this.modalDel = true;
+            if (name == 'prohibit') {
+                this.modalTitle = '禁用';
+                this.modalContent = '禁用后无法登录，请确认';
+            } else if (name == 'del') {
+                this.modalTitle = '删除';
+                this.modalContent = '删除后无法登录，请确认';
+            } else if (name == 'enable') {
+                this.modalTitle = '启用';
+                this.modalContent = '是否启用？';
+            }
+            this.modalType = name;
+            this.modalData = data;
+            // this.modal_loading = true;
+            // // if(name =='prohibit'){
+            // //     this.prohibit(data)
+            // // }else if(name =='del'){
+            // //     this.delete(data)
+            // // }
+        },
+        del() {
+            this.modal_loading = true;
+            if (this.modalType == 'prohibit') {
+                this.prohibit(this.modalData);
+            } else if (this.modalType == 'del') {
+                this.delete(this.modalData);
+            }
+        },
+        // 禁用传0，启用传1
+        //todo 禁用传什么值？传0接口成功，但是数据没更新
+        prohibit(data) {
+            this.axios
+                .post(`/user/updateUser?id=${data.id}&status=${data.status === 1 ? 2 : 1}`)
+                .then((res) => {
+                    this.modal_loading = false;
+                    this.modalDel = false;
+                    this.$Message.success('禁用成功');
+                    this.loadData();
+                })
+                .catch((err) => {
+                    console.log('err', err);
+                });
+        },
+        delete(data) {
+            // todo 报系统错误
+            this.axios
+                .delete(`/user/delUser`, { params: { id: data.id } })
+                .then((res) => {
+                    this.modal_loading = false;
+                    this.modalDel = false;
+                    this.$Message.success('删除成功');
+                    this.loadData();
+                })
+                .catch((err) => {
+                    this.$Message.error(err);
+                    this.modal_loading = false;
+                });
+        },
         handleSubmit(name) {
-            this.$refs[name].validate(valid => {
+            this.$refs[name].validate((valid) => {
                 if (valid) {
                     this.axios
                         .post(`/user/addUser`, this.formCustom)
-                        .then(res => {
-                            this.$Message.success("新增成功")
-                            this.modalImg = false
-                            this.loadData()
+                        .then((res) => {
+                            this.$Message.success('新增成功');
+                            this.modalImg = false;
+                            this.loadData();
                             // this.table.data = res.data.data.list;
                             // this.total = res.data.data.total;
                         })
-                        .catch(err => {
+                        .catch((err) => {
+                            this.$Message.error(err);
+                        });
+                } else {
+                    this.$Message.error('Fail!');
+                }
+            });
+        },
+        changePassWord(name) {
+            this.$refs[name].validate((valid) => {
+                if (valid) {
+                    this.axios
+                        .post(`/common/modifyPass`, this.formCustom)
+                        .then((res) => {
+                            this.$Message.success('修改成功');
+                            this.modalPassWord = false;
+                            this.loadData();
+                        })
+                        .catch((err) => {
                             console.log('err', err);
                         });
                 } else {
@@ -320,12 +466,12 @@ export default {
         loadData(search) {
             this.axios
                 .post(`/user/selectPage`, this.query)
-                .then(res => {
-                    this.table.data = res.data.data.list;
-                    this.total = res.data.data.total;
+                .then((res) => {
+                    this.table.data = res.data.list;
+                    this.total = res.data.total;
                 })
-                .catch(err => {
-                    console.log('err', err);
+                .catch((err) => {
+                      this.$Message.error(err);
                 });
         },
         // 触发搜索按钮
@@ -337,63 +483,72 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.handle-box {
-    // margin-bottom: 20px;
-}
+<style lang="less">
+.account-TableList {
+    .handle-box {
+        // margin-bottom: 20px;
+    }
 
-.handle-select {
-    width: 120px;
-}
+    .handle-select {
+        width: 120px;
+    }
 
-.handle-input {
-    width: 300px;
-    display: inline-block;
-}
-.table {
-    width: 100%;
-    font-size: 14px;
-}
-.red {
-    color: #ff0000;
-}
-.mr10 {
-    margin-right: 10px;
-}
-.table-td-thumb {
-    display: block;
-    margin: auto;
-    width: 40px;
-    height: 40px;
-}
-.card-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 350px;
-    .card {
+    .handle-input {
         width: 300px;
-        height: 300px;
-        margin-right: 20px;
-        .text {
-            text-align: center;
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        img {
-            width: 100%;
-            height: 100%;
-            padding: 5px;
-            background: #ddd;
+        display: inline-block;
+    }
+    .table {
+        width: 100%;
+        font-size: 14px;
+    }
+    .red {
+        color: #ff0000;
+    }
+    .mr10 {
+        margin-right: 10px;
+    }
+    .table-td-thumb {
+        display: block;
+        margin: auto;
+        width: 40px;
+        height: 40px;
+    }
+    .card-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 350px;
+        .card {
+            width: 300px;
+            height: 300px;
+            margin-right: 20px;
+            .text {
+                text-align: center;
+                font-size: 14px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            img {
+                width: 100%;
+                height: 100%;
+                padding: 5px;
+                background: #ddd;
+            }
         }
     }
-}
-.page-content {
-    text-align: right;
-    margin-top: 40px;
-}
-.addBtn {
-    margin-bottom: 10px;
+    .page-content {
+        text-align: right;
+        margin-top: 40px;
+    }
+    .addBtn {
+        margin-bottom: 10px;
+    }
+    .btn-right {
+        margin-left: 10px;
+    }
+    .ivu-form .ivu-form-item-label,
+    .ivu-form-item-content {
+        display: inline-block;
+    }
 }
 </style>

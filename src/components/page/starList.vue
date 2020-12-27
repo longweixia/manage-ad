@@ -231,7 +231,7 @@ export default {
         // 获取token
         getToken() {
              this.axios.post(`/common/testLogin?id=1`).then(res => {
-                    let token = res.data.data.token;
+                    let token = res.data.token;
                     localStorage.setItem('Authorization', token);
                  
               
@@ -253,12 +253,12 @@ export default {
                     pageSize: 20
                 })
                 .then(res => {
-                    this.table.data = res.data.data.list;
-                    this.total = res.data.data.total;
+                    this.table.data = res.data.list;
+                    this.total = res.data.total;
                    
                 })
                 .catch(err => {
-                    console.log('err', err);
+                  this.$Message.error(err);
                 });
         },
         // 触发搜索按钮

@@ -240,6 +240,70 @@ export const validImage = function (file, limit = 20) {
   return true
 }
 
+export const timeChange = function(UTCDateString) {
+  if (!UTCDateString) {
+    return '-';
+  }
+  function formatFunc(str) {
+    return str > 9 ? str : '0' + str
+  }
+  var date2 = new Date(UTCDateString);
+  console.log('时间', date2)
+  var year = date2.getFullYear();
+  var mon = formatFunc(date2.getMonth() + 1);
+  var day = formatFunc(date2.getDate());
+  var hour = date2.getHours();
+  var noon = hour >= 12 ? 'PM' : 'AM'; // 判断是上午还是下午
+  hour = hour >= 12 ? hour - 12 : hour; // 12小时制
+  hour = formatFunc(hour);
+  var min = formatFunc(date2.getMinutes());
+  var sec = formatFunc(date2.getSeconds());
+  var dateStr = year + '-' + mon + '-' + day + ' ' + hour + ':' + min + ':' + sec;
+  return dateStr;
+}
+export const yearDay = function(UTCDateString) {
+  if (!UTCDateString) {
+    return '-';
+  }
+  function formatFunc(str) {
+    return str > 9 ? str : '0' + str
+  }
+  var date2 = new Date(UTCDateString);
+  console.log('时间', date2)
+  var year = date2.getFullYear();
+  var mon = formatFunc(date2.getMonth() + 1);
+  var day = formatFunc(date2.getDate());
+  var hour = date2.getHours();
+  var noon = hour >= 12 ? 'PM' : 'AM'; // 判断是上午还是下午
+  hour = hour >= 12 ? hour - 12 : hour; // 12小时制
+  hour = formatFunc(hour);
+  var min = formatFunc(date2.getMinutes());
+  var sec = formatFunc(date2.getSeconds());
+  var dateStr = year + '/' + mon + '/' + day;
+  return dateStr;
+}
+
+export const filterDeadline = function (time) {
+	let deadlineDate = new Date(time).getTime()
+	let newDate = Date.now()
+	let getTime = parseInt((deadlineDate - newDate)/1000);
+	if (getTime < 0) {
+		return ` 0 天 0 时 0 分 `
+	}
+	let day = parseInt(getTime/3600/24);   //  天数
+	let hour = parseInt((getTime - (day*3600*24))/3600)  //  小时
+	let minute = parseInt((getTime - ((day*3600*24) + hour*3600))/60)  //  分钟
+	function checkTime(time){
+		return time = time < 10 ? `0${time}` : time
+  }
+  if(checkTime(day)<0&&checkTime(hour)<0&&checkTime(minute)<0){
+    return '已过期'
+  }else{
+    return ` ${checkTime(day)} 天 ${checkTime(hour)} 时 ${checkTime(minute)} 分 `
+  }
+	
+}
+
 
 // 针对UMS给的时间对象格式化
 // export const DateObjformatTime = (timeObj, format = 'YYYY-MM-DD HH:mm:ss') => {

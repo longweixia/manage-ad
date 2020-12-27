@@ -1,16 +1,16 @@
 <template>
-    <div>
+    <div class="fen-manage-area">
         <div class="container">
             <div class="handle-box">
-                <Form :label-width="50" inline :model="query" class="demo-form-inline" ref="ruleForm">
-                    <FormItem label="id" prop="id">
+                <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
+                    <FormItem label="ID" prop="id">
                         <!-- todo  id 搜索不匹配 -->
-                        <InputNumber  v-model="query.id" placeholder="ID" clearable></InputNumber>
+                        <InputNumber  v-model="query.id" placeholder="ID" clearable style="width:200px"></InputNumber>
                     </FormItem>
 
                     <FormItem>
                         <Button type="primary" @click="handleSearch">搜索</Button>
-                        <Button @click="resetForm('ruleForm')">重置</Button>
+                        <Button @click="resetForm('ruleForm')" style="margin-left:10px">重置</Button>
                     </FormItem>
                     <div>
                         <Button type="primary" @click="batchModal">批量赠送</Button>
@@ -49,6 +49,7 @@
 <script>
 // import { getConfigsByProductId, addNewAndroidPlugin } from '../../api/index.js';
 import ExcelUploadModal from '../common/ExcelUploadModal.vue';
+import {timeChange} from '../../utils/helper.js';
 
 export default {
     name: 'myArticle',
@@ -82,13 +83,13 @@ export default {
                         title: '昵称',
                         key: 'nickName',
                         align: 'center',
-                        minWidth: 80
+                        minWidth: 100
                     },
                     {
                         title: '性别',
                         key: 'gender',
                         align: 'center',
-                        minWidth: 100, // todo  男女值分别为什么
+                        minWidth: 80, // todo  男女值分别为什么
                         render: (h, params) => {
                             let { gender } = params.row;
                             let text = '无';
@@ -112,34 +113,51 @@ export default {
                         key: 'name',
                         align: 'center',
                         sortable: true,
-                        minWidth: 150
+                        minWidth: 100
                     },
                     {
                         title: '消耗活力值',
                         key: 'totalVigourVal',
                         align: 'center',
                         sortable: true,
-                        minWidth: 150
+                        minWidth: 100
                     },
                     {
                         title: '当前活力值',
                         key: 'vigourVal',
                         align: 'center',
                         sortable: true,
-                        minWidth: 150
+                        minWidth: 100
                     },
 
                     {
                         title: '注册时间',
                         key: 'addTime',
                         align: 'center',
-                        minWidth: 150
+                        minWidth: 150,
+                         render: (h, params) => {
+                             let {addTime} = params.row
+                            let clickBtn = h(
+                                'div',
+                                timeChange(addTime)||"无"
+                            );
+                            return h('div', [clickBtn]);
+                        }
+
                     },
                     {
                         title: '最后登录时间',
                         key: 'lastVisitTime', //todo 时间需要格式化
                         align: 'center',
-                        minWidth: 150
+                        minWidth: 180,
+                          render: (h, params) => {
+                             let {lastVisitTime} = params.row
+                            let clickBtn = h(
+                                'div',
+                                timeChange(lastVisitTime)||"无"
+                            );
+                            return h('div', [clickBtn]);
+                        }
                     },
 
                     {
@@ -222,10 +240,10 @@ export default {
             this.axios
                 .post(`/fens/giveVigourVal?id=${id}&vigourVal=${vigourVal}`)
                 .then(res => {
-                    if (res.data.code == 200) {
+                
                         this.$Message.success('赠送成功');
                         this.modalOne = false;
-                    }
+                    
                 })
                 .catch(err => {
                     console.log('err', err);
@@ -244,8 +262,8 @@ export default {
                     pageSize: 20
                 })
                 .then(res => {
-                    this.table.data = res.data.data.list;
-                    this.total = res.data.data.total;
+                    this.table.data = res.data.list;
+                    this.total = res.data.total;
                 })
                 .catch(err => {
                     console.log('err', err);
@@ -260,7 +278,8 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
+.fen-manage-area{
 .handle-box {
     margin-bottom: 20px;
 }
@@ -313,5 +332,10 @@ export default {
 .page-content {
     text-align: right;
     margin-top: 40px;
+}
+.ivu-form .ivu-form-item-label,
+.ivu-form-item-content{
+    display: inline-block;
+}
 }
 </style>

@@ -5,18 +5,18 @@
             <div class="card-area">
                 <div class="row-text">每日签到次数</div>
                  每日最高
-                     <Input v-model="limitVal" placeholder="数值" style="width:200px" clearable></Input>次
+                     <Input v-model="signMaxNum" placeholder="数值" style="width:200px" clearable></Input>次
                 
             </div>
             <div class="card-area">
                 <div class="row-text">签到获得热力值</div>
                  每次获得
-                     <Input v-model="limitVal" placeholder="数值" style="width:200px" clearable></Input>热力值
+                     <Input v-model="vigourSignNum" placeholder="数值" style="width:200px" clearable></Input>热力值
 
                 
             </div>
             <div>
-                <Button type="primary">保存</Button>
+                <Button type="primary" @click="save">保存</Button>
             </div>
             
           
@@ -30,64 +30,42 @@
 export default {
     data: function() {
         return {
-            selectHotVal:"",//选择的热力下拉框的值
-              selectHotList: [
-                {
-                    value: '2020/12/22',
-                    label: '2020/12/29'
-                },
-                {
-                    value: '2020/12/29',
-                    label: '2021/01/05'
-                }
-            ],
-            numList:[
-                {name:"",value:""},
-                {name:"",value:""},
-            ],
-            limitVal:"",//每日限制次数
+            signMaxNum:"",
+            vigourSignNum:"",//每日限制次数
             form: {
                 name: '', //姓名
             },
-            imgObj:{
-                homeImg:"", //首页轮播图
-                detailImg:"", //详情页
-                hitPopupImg:"",  //打榜弹窗图
-            },//轮播图等
-            imgHeader:"",//头像url
-            tagList:[
-                {name:'标签2'},
-                {name:'标签3'},
-                {name:'标签4'},
-            ],//标签集合
+            
         };
     },
+       mounted() {
+        this.loadData();
+    },
     methods: {
-        // 上传图片
-        uploadImg() {},
-        //新增标签
-        addTag() {},
-        //关闭标签
-        handleClose(event, name) {
-            
-                const index = this.tagList.indexOf(name);
-                this.tagList.splice(index, 1);
-            
-        },
-        loadData(search) {
+        loadData() {
             this.axios
-                .post(`/star/star/list`, {
-                    id: search ? this.query.id : '',
-                    name: search ? this.query.name : '',
-                    pageNum: 1,
-                    pageSize: 20
+                .get(`/hitSettings/select`)
+                .then((res) => {
+                    this.signMaxNum = res.data.signMaxNum;
+                    this.vigourSignNum = res.data.vigourSignNum;
                 })
-                .then(res => {
-                    this.table.data = res.data.data.list;
-                    this.total = res.data.data.total;
+                .catch((err) => {
+                    this.$Message.error(err);
+                });
+        },
+
+        save() {
+            let pramas = {
+                signMaxNum: Number(this.signMaxNum),
+                vigourSignNum: Number(this.vigourSignNum)
+            };
+            this.axios
+                .post(`/hitSettings/edit`, pramas)
+                .then((res) => {
+                    this.$Message.success('保存成功');
                 })
-                .catch(err => {
-                    console.log('err', err);
+                .catch((err) => {
+                    this.$Message.error(err);
                 });
         }
     }

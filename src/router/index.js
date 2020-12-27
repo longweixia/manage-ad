@@ -88,6 +88,7 @@ export default new Router({
                 },
                 {
                     path: '/resource',
+                    name: 'resource',
                     component: () =>
                         import ( /* webpackChunkName: "dashboard" */ '../components/page/resource/index.vue'),
                     meta: { title: '资源管理' }

@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <div class="resource-table-list">
         <div class="container">
             <div class="handle-box">
-                <Form :label-width="100" inline :model="query" class="demo-form-inline" ref="ruleForm">
+                <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
                     <FormItem label="有效期" prop="time">
                         <DatePicker @on-change="changeDate" type="daterange" placeholder="Select date" style="width: 200px"></DatePicker>
                     </FormItem>
@@ -18,8 +18,8 @@
                     </FormItem>
 
                     <FormItem>
-                        <Button type="primary" @click="handleSearch">搜索</Button>
-                        <Button @click="resetForm('ruleForm')">重置</Button>
+                        <Button type="primary" @click="handleSearch" style="margin-left:20px">搜索</Button>
+                        <Button @click="resetForm('ruleForm')" style="margin-left:10px">重置</Button>
                     </FormItem>
                 </Form>
             </div>
@@ -50,6 +50,7 @@
 </template>
 
 <script>
+import {timeChange,yearDay, filterDeadline} from '../../../utils/helper.js'
 export default {
     name: 'myArticle',
     data() {
@@ -101,17 +102,17 @@ export default {
             },
             table: {
                 data: [
-                    {type:2,target:2,beginTime:'2020/11/16',endTime:'2020/12/27',
-                    relationStar:['邓超','小王','小li'],completeStar:['邓超','小王','小搞'],status:2,
-                    addTime:'2020/11/16'
-                    }
+                    // {type:2,target:2,beginTime:'2020/11/16',endTime:'2020/12/27',
+                    // relationStar:['邓超','小王','小li'],completeStar:['邓超','小王','小搞'],status:2,
+                    // addTime:'2020/11/16'
+                    // }
                 ],
                 columns: [
                     {
                         title: '资源类型',
                         key: 'type',
                         align: 'center',
-                        minWidth: 100,
+                        minWidth: 120,
                         render: (h, params) => {
                             let { type } = params.row, text;
                             if(type){
@@ -133,29 +134,30 @@ export default {
                         key: 'beginTime',
                         sortable: true,
                         align: 'center',
-                        minWidth: 150,
+                        minWidth: 280,
                         render: (h, params) => {
                             let { beginTime, endTime } = params.row, text;
                             let time = h(
                                 'div',
                                 {
                                     style: {
-                                        color: 'blue',
-                                        cursor: 'pointer'
+                                        fontSize: '12px',
                                     },
                                  
                                 },
-                               beginTime+"-"+endTime
+                               (yearDay(beginTime)||'无')+"—"+(yearDay(endTime)||'无')
                             );
                             // 计算倒计时
-                            let countDownText= "1天"
+                            let countDownText;
+                            countDownText = filterDeadline(endTime)
 
                             let countDown = h(
                                 'div',
                                 {
                                     style: {
-                                        color: 'blue',
-                                        cursor: 'pointer'
+                                        color: 'red',
+                                      
+                                        fontSize: '12px',
                                     },
                                  
                                 },
@@ -168,12 +170,12 @@ export default {
                         title: '关联明星',
                         key: 'relationStar',
                         align: 'center',
-                        sortable: true,
+                     
                         minWidth: 150,
                         render: (h, params) => {
                             let { relationStar } = params.row;
                             let text='';
-                            relationStar.forEach((item,i)=>{
+                            relationStar&&relationStar.forEach((item,i)=>{
                                 if(!text){
                                     text = text+item
                                 }else{
@@ -200,12 +202,12 @@ export default {
                         title: '已完成',
                         key: 'completeStar',
                         align: 'center',
-                        sortable: true,
+                  
                         minWidth: 150,
                         render: (h, params) => {
                             let { completeStar } = params.row;
                             let text='';
-                            completeStar.forEach((item,i)=>{
+                            completeStar&&completeStar.forEach((item,i)=>{
                                 if(!text){
                                     text = text+item
                                 }else{
@@ -232,7 +234,7 @@ export default {
                         title: '状态',
                         key: 'status',
                         align: 'center',
-                        sortable: true,
+                 
                         minWidth: 150,
                         render: (h, params) => {
                             // 1-待开始 2-进行中 3-已结束
@@ -261,6 +263,13 @@ export default {
                         align: 'center',
                         sortable: true,
                         minWidth: 150,
+                            render: (h, params) => {
+                    
+                            let { addTime} = params.row,text;
+                            
+                            text = timeChange(addTime)
+                            return h('div', text);
+                        }
                    
                     },
 
@@ -300,6 +309,8 @@ export default {
     },
     created() {},
     mounted() {
+        // 页面没刷新
+        console.log(this.$route.params.loadPage)
         this.loadData();
     },
     methods: {
@@ -312,7 +323,6 @@ export default {
         },
         // 改变时间
         changeDate(e){
-            console.log(e)
             this.query.beginTime = e[0]+" 00:00:00"
             this.query.endTime = e[1]+" 23:59:59"
         },
@@ -329,15 +339,16 @@ export default {
         resetForm(formName) {
             this.$refs[formName].resetFields();
         },
-        loadData(search) {
+        loadData() {
             this.axios
                 .post(`/resources/selectResourcesPage`, this.query)
                 .then((res) => {
-                    // this.table.data = res.data.data.list;
-                    this.total = res.data.data.total;
+                    this.table.data = res.data.list;
+                    this.total = res.data.total;
                 })
                 .catch((err) => {
-                    console.log('err', err);
+                
+                        this.$Message.error(err);
                 });
         },
         // 触发搜索按钮
@@ -349,7 +360,10 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
+.resource-table-list{
+
+
 .handle-box {
     // margin-bottom: 20px;
 }
@@ -407,5 +421,10 @@ export default {
 }
 .addBtn{
     margin-bottom: 10px;
+}
+.ivu-form .ivu-form-item-label,
+.ivu-form-item-content{
+    display: inline-block;
+}
 }
 </style>

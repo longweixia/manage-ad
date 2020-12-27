@@ -5,18 +5,18 @@
             <div class="card-area">
                 <div class="row-text">每日看视频次数</div>
                  每日最高
-                     <Input v-model="limitVal" placeholder="数值" style="width:200px" clearable></Input>次
+                     <Input v-model="videoMaxNum" placeholder="数值" style="width:200px" clearable></Input>次
                 
             </div>
             <div class="card-area">
                 <div class="row-text">看视频获得热力值</div>
                  每次获得
-                     <Input v-model="limitVal" placeholder="数值" style="width:200px" clearable></Input>热力值
+                     <Input v-model="vigourVideoNum" placeholder="数值" style="width:200px" clearable></Input>热力值
 
                 
             </div>
             <div>
-                <Button type="primary">保存</Button>
+                <Button type="primary" @click="save">保存</Button>
             </div>
             
           
@@ -45,7 +45,8 @@ export default {
                 {name:"",value:""},
                 {name:"",value:""},
             ],
-            limitVal:"",//每日限制次数
+            videoMaxNum:"",//每日限制次数
+            vigourVideoNum:"",//每日限制次数
             form: {
                 name: '', //姓名
             },
@@ -62,32 +63,33 @@ export default {
             ],//标签集合
         };
     },
+    mounted() {
+        this.loadData();
+    },
     methods: {
-        // 上传图片
-        uploadImg() {},
-        //新增标签
-        addTag() {},
-        //关闭标签
-        handleClose(event, name) {
-            
-                const index = this.tagList.indexOf(name);
-                this.tagList.splice(index, 1);
-            
-        },
-        loadData(search) {
+        loadData() {
             this.axios
-                .post(`/star/star/list`, {
-                    id: search ? this.query.id : '',
-                    name: search ? this.query.name : '',
-                    pageNum: 1,
-                    pageSize: 20
+                .get(`/hitSettings/select`)
+                .then((res) => {
+                    this.videoMaxNum = res.data.videoMaxNum;
+                    this.vigourVideoNum = res.data.vigourVideoNum;
                 })
-                .then(res => {
-                    this.table.data = res.data.data.list;
-                    this.total = res.data.data.total;
+                .catch((err) => {
+                    this.$Message.error(err);
+                });
+        },
+          save() {
+            let pramas = {
+                videoMaxNum: Number(this.videoMaxNum),
+                vigourVideoNum: Number(this.vigourVideoNum)
+            };
+            this.axios
+                .post(`/hitSettings/edit`, pramas)
+                .then((res) => {
+                    this.$Message.success('保存成功');
                 })
-                .catch(err => {
-                    console.log('err', err);
+                .catch((err) => {
+                    this.$Message.error(err);
                 });
         }
     }

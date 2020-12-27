@@ -1,28 +1,23 @@
 <template>
-    <div>
+    <div class="fens-give-week-tablelist">
         <div class="container">
             <div class="handle-box">
-                <Form :label-width="60" inline :model="query" class="demo-form-inline" ref="ruleForm">
-                    <FormItem label="选择月" prop="time">
-                        <Select v-model="query.startTime" style="width: 150px" clearable>
-                            <Option v-for="item in TimeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                        </Select>
-                    </FormItem>
-                    <FormItem label="姓名" prop="starName">
-                        <Input v-model="query.starName" placeholder="姓名" clearable></Input>
-                    </FormItem>
-                    <FormItem label="id" prop="starId">
-                        <Input type="number" v-model="query.starId" placeholder="ID" clearable></Input>
+                <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
+                    <FormItem label="ID" prop="fensId">
+                        <Input type="number" v-model="query.fensId" placeholder="ID" clearable></Input>
                     </FormItem>
 
                     <FormItem>
                         <el-button type="primary" @click="handleSearch">搜索</el-button>
                         <el-button @click="resetForm('ruleForm')">重置</el-button>
                     </FormItem>
+                    <div>
+                        月份：{{weekTimes}}  明星：{{query.starName}}  排名：{{rankNum}}
+                    </div>
                 </Form>
             </div>
 
-            <Table border :columns="table.columns" :data="table.data" style="width:100%"></Table>
+            <Table border :columns="table.columns" :data="table.data" style="width: 100%"></Table>
             <Page class="page-content" :total="total" show-elevator show-sizer />
         </div>
         <Modal v-model="modalImg" title="查看图片" @on-ok="ok" @on-cancel="cancel" width="1000">
@@ -49,6 +44,8 @@ export default {
     name: 'myArticle',
     data() {
         return {
+            rankNum:null,
+            weekTimes:'',
             modalImg: false,
             homeImg: '', //首页轮播图
             detailImg: '', //详情页
@@ -56,22 +53,22 @@ export default {
             time: '',
             TimeList: [
                 {
-                    value: '1',
-                    label: '1'
+                    value: '2020/12/22',
+                    label: '2020/12/29'
                 },
                 {
-                    value: '2',
-                    label: '2'
+                    value: '2020/12/29',
+                    label: '2021/01/05'
                 }
             ],
             query: {
                 endTime: '', //周结束时间
 
-                hitListType: 1, //榜单类型 0：周榜；1：月榜；2：总榜
+                hitListType: 0, //榜单类型 0：周榜；1：月榜；2：总榜
 
-                listType: 2, //列表类型 默认空， 0：本周；1：近三个月周时间段；2：具体某个月份
+                listType: 1, //列表类型 默认空， 0：本周；1：近三个月周时间段；2：具体某个月份
 
-                monthNum: 12, //具体月份值
+                monthNum: '', //具体月份值
 
                 pageNum: 1, //当前页码
 
@@ -79,7 +76,7 @@ export default {
 
                 sortType: 0, //排序 0：正序；1：倒序；
 
-                starId: '', //明星ID
+                starId: null, //明星ID
 
                 starName: '', //明星姓名
 
@@ -87,74 +84,36 @@ export default {
             },
             table: {
                 data: [
-                   
+                    {
+                        id: 1
+                    }
                 ],
                 columns: [
                     {
-                        title: '月',
-                        key: 'id',
-                        align: 'center',
-                        minWidth: 100
-                    },
-                    {
-                        title: '明星',
-                        key: 'name',
+                        title: '粉丝名称',
+                        key: 'fensName',
                         align: 'center',
                         minWidth: 100
                     },
                     {
                         title: 'ID',
-                        key: 'ID',
-                        sortable: true,
+                        key: 'fensId',
                         align: 'center',
                         minWidth: 100
                     },
                     {
-                        title: '排名',
-                        key: 'address',
+                        title: '贡献值',
+                        key: 'totalVigourVal',
+                        align: 'center',
+                        minWidth: 100
+                    },
+                    {
+                        title: '贡献排名',
+                        key: 'rank',
                         align: 'center',
                         sortable: true,
-                        minWidth: 150
-                    },
-
-                    {
-                        title: '操作',
-                        key: 'name',
-                        align: 'center',
-                        minWidth: 100,
-                        render: (h, params) => {
-                            let detail = h(
-                                'div',
-                                {
-                                    style: {
-                                        color: 'blue',
-                                        cursor: 'pointer'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.goDetail();
-                                        }
-                                    }
-                                },
-                                '明星详情'
-                            );
-                            let fens = h(
-                                'div',
-                                {
-                                    style: {
-                                        color: 'blue',
-                                        cursor: 'pointer'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.goDetail();
-                                        }
-                                    }
-                                },
-                                '粉丝贡献'
-                            );
-                            return h('div', [detail,fens]);
-                        }
+                        minWidth: 150,
+                      
                     }
                 ]
             },
@@ -168,15 +127,25 @@ export default {
     },
     created() {},
     mounted() {
-        this.loadData();
+       
+        this.query.starId = this.$route.query.data.starId
+        this.weekTimes = this.$route.query.data.weekTime
+        this.query.starName = this.$route.query.data.starName
+        this.rankNum = this.$route.query.data.rank
+        let timeArr = this.$route.query.data.weekTime.split('~')
+        this.query.startTime = timeArr[0]
+        this.query.endTime = timeArr[1]
+
+        console.log(this.query.starId)
+         this.loadData();
     },
     methods: {
         ok() {},
         cancel() {},
-        //去详情
-        goDetail() {
+        //去详情-粉丝贡献
+        goDetail(name) {
             this.$router.push({
-                name: 'starDetail'
+                name: `${name}Detail`
             });
         },
 
@@ -186,10 +155,10 @@ export default {
         },
         loadData(search) {
             this.axios
-                .post(`/star/hitList/rankList`, this.query)
+                .post(`/star/fensMark/rankList`, this.query)
                 .then((res) => {
-                    this.table.data = res.data.data.list;
-                    this.total = res.data.data.total;
+                    this.table.data = res.data.list;
+                    this.total = res.data.total;
                 })
                 .catch((err) => {
                     console.log('err', err);
@@ -204,60 +173,66 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.handle-box {
-    margin-bottom: 20px;
-}
+<style lang="less">
+.fens-give-week-tablelist{
+    .handle-box {
+        margin-bottom: 20px;
+    }
 
-.handle-select {
-    width: 120px;
-}
+    .handle-select {
+        width: 120px;
+    }
 
-.handle-input {
-    width: 300px;
-    display: inline-block;
-}
-.table {
-    width: 100%;
-    font-size: 14px;
-}
-.red {
-    color: #ff0000;
-}
-.mr10 {
-    margin-right: 10px;
-}
-.table-td-thumb {
-    display: block;
-    margin: auto;
-    width: 40px;
-    height: 40px;
-}
-.card-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 350px;
-    .card {
+    .handle-input {
         width: 300px;
-        height: 300px;
-        margin-right: 20px;
-        .text {
-            text-align: center;
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        img {
-            width: 100%;
-            height: 100%;
-            padding: 5px;
-            background: #ddd;
+        display: inline-block;
+    }
+    .table {
+        width: 100%;
+        font-size: 14px;
+    }
+    .red {
+        color: #ff0000;
+    }
+    .mr10 {
+        margin-right: 10px;
+    }
+    .table-td-thumb {
+        display: block;
+        margin: auto;
+        width: 40px;
+        height: 40px;
+    }
+    .card-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 350px;
+        .card {
+            width: 300px;
+            height: 300px;
+            margin-right: 20px;
+            .text {
+                text-align: center;
+                font-size: 14px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            img {
+                width: 100%;
+                height: 100%;
+                padding: 5px;
+                background: #ddd;
+            }
         }
     }
-}
-.page-content {
-    text-align: right;
-    margin-top: 40px;
+    .page-content {
+        text-align: right;
+        margin-top: 40px;
+    }
+    .ivu-form .ivu-form-item-label,
+    .ivu-form-item-content {
+        display: inline-block;
+    }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div class="fens-give-tablelist">
+    <div class="fens-give-week-tablelist">
         <div class="container">
             <div class="handle-box">
                 <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
@@ -174,7 +174,7 @@ export default {
 </script>
 
 <style lang="less">
-.fens-give-tablelist {
+.fens-give-week-tablelist{
     .handle-box {
         margin-bottom: 20px;
     }

@@ -20,8 +20,8 @@ import 'viewerjs/dist/viewer.css'
 Vue.use(ViewUI);
 
 Vue.use(Viewer)
-// axios.defaults.baseURL = "https://123.207.120.31:18001" //接口的基础url
-axios.defaults.baseURL = "https://192.168.20.4:18001" //本地接口的基础url
+axios.defaults.baseURL = "https://123.207.120.31:18001" //接口的基础url
+// axios.defaults.baseURL = "https://192.168.20.4:18001" //本地接口的基础url
 // 请求拦截
 axios.interceptors.request.use(
     config => {

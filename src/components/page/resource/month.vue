@@ -38,6 +38,7 @@
                 <Button type="primary" @click="uploadImg">上传图片</Button>
 
                 <div class="upload-area">
+                    {{getImageUrl}}
                     <upload :value.sync="imgUrl" @upImageUrl="getImageUrl" ref="upload" :fileFormat="true"></upload>
                 </div>
             </div>

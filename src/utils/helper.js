@@ -254,7 +254,7 @@ export const timeChange = function(UTCDateString) {
   var day = formatFunc(date2.getDate());
   var hour = date2.getHours();
   var noon = hour >= 12 ? 'PM' : 'AM'; // 判断是上午还是下午
-  hour = hour >= 12 ? hour - 12 : hour; // 12小时制
+//   hour = hour >= 12 ? hour - 12 : hour; // 12小时制
   hour = formatFunc(hour);
   var min = formatFunc(date2.getMinutes());
   var sec = formatFunc(date2.getSeconds());
@@ -275,7 +275,7 @@ export const yearDay = function(UTCDateString) {
   var day = formatFunc(date2.getDate());
   var hour = date2.getHours();
   var noon = hour >= 12 ? 'PM' : 'AM'; // 判断是上午还是下午
-  hour = hour >= 12 ? hour - 12 : hour; // 12小时制
+//   hour = hour >= 12 ? hour - 12 : hour; // 12小时制
   hour = formatFunc(hour);
   var min = formatFunc(date2.getMinutes());
   var sec = formatFunc(date2.getSeconds());

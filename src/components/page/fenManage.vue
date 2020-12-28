@@ -20,8 +20,7 @@
             </div>
 
             <Table border :columns="table.columns" :data="table.data"></Table>
-            <Page class="page-content" :total="total" show-elevator show-sizer />
-        </div>
+    <pagination  :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></pagination>        </div>
         <!-- 赠送活力值 -->
         <Modal v-model="modalOne" title="赠送活力值" @on-ok="ok" @on-cancel="cancel" width="400">
             <div class="card-content">
@@ -50,14 +49,18 @@
 // import { getConfigsByProductId, addNewAndroidPlugin } from '../../api/index.js';
 import ExcelUploadModal from '../common/ExcelUploadModal.vue';
 import {timeChange} from '../../utils/helper.js';
+import Pagination from './../common/Pagination.vue'
+import { PAGE_PARAMS } from './../../utils/constants.js'
 
 export default {
     name: 'myArticle',
     components: {
-        ExcelUploadModal
+        ExcelUploadModal,
+        Pagination
     },
     data() {
         return {
+                  pagination: Object.assign({}, PAGE_PARAMS),
             modalOneData: {}, //选择单行的数据
             uploadModel: false, //批量导入
             vigourVal: null, //赠送的热力数量
@@ -235,18 +238,21 @@ export default {
         },
         // 单个提交
         submitOne() {
-            let id = this.modalOneData.fensId,
-            vigourVal = Number(this.vigourVal);
+            let id = this.modalOneData.id,
+            vigourVal =this.vigourVal;
             this.axios
                 .post(`/fens/giveVigourVal?id=${id}&vigourVal=${vigourVal}`)
                 .then(res => {
                 
                         this.$Message.success('赠送成功');
+                        this.loadData()
+                        this.modalOneData = {}
+                        this.vigourVal= ""
                         this.modalOne = false;
                     
                 })
                 .catch(err => {
-                    console.log('err', err);
+                  this.$Message.error(err);
                 });
         },
 
@@ -255,22 +261,24 @@ export default {
             this.$refs[formName].resetFields();
         },
         loadData(search) {
+
             this.axios
                 .post(`/fens/selectFensPage`, {
                     id: search ? this.query.id : '',
-                    pageNum: 1,
-                    pageSize: 20
+                    pageNum:  this.pagination.pageNum,
+                    pageSize: this.pagination.pageSize
                 })
                 .then(res => {
                     this.table.data = res.data.list;
-                    this.total = res.data.total;
+                      this.pagination.total = res.data.total
                 })
                 .catch(err => {
-                    console.log('err', err);
+                    this.$Message.error(err);
                 });
         },
         // 触发搜索按钮
         handleSearch() {
+            this.pagination.pageNum = 1
             // this.$set(this.query, 'pageIndex', 1);
             this.loadData(true);
         }

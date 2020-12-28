@@ -7,7 +7,7 @@
                         <Input v-model="query.name" placeholder="姓名" clearable></Input>
                     </FormItem>
                     <FormItem label="账号" prop="account">
-                        <Input v-model="query.account" placeholder="姓名" clearable></Input>
+                        <Input v-model="query.account" placeholder="账号" clearable></Input>
                     </FormItem>
                     <FormItem label="状态" prop="status">
                         <Select v-model="query.status" style="width: 150px" clearable>
@@ -26,7 +26,7 @@
             </div>
 
             <Table border :columns="table.columns" :data="table.data" style="width: 100%"></Table>
-            <Page class="page-content" :total="total" show-elevator show-sizer />
+                <pagination  :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></pagination>
         </div>
         <!-- 新增账号弹窗 -->
         <Modal v-model="modalImg" title="新增账号" @on-ok="ok" @on-cancel="cancel" width="600">
@@ -86,8 +86,16 @@
 </template>
 
 <script>
+import {timeChange,yearDay, filterDeadline} from '../../../utils/helper.js'
+import Pagination from './../../common/Pagination.vue'
+import { PAGE_PARAMS } from '../../../utils/constants.js'
 export default {
     name: 'myArticle',
+         components: {
+
+    Pagination,
+
+  },
     data() {
         const validateName = (rule, value, callback) => {
             if (value === '') {
@@ -142,6 +150,7 @@ export default {
             // }, 1000);
         };
         return {
+            pagination: Object.assign({}, PAGE_PARAMS),
             // 弹窗的数据
             formCustom: {
                 name: '',
@@ -209,8 +218,7 @@ export default {
                 name: '',
                 pageNum: 1,
                 pageSize: 20,
-                status: '', //1-待开始 2-进行中 3-已结束
-                type: '' //资源类型(1-后援金 2-小程序开屏 3-首页轮播 4-户外大屏)
+                status: '', 
             },
             table: {
                 data: [],
@@ -235,7 +243,7 @@ export default {
 
                         minWidth: 150,
                         render: (h, params) => {
-                            // 1-启用 2-禁用
+                            // 1-启用 0-禁用
                             let { status } = params.row,
                                 text;
                             switch (status) {
@@ -257,7 +265,14 @@ export default {
                         key: 'addTime',
                         align: 'center',
 
-                        minWidth: 150
+                        minWidth: 150,
+                             render: (h, params) => {
+                    
+                            let { addTime} = params.row,text;
+                            
+                            text = timeChange(addTime)
+                            return h('div', text);
+                        }
                     },
                     {
                         title: '操作',
@@ -265,7 +280,7 @@ export default {
                         align: 'center',
                         minWidth: 100,
                         render: (h, params) => {
-                            let { status } = params.row;
+                            let { status,id } = params.row;
                             let firstBTn;
                             // 使用
                             if (status === 1) {
@@ -277,11 +292,12 @@ export default {
                                 'div',
                                 {
                                     style: {
-                                        color: 'blue',
+                                        color: '#409EFF',
                                         cursor: 'pointer'
                                     },
                                     on: {
                                         click: () => {
+                                        
                                             this.showdelModal(params.row, status == 1 ? 'prohibit' : 'enable');
                                         }
                                     }
@@ -293,7 +309,7 @@ export default {
                                 'div',
                                 {
                                     style: {
-                                        color: 'blue',
+                                        color: '#409EFF',
                                         cursor: 'pointer'
                                     },
                                     on: {
@@ -309,7 +325,7 @@ export default {
                                 'div',
                                 {
                                     style: {
-                                        color: 'blue',
+                                        color: '#409EFF',
                                         cursor: 'pointer'
                                     },
                                     on: {
@@ -322,7 +338,7 @@ export default {
                                 '修改'
                             );
 
-                            return h('div', [disableBtn, deleteBtn, detail]);
+                            return h('div', [id!=1?disableBtn:'', id!=1?deleteBtn:'', detail]);
                         }
                     }
                 ]
@@ -362,8 +378,9 @@ export default {
             // // }
         },
         del() {
-            this.modal_loading = true;
-            if (this.modalType == 'prohibit') {
+            // this.modal_loading = true;
+            if (this.modalType == 'prohibit'||this.modalType == 'enable') {
+              
                 this.prohibit(this.modalData);
             } else if (this.modalType == 'del') {
                 this.delete(this.modalData);
@@ -373,7 +390,7 @@ export default {
         //todo 禁用传什么值？传0接口成功，但是数据没更新
         prohibit(data) {
             this.axios
-                .post(`/user/updateUser?id=${data.id}&status=${data.status === 1 ? 2 : 1}`)
+                .post(`/user/updateUser?id=${data.id}&status=${data.status === 1 ? 0 : 1}`)
                 .then((res) => {
                     this.modal_loading = false;
                     this.modalDel = false;
@@ -464,11 +481,13 @@ export default {
             this.$refs[formName].resetFields();
         },
         loadData(search) {
+               this.query.pageNum =   this.pagination.pageNum
+            this.query.pageSize = this.pagination.pageSize
             this.axios
                 .post(`/user/selectPage`, this.query)
                 .then((res) => {
                     this.table.data = res.data.list;
-                    this.total = res.data.total;
+                     this.pagination.total = res.data.total
                 })
                 .catch((err) => {
                       this.$Message.error(err);
@@ -476,6 +495,7 @@ export default {
         },
         // 触发搜索按钮
         handleSearch() {
+              this.pagination.pageNum = 1
             // this.$set(this.query, 'pageIndex', 1);
             this.loadData(true);
         }

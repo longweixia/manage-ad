@@ -210,7 +210,7 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.goDetail('detail',params.row.starId);
+                                            this.goDetail('detail',params.row.id);
                                         }
                                     }
                                 },

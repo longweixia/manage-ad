@@ -28,9 +28,11 @@
             </div>
 
             <Table border :columns="table.columns" :data="table.data" style="width: 100%"></Table>
-            <Page class="page-content" :total="total" show-elevator show-sizer />
+            <!-- <Page class="page-content" :total="total" show-elevator show-sizer /> -->
+            <pagination  :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></pagination>
+
         </div>
-        <Modal v-model="modalImg" title="查看图片" @on-ok="ok" @on-cancel="cancel" width="1000">
+        <!-- <Modal v-model="modalImg" title="查看图片" @on-ok="ok" @on-cancel="cancel" width="1000">
             <div class="card-content">
                 <div class="card">
                     <div class="text">首页轮播图预览</div>
@@ -45,16 +47,25 @@
                     <img :src="hitPopupImg" />
                 </div>
             </div>
-        </Modal>
+        </Modal> -->
     </div>
 </template>
 
 <script>
 import {timeChange,yearDay, filterDeadline} from '../../../utils/helper.js'
+import Pagination from './../../common/Pagination.vue'
+import { PAGE_PARAMS } from '../../../utils/constants.js'
+
 export default {
     name: 'myArticle',
+      components: {
+
+    Pagination,
+
+  },
     data() {
         return {
+      pagination: Object.assign({}, PAGE_PARAMS),
             modalImg: false,
             homeImg: '', //首页轮播图
             detailImg: '', //详情页
@@ -175,7 +186,10 @@ export default {
                         render: (h, params) => {
                             let { relationStar } = params.row;
                             let text='';
-                            relationStar&&relationStar.forEach((item,i)=>{
+                              if(!relationStar||relationStar.length==0){
+                                text = "无"
+                            }else{
+                                relationStar&&relationStar.forEach((item,i)=>{
                                 if(!text){
                                     text = text+item
                                 }else{
@@ -183,13 +197,15 @@ export default {
                                 }
                     
                             })
+                            }
+                            
                             let countDown = h(
                                 'div',
                                 {
-                                    style: {
-                                        color: 'blue',
-                                        cursor: 'pointer'
-                                    },
+                                    // style: {
+                                    //     color: 'blue',
+                                    //     cursor: 'pointer'
+                                    // },
                                  
                                 },
                                text
@@ -207,7 +223,10 @@ export default {
                         render: (h, params) => {
                             let { completeStar } = params.row;
                             let text='';
-                            completeStar&&completeStar.forEach((item,i)=>{
+                            if(!completeStar||completeStar.length==0){
+                                text = "无"
+                            }else{
+                                 completeStar&&completeStar.forEach((item,i)=>{
                                 if(!text){
                                     text = text+item
                                 }else{
@@ -215,13 +234,15 @@ export default {
                                 }
                     
                             })
+                            }
+                           
                             let countDown = h(
                                 'div',
                                 {
-                                    style: {
-                                        color: 'blue',
-                                        cursor: 'pointer'
-                                    },
+                                    // style: {
+                                    //     color: 'blue',
+                                    //     cursor: 'pointer'
+                                    // },
                                  
                                 },
                                text
@@ -283,7 +304,7 @@ export default {
                                 'div',
                                 {
                                     style: {
-                                        color: 'blue',
+                                        color: '#2d8cf0',
                                         cursor: 'pointer'
                                     },
                                     on: {
@@ -334,17 +355,19 @@ export default {
                 name: 'starDetail'
             });
         },
-
         // 重置
         resetForm(formName) {
             this.$refs[formName].resetFields();
         },
         loadData() {
+             this.query.pageNum =   this.pagination.pageNum
+            this.query.pageSize = this.pagination.pageSize
             this.axios
                 .post(`/resources/selectResourcesPage`, this.query)
                 .then((res) => {
                     this.table.data = res.data.list;
-                    this.total = res.data.total;
+                    // this.total = res.data.total;
+                    this.pagination.total = res.data.total
                 })
                 .catch((err) => {
                 
@@ -353,6 +376,7 @@ export default {
         },
         // 触发搜索按钮
         handleSearch() {
+               this.pagination.pageNum = 1
             // this.$set(this.query, 'pageIndex', 1);
             this.loadData(true);
         }

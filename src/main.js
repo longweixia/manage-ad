@@ -20,7 +20,8 @@ import 'viewerjs/dist/viewer.css'
 Vue.use(ViewUI);
 
 Vue.use(Viewer)
-axios.defaults.baseURL = "https://123.207.120.31:18001" //接口的基础url
+// axios.defaults.baseURL = "https://123.207.120.31:18001" //接口的基础url
+axios.defaults.baseURL = "https://192.168.20.4:18001" //本地接口的基础url
 // 请求拦截
 axios.interceptors.request.use(
     config => {
@@ -41,10 +42,10 @@ axios.interceptors.response.use((response) => {
       return  Promise.reject(response.data.message)
     //   router.push("/login")
     //其余错误状态处理    
-    } else if (response.data.code == '10001') {
+    } else if (response.data.code == '100001'||response.data.code == '200001') {
         return  Promise.reject(response.data.message)
     //请求成功
-    } else if(response.data.code == 200){
+    }  else if(response.data.code == 200){
       //将我们请求到的信息返回页面中请求的逻辑
       return response.data;
     }else{
@@ -56,6 +57,7 @@ axios.interceptors.response.use((response) => {
     if (error.response) {
         switch (error.response.status) {
           case 401:
+            router.push("/login")
             return Promise.reject('登录失效');
              
           default:

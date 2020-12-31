@@ -272,7 +272,7 @@ export default {
                 })
                 .then((res) => {
                     this.table.data = res.data.list;
-                    this.total = res.data.total;
+                    this.total = res.data.total&&Number(res.data.total);
                 })
                 .catch((err) => {
                     this.$Message.error(err);

@@ -7,7 +7,7 @@
                 <Button>上传文件</Button>
                 <input class="crop-input" type="file" name="image" accept="image/*" @change="setImage" />
             </div>
-            {{ home1Colone }}
+       
             <div class="crop-demo">
                 <img :src="home1Colone" class="pre-img" />
             </div>
@@ -43,6 +43,7 @@
             <div style="text-align: center" slot="footer">
                 <Button type="primary" @click="confirm">提交</Button>
             </div>
+            {{bannerObj}}
         </div>
     </Modal>
 </template>
@@ -63,12 +64,24 @@ export default {
         level1: {
             type: String,
             default: ''
+        },
+        bannerData: {
+            type: Object,
+            default: {}
         }
     },
     watch: {
+        
+       
         modalBannaer: {
             handler(newval, oldval) {
                 this.modalBannaerInit = newval;
+            },
+            immediate: true
+        },
+        bannerData: {
+            handler(newval, oldval) {
+                this.bannerObj = newval;
             },
             immediate: true
         },
@@ -102,6 +115,7 @@ export default {
     },
     data() {
         return {
+             bannerObj: this.bannerData, //轮播对象
             flieData: null, //上传的文件数据
             modalBannaerInit: this.modalBannaerInit,
             home1Colone: this.home1,
@@ -118,14 +132,21 @@ export default {
     },
     methods: {
         confirm() {
-            let params = {
-                "home1": this.home1Colone,
-                "id": 0,
-                "level1": this.level1Colone,
-                "open": 1
-            }
+            // let params = {
+            //     "home1": this.home1Colone,
+            //     "id": 0,
+            //     "level1": this.level1Colone,
+            //     "open": 1
+            // }
+            this.bannerObj.home1 = this.home1Colone
+            // console.log(this.bannerObj.id,22)
+            // this.bannerObj.id = BigInt(this.bannerObj.id)
+          
+            
+        
+
             this.axios
-                .post(`/carousel/addOrUpdateCarousel`,params)
+                .post(`/carousel/addOrUpdateCarousel`,this.bannerObj)
                 .then((res) => {
                        this.$emit('closeBanner1', false);
                        this.$Message.success('上传成功');

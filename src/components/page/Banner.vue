@@ -58,7 +58,7 @@
         </div>
         <!-- 轮播1 -->
         
-        <Banners1 :modalBannaer="modalBannaer1" @closeBanner1="closeBanner1" @upImageUrl1='upImageUrl1' :home1="home1" :level1="level1"></Banners1>
+        <Banners1 :modalBannaer="modalBannaer1" @closeBanner1="closeBanner1" @upImageUrl1='upImageUrl1' :home1="home1" :level1="level1" :bannerData="bannerData"></Banners1>
     </div>
 </template>
 
@@ -72,6 +72,7 @@ export default {
     },
     data() {
         return {
+            bannerData:{}, //轮播数据
             modalBannaer1: false,
             open: false, //是否开启
             home1: '',
@@ -182,17 +183,18 @@ export default {
         loadData() {
             this.axios
                 .post(`/carousel/selectCarousel`)
-                .then((res1) => {
-                    let res = {
-                        data: {
-                            home1: 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1727914444,3729344997&fm=26&gp=0.jpg', //首页轮播图
-                            home2: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2033921778,648007645&fm=26&gp=0.jpg', //首页轮播图
-                            id: 0, // 图片id
-                            level1: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2980445260,41238050&fm=26&gp=0.jpg', //二级轮播图
-                            level2: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1694681277,1453280371&fm=26&gp=0.jpg', //二级轮播图
-                            open: 1 //是否开启 1开启，0不开启
-                        }
-                    };
+                .then((res) => {
+                    // let res = {
+                    //     data: {
+                    //         home1: 'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1727914444,3729344997&fm=26&gp=0.jpg', //首页轮播图
+                    //         home2: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2033921778,648007645&fm=26&gp=0.jpg', //首页轮播图
+                    //         id: 0, // 图片id
+                    //         level1: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2980445260,41238050&fm=26&gp=0.jpg', //二级轮播图
+                    //         level2: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1694681277,1453280371&fm=26&gp=0.jpg', //二级轮播图
+                    //         open: 1 //是否开启 1开启，0不开启
+                    //     }
+                    // };
+                    this.bannerData = res.data
                     this.open = res.data.open == 0 ? false : true;
                     this.home1 = res.data.home1;
                     this.home2 = res.data.home2;

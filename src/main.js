@@ -9,70 +9,70 @@ import 'element-ui/lib/theme-chalk/index.css'; // 默认主题
 import './assets/css/icon.css';
 import './components/common/directives';
 import 'babel-polyfill';
-import axios from 'axios'
+import axios from 'axios';
 import ViewUI from 'view-design';
 
 // import style
 import 'view-design/dist/styles/iview.css';
-import Viewer from 'v-viewer'
-import 'viewerjs/dist/viewer.css'
+import Viewer from 'v-viewer';
+import 'viewerjs/dist/viewer.css';
 
 Vue.use(ViewUI);
 
-Vue.use(Viewer)
-axios.defaults.baseURL = "https://123.207.120.31:18001" //接口的基础url
-// axios.defaults.baseURL = "https://192.168.20.4:18001" //本地接口的基础url
+Vue.use(Viewer);
+// axios.defaults.baseURL = 'https://123.207.120.31:18001'; //接口的基础url
+axios.defaults.baseURL = "https://192.168.20.4:18001" //本地接口的基础url
 // 请求拦截
 axios.interceptors.request.use(
     config => {
- 
-        if (localStorage.getItem("Authorization")) {
-            config.headers.Authorization = localStorage.getItem("Authorization"); //把localStorage的token放在Authorization里
+        if (localStorage.getItem('Authorization')) {
+            config.headers.Authorization = localStorage.getItem('Authorization'); //把localStorage的token放在Authorization里
         }
         return config;
     },
     function(err) {
-        Promise.reject(err)
+        Promise.reject(err);
     }
 );
 // 响应拦截
-axios.interceptors.response.use((response) => {
-    //特殊错误处理，状态为401时为登录超时
-    if (response.data.code =='401') {
-      return  Promise.reject(response.data.message)
-    //   router.push("/login")
-    //其余错误状态处理    
-    } else if (response.data.code == '100001'||response.data.code == '200001') {
-        return  Promise.reject(response.data.message)
-    //请求成功
-    }  else if(response.data.code == 200){
-      //将我们请求到的信息返回页面中请求的逻辑
-      return response.data;
-    }else{
-        return response.data;
-    }
-   //......
-  
-  }, function (error) {
-    if (error.response) {
-        switch (error.response.status) {
-          case 401:
-            router.push("/login")
-            return Promise.reject('登录失效');
-             
-          default:
-              break;
+axios.interceptors.response.use(
+    response => {
+        //特殊错误处理，状态为401时为登录超时
+        if (response.data.code == '401') {
+            return Promise.reject(response.data.message);
+            //   router.push("/login")
+            //其余错误状态处理
+        } else if (response.data.code == '100001' || response.data.code == '200001'||response.data.code == '300001') {
+            return Promise.reject(response.data.message);
+            //请求成功
+        } else if (response.data.code == 200) {
+            //将我们请求到的信息返回页面中请求的逻辑
+            return response.data;
+        } else {
+            return response.data;
         }
-    }else{
-         return Promise.reject(error);
+        //......
+    },
+    function(error) {
+        if (error.response) {
+            switch (error.response.status) {
+                case 401:
+                    router.push('/login');
+                    return Promise.reject('登录失效');
+
+                default:
+                    break;
+            }
+        } else {
+            return Promise.reject(error);
+        }
     }
-   
-  });
+);
 // Vue.prototype.baseUrl = process.env.API_ROOT//接口的基础url
 // 改2 这里
 // http://47.103.40.123:3001  服务器
 
-Vue.prototype.axios = axios
+Vue.prototype.axios = axios;
 Vue.config.productionTip = false;
 Vue.use(VueI18n);
 Vue.use(ElementUI, {

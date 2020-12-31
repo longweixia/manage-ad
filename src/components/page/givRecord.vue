@@ -23,18 +23,26 @@
             </div>
 
             <Table border :columns="table.columns" :data="table.data"></Table>
-            <Page class="page-content" :total="total" show-elevator show-sizer />
-        </div>
+                <Pagination  :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></Pagination>        </div>
+
+        
     </div>
 </template>
 
 <script>
 // import {getConfigsByProductId,addNewAndroidPlugin}  from '../../api/index.js';
 import { timeChange } from '../../utils/helper.js';
+import Pagination from './../common/Pagination.vue'
+import { PAGE_PARAMS } from './../../utils/constants.js'
 export default {
     name: 'myArticle',
+        components: {
+ 
+        Pagination
+    },
     data() {
         return {
+             pagination: Object.assign({}, PAGE_PARAMS),
             modalOne: false,
             homeImg: '', //首页轮播图
             detailImg: '', //详情页
@@ -42,8 +50,7 @@ export default {
             query: {
                 id: '',
 
-                pageIndex: 1,
-                pageSize: 10,
+          
                 giveTime: '',
                 giveTimeEnd: ''
             },
@@ -132,11 +139,13 @@ export default {
             this.query.giveTimeEnd = e[1]? e[1]  + ' 23:59:59': e[1] ;
         },
         loadData(search) {
+               this.query.pageNum=this.pagination.pageNum,
+                    this.query.pageSize=this.pagination.pageSize
             this.axios
                 .post(`/fens/selectGivePage`, this.query)
                 .then((res) => {
                     this.table.data = res.data.list;
-                    this.total = res.data.total;
+                        this.pagination.total = res.data.total
                 })
                 .catch((err) => {
                     this.$Message.error(err);
@@ -144,6 +153,7 @@ export default {
         },
         // 触发搜索按钮
         handleSearch() {
+              this.pagination.pageNum = 1
             // this.$set(this.query, 'pageIndex', 1);
             this.loadData(true);
         }

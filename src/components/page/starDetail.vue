@@ -1,86 +1,83 @@
 <template>
     <div class="star-area-detail">
-        
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>明星详情</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-       
-         <div class="container">
-               <Form ref="formInline"  :rules="rules" inline>
-             <FormItem prop="name">
-            <div class="card-area">
-                <div class="row-text">姓名</div>
-                <Input v-model="name" placeholder="姓名" style="width: 200px" clearable></Input>
-            </div>
-            </FormItem>
-            <!-- <div class="card-area">
+
+        <div class="container">
+            <Form ref="formInline" :rules="rules" inline>
+                <FormItem prop="name">
+                    <div class="card-area">
+                        <div class="row-text">姓名</div>
+                        <Input v-model="name" placeholder="姓名" style="width: 200px" clearable></Input>
+                    </div>
+                </FormItem>
+                <!-- <div class="card-area">
                 <div class="row-text">图片</div>
                 <Button type="primary" @click="uploadImg('Carousel')">上传图片</Button>
             </div> -->
-            <UploadCarousel @updateCarouselImg="updateCarouselImg" :homeImg="homeImg"></UploadCarousel>
-            <div class="card-area">
-                <div class="card-content">
-                     <FormItem prop="homeImg">
-                    <div class="card">
-                        <div class="text">首页轮播图预览</div>
-                        <viewer :images="[homeImg]" v-if="homeImg">
-                            <img :src="homeImg" class="img" />
-                        </viewer>
-                        <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" />
-                    </div>
+                <UploadCarousel @updateCarouselImg="updateCarouselImg" :homeImg="homeImg"></UploadCarousel>
+                <div class="card-area">
+                    <div class="card-content">
+                        <FormItem prop="homeImg">
+                            <div class="card">
+                                <div class="text">首页轮播图预览</div>
+                                <viewer :images="[homeImg]" v-if="homeImg">
+                                    <img :src="homeImg" class="img" />
+                                </viewer>
+                                <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" />
+                            </div>
                         </FormItem>
-                    <div class="card">
-                        <div class="text">明星详细页预览</div>
-                        <viewer :images="[homeImg]" v-if="homeImg">
-                            <img :src="homeImg" class="img" />
-                        </viewer>
-                        <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" />
-                    </div>
-                    <div class="card">
-                        <div class="text">打榜弹窗预览</div>
-                        <viewer :images="[homeImg]" v-if="homeImg">
-                            <img :src="homeImg" class="img" />
-                        </viewer>
-                        <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" />
+                        <div class="card">
+                            <div class="text">明星详细页预览</div>
+                            <viewer :images="[homeImg]" v-if="homeImg">
+                                <img :src="homeImg" class="img" />
+                            </viewer>
+                            <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" />
+                        </div>
+                        <div class="card">
+                            <div class="text">打榜弹窗预览</div>
+                            <viewer :images="[homeImg]" v-if="homeImg">
+                                <img :src="homeImg" class="img" />
+                            </viewer>
+                            <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" />
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <UploadHeader @updateCarouselImg="updateCarouselimgHeader" :homeImg="avatar"></UploadHeader>
-            <div class="card-area">
-                <!-- <div class="row-text">头像</div>
+                <UploadHeader @updateCarouselImg="updateCarouselimgHeader" :homeImg="avatar"></UploadHeader>
+                <div class="card-area">
+                    <!-- <div class="row-text">头像</div>
                 <Button type="primary" @click="uploadImg">上传头像</Button> -->
-                <div class="card-header">
-                    <viewer :images="[avatar]" v-if="avatar">
-                        <img :src="avatar" class="img" style="width:100px;height:100px;border-radius:50px" />
-                    </viewer>
-                    <img v-if="!avatar" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" />
+                    <div class="card-header">
+                        <viewer :images="[avatar]" v-if="avatar">
+                            <img :src="avatar" class="img" style="width:100px;height:100px;border-radius:50px" />
+                        </viewer>
+                        <img v-if="!avatar" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" />
+                    </div>
                 </div>
-            </div>
-            <div class="card-area">
-                <div>
-                    <div class="row-text tag-text">设置标签</div>
-                    <span class="addTag-text" @click="addTag">新增标签</span>
-                    <div class="tips">标签可在发布资源时选择，便于快速关联明星</div>
+                <div class="card-area">
+                    <div>
+                        <div class="row-text tag-text">设置标签</div>
+                        <span class="addTag-text" @click="addTag">新增标签</span>
+                        <div class="tips">标签可在发布资源时选择，便于快速关联明星</div>
+                    </div>
+                    <div class="tag-area">
+                        <!-- <Tag class="tag" checkable color="primary">热门明星</Tag> -->
+                        <Tag
+                            :class="item.checked ? 'tagTrue' : 'tag'"
+                            :checked="false"
+                            color="primary"
+                            v-for="(item, index) in tagList"
+                            :key="index"
+                            @click.native="changeTag(item)"
+                        >
+                            <span class="tag-text">{{ item.name }}</span>
+                        </Tag>
+                    </div>
                 </div>
-                <div class="tag-area">
-        
-                    <!-- <Tag class="tag" checkable color="primary">热门明星</Tag> -->
-                    <Tag
-                       
-                         :class="item.checked ? 'tagTrue' : 'tag'"
-                        :checked="false"
-                        color="primary"
-                        v-for="(item, index) in tagList"
-                        :key="index"
-                        @click.native="changeTag(item)"
-                    >
-                       <span  class="tag-text">{{ item.name }}</span> 
-                    </Tag>
-                </div>
-            </div>
             </Form>
             <div class="card-area">
                 <!-- <div class="row-text">小程序开屏图(选填)</div>
@@ -134,17 +131,15 @@ export default {
         UploadScreen
     },
     data: function() {
-    //     const logisticValid = (rule, value, cb) => {
-    //   let { isCollect, isLine, isInBoard, isAboard } = this.form,
-    //       arr = [isCollect, isLine, isInBoard, isAboard]
-    //   if(arr.includes(true)) cb()
-    //   else cb(new Error(rule.message))
-    // }
+        //     const logisticValid = (rule, value, cb) => {
+        //   let { isCollect, isLine, isInBoard, isAboard } = this.form,
+        //       arr = [isCollect, isLine, isInBoard, isAboard]
+        //   if(arr.includes(true)) cb()
+        //   else cb(new Error(rule.message))
+        // }
         return {
-              rules: {
-                name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
-               
-                
+            rules: {
+                name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }]
             },
             modalBannaerInit: false,
             modalTag: false,
@@ -166,6 +161,7 @@ export default {
         };
     },
     mounted() {
+        this.getTags()
         this.id = this.$route.query.id;
         // this.getTag();
         if (this.id) {
@@ -177,38 +173,33 @@ export default {
         save() {
             if (this.id) {
                 //修改
-                this.changeStar()
+                this.changeStar();
             } else {
                 // 新增
                 this.addStar();
             }
         },
-        // 校验数据
-        checkData(){
-            if(!this.homeImg){
-                this.$Message.error("请上传首页轮播");
-                return false
+        // 校验数据---不校验数据
+        checkData() {
+            if (!this.homeImg) {
+                this.$Message.error('请上传首页轮播');
+                return false;
+            } else if (!this.avatar) {
+                this.$Message.error('请上传头像');
+                return false;
             }
-           else if(!this.avatar){
-                this.$Message.error("请上传头像");
-                 return false
-            }
-
         },
         // 新增明星
         addStar() {
-            this.checkData()
+            // this.checkData();
             // 处理标签
             let tagArry = [];
             this.tagList.forEach((item, index) => {
                 if (item.checked) {
-                   
-                    tagArry.push(
-                        {
-                            id:item.id,
-                            name:item.name,
-                        }
-                    );
+                    tagArry.push({
+                        id: item.id,
+                        name: item.name
+                    });
                 }
             });
             this.axios
@@ -225,8 +216,11 @@ export default {
                 })
                 .then(res => {
                     // this.tagList = res.data;
-                    this.$Message.success("新增成功")
-                    this.loadData()
+                    this.$Message.success('新增成功');
+                    // this.loadData()
+                    this.$router.push({
+                        name: 'starList'
+                    });
                 })
                 .catch(err => {
                     this.$Message.error(err);
@@ -234,18 +228,15 @@ export default {
         },
         // 修改明星
         changeStar() {
-              this.checkData()
+            // this.checkData();
             // 处理标签
             let tagArry = [];
-             this.tagList.forEach((item, index) => {
+            this.tagList.forEach((item, index) => {
                 if (item.checked) {
-                
-                    tagArry.push(
-                        {
-                            id:item.id,
-                            name:item.name,
-                        }
-                    );
+                    tagArry.push({
+                        id: item.id,
+                        name: item.name
+                    });
                 }
             });
             this.axios
@@ -262,8 +253,8 @@ export default {
                 })
                 .then(res => {
                     // this.tagList = res.data;
-                     this.$Message.success("修改成功")
-                      this.loadData()
+                    this.$Message.success('修改成功');
+                    this.loadData();
                 })
                 .catch(err => {
                     this.$Message.error(err);
@@ -285,18 +276,17 @@ export default {
         // },
         // 上传图片
         uploadImg() {},
-        changeTag(data){
-           for(var i =0;i< this.tagList.length;i++){
-               if(this.tagList[i].id == data.id){
-                   console.log(data)
-                   this.tagList[i].checked = !data.checked
-               }
-           }
-           this.$forceUpdate(this.tagList)
-        //    this.tagList.find((item,index)=>{
-        //        return item.id = data.id
-        //    }).checked = !data.checked
-
+        changeTag(data) {
+            for (var i = 0; i < this.tagList.length; i++) {
+                if (this.tagList[i].id == data.id) {
+                    console.log(data);
+                    this.tagList[i].checked = !data.checked;
+                }
+            }
+            this.$forceUpdate(this.tagList);
+            //    this.tagList.find((item,index)=>{
+            //        return item.id = data.id
+            //    }).checked = !data.checked
         },
         //新增标签
         addTag() {
@@ -328,12 +318,9 @@ export default {
             const index = this.tagList.indexOf(name);
             this.tagList.splice(index, 1);
         },
+        // 查询标签
         loadData() {
             this.axios
-                .post(`/star/tags/list`)
-                .then(res => {
-                    this.tagList = res.data;
-                    this.axios
                         .get(`/star/star/selectStatById`, {
                             params: {
                                 id: this.id
@@ -357,6 +344,14 @@ export default {
                         .catch(err => {
                             this.$Message.error(err);
                         });
+           
+        },
+        getTags(){
+             this.axios
+                .post(`/star/tags/list`)
+                .then(res => {
+                    this.tagList = res.data;
+                    
                 })
                 .catch(err => {
                     this.$Message.error(err);
@@ -444,19 +439,19 @@ export default {
         .tag {
             cursor: pointer;
             margin-right: 10px;
-            
+
             border: 1px solid #ddd;
         }
-         .tagTrue {
-                    color: #fff !important;
-                    cursor: pointer;
-                    margin-right: 10px;
-                    border: 1px solid #ddd;
-                    background: #2d8cf0;
-                    .tag-text {
-                        color: #fff !important;
-                    }
-                }
+        .tagTrue {
+            color: #fff !important;
+            cursor: pointer;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            background: #2d8cf0;
+            .tag-text {
+                color: #fff !important;
+            }
+        }
     }
 }
 </style>

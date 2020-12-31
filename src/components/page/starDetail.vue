@@ -2,7 +2,7 @@
     <div class="star-area-detail">
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item>明星详情</el-breadcrumb-item>
+                <el-breadcrumb-item>{{titles=='add'?'添加明星':'明星详情'}}</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
 
@@ -64,6 +64,7 @@
                         <span class="addTag-text" @click="addTag">新增标签</span>
                         <div class="tips">标签可在发布资源时选择，便于快速关联明星</div>
                     </div>
+      
                     <div class="tag-area">
                         <!-- <Tag class="tag" checkable color="primary">热门明星</Tag> -->
                         <Tag
@@ -92,12 +93,16 @@
                     <img v-if="!openImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" />
                 </div>
             </div>
-            <div><Button type="primary" @click="save">保存</Button></div>
+            <div>
+                <Button  @click="reback" style="display:inline-block">返回</Button>
+                <Button type="primary" @click="save" style="display:inline-block;margin-left:20px">保存</Button>
+            </div>
+          
 
             <!-- 新增按钮，弹窗 -->
             <Modal v-model="modalTag" title="新增标签">
                 <div>
-                    <Input v-model="tagText" placeholder="最多6个字" style="width: 200px" clearable></Input>
+                    <Input v-model="tagText" placeholder="最多6个字" maxlength="6" style="width: 200px" clearable></Input>
                     <Button class="card-screen-btn" type="primary" @click="okAddTag" style="margin-left:10px">增加</Button>
                 </div>
                 <p style="margin-top:20px">当前标签</p>
@@ -110,7 +115,7 @@
                         :key="index"
                         closable
                         @on-change="item.checked = !item.checked"
-                        @on-close="handleClose"
+                        @on-close="handleClose(item)"
                     >
                         {{ item.name }}
                     </Tag>
@@ -157,18 +162,26 @@ export default {
                 // { name: '户外大屏', value: 4, checked: false, id: 14 }
             ], //标签集合
             addTagList: [], //新增标签上的列表
-            tagText: ''
+            tagText: '',
+            titles:"明星详情",//详情标题
         };
     },
     mounted() {
+        this.titles = this.$route.query.add
         this.getTags()
         this.id = this.$route.query.id;
-        // this.getTag();
+     
         if (this.id) {
             this.loadData();
         }
     },
     methods: {
+        reback(){
+            this.$router.push({
+                name:'starList'
+            })
+
+        },
         // 保存，有id为修改，否则为新增
         save() {
             if (this.id) {
@@ -269,11 +282,7 @@ export default {
         updateCarouselimgScreen(data) {
             this.openImg = data;
         },
-        // 获取标签
-        getTag() {},
-        // getTag() {
-
-        // },
+      
         // 上传图片
         uploadImg() {},
         changeTag(data) {
@@ -291,7 +300,7 @@ export default {
         //新增标签
         addTag() {
             this.modalTag = true;
-            // this.getTag()
+          
         },
         // 确认新增
         okAddTag() {
@@ -307,16 +316,30 @@ export default {
                 })
                 .then(res => {
                     this.$Message.success('添加成功');
-                    this.getTag();
+                    this.getTags();
                 })
                 .catch(err => {
                     this.$Message.error(err);
                 });
         },
         //关闭标签
-        handleClose(event, name) {
-            const index = this.tagList.indexOf(name);
-            this.tagList.splice(index, 1);
+        handleClose(data) {
+            console.log(data)
+            this.axios
+                .get(`/star/tags/deleteTags`, {
+                    params: {
+                        id: data.id
+                    }
+                })
+                .then(res => {
+               
+                    this.getTags();
+                })
+                .catch(err => {
+                    this.$Message.error(err);
+                });
+            // const index = this.tagList.indexOf(name);
+            // this.tagList.splice(index, 1);
         },
         // 查询标签
         loadData() {
@@ -411,7 +434,7 @@ export default {
                 margin-bottom: 5px;
             }
             .addTag-text {
-                color: blue;
+                color: #2d8cf0;
                 cursor: pointer;
                 margin-left: 20px;
             }
@@ -422,8 +445,8 @@ export default {
                 height: 200px;
                 margin-top: 10px;
                 img {
-                    width: 100%;
-                    height: 100%;
+                    width: 200px;
+                  height: 200px;
                 }
             }
             .card-screen-btn {

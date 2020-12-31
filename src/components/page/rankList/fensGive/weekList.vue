@@ -1,5 +1,10 @@
 <template>
     <div class="fens-give-week-tablelist">
+          <div class="crumbs">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item>周粉丝贡献榜</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
         <div class="container">
             <div class="handle-box">
                 <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
@@ -12,13 +17,13 @@
                         <el-button @click="resetForm('ruleForm')">重置</el-button>
                     </FormItem>
                     <div>
-                        周时间段：{{weekTimes}}  明星：{{query.starName}}  排名：{{rankNum}}
+                        周时间段：{{weekTimes}}  明星：{{starName}}  排名：{{rankNum}}
                     </div>
                 </Form>
             </div>
 
             <Table border :columns="table.columns" :data="table.data" style="width: 100%"></Table>
-            <Page class="page-content" :total="total" show-elevator show-sizer />
+<Pagination :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></Pagination>
         </div>
         <Modal v-model="modalImg" title="查看图片" @on-ok="ok" @on-cancel="cancel" width="1000">
             <div class="card-content">
@@ -40,10 +45,17 @@
 </template>
 
 <script>
+import Pagination from './../../../common/Pagination.vue';
+import { PAGE_PARAMS } from './../../../../utils/constants.js';
 export default {
     name: 'myArticle',
+       components: {
+        Pagination
+    },
     data() {
         return {
+            starName:"",
+             pagination: Object.assign({}, PAGE_PARAMS),
             rankNum:null,
             weekTimes:'',
             modalImg: false,
@@ -63,23 +75,10 @@ export default {
             ],
             query: {
                 endTime: '', //周结束时间
-
-                hitListType: 0, //榜单类型 0：周榜；1：月榜；2：总榜
-
-                listType: 1, //列表类型 默认空， 0：本周；1：近三个月周时间段；2：具体某个月份
-
-                monthNum: '', //具体月份值
-
-                pageNum: 1, //当前页码
-
-                pageSize: 20, //页面数量
-
+                fensId:"",//粉丝id
+                fensName:"",//粉丝名
                 sortType: 0, //排序 0：正序；1：倒序；
-
-                starId: null, //明星ID
-
-                starName: '', //明星姓名
-
+                starId: '', //明星ID
                 startTime: '' //周开始时间
             },
             table: {
@@ -127,12 +126,12 @@ export default {
     },
     created() {},
     mounted() {
-       
-        this.query.starId = this.$route.query.data.starId
-        this.weekTimes = this.$route.query.data.weekTime
-        this.query.starName = this.$route.query.data.starName
-        this.rankNum = this.$route.query.data.rank
-        let timeArr = this.$route.query.data.weekTime.split('~')
+       let data = JSON.parse(decodeURIComponent(this.$route.query.data))
+        this.query.starId = data.starId
+        this.weekTimes = data.weekTime
+        this.starName = data.starName
+        this.rankNum = data.rank
+        let timeArr = data.weekTime.split('~')
         this.query.startTime = timeArr[0]
         this.query.endTime = timeArr[1]
 
@@ -153,12 +152,14 @@ export default {
         resetForm(formName) {
             this.$refs[formName].resetFields();
         },
-        loadData(search) {
+        loadData() {
+                   this.query.pageNum = this.pagination.pageNum;
+            this.query.pageSize = this.pagination.pageSize;
             this.axios
                 .post(`/star/fensMark/rankList`, this.query)
                 .then((res) => {
                     this.table.data = res.data.list;
-                    this.total = res.data.total;
+                     this.pagination.total = res.data.total&&Number(res.data.total);
                 })
                 .catch((err) => {
                     console.log('err', err);
@@ -167,7 +168,7 @@ export default {
         // 触发搜索按钮
         handleSearch() {
             // this.$set(this.query, 'pageIndex', 1);
-            this.loadData(true);
+            this.loadData();
         }
     }
 };

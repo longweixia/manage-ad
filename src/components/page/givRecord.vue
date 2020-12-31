@@ -4,7 +4,13 @@
             <div class="handle-box">
                 <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
                     <FormItem label="赠送时间">
-                        <DatePicker type="daterange" ref='DatePicker' placeholder="请选择起止时间" style="width: 200px" @on-change="changeDate"></DatePicker>
+                        <DatePicker
+                            type="daterange"
+                            ref="DatePicker"
+                            placeholder="请选择起止时间"
+                            style="width: 200px"
+                            @on-change="changeDate"
+                        ></DatePicker>
                     </FormItem>
 
                     <FormItem label="ID" prop="id">
@@ -23,26 +29,24 @@
             </div>
 
             <Table border :columns="table.columns" :data="table.data"></Table>
-                <Pagination  :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></Pagination>        </div>
-
-        
+            <Pagination :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></Pagination>
+        </div>
     </div>
 </template>
 
 <script>
 // import {getConfigsByProductId,addNewAndroidPlugin}  from '../../api/index.js';
 import { timeChange } from '../../utils/helper.js';
-import Pagination from './../common/Pagination.vue'
-import { PAGE_PARAMS } from './../../utils/constants.js'
+import Pagination from './../common/Pagination.vue';
+import { PAGE_PARAMS } from './../../utils/constants.js';
 export default {
     name: 'myArticle',
-        components: {
- 
+    components: {
         Pagination
     },
     data() {
         return {
-             pagination: Object.assign({}, PAGE_PARAMS),
+            pagination: Object.assign({}, PAGE_PARAMS),
             modalOne: false,
             homeImg: '', //首页轮播图
             detailImg: '', //详情页
@@ -50,7 +54,6 @@ export default {
             query: {
                 id: '',
 
-          
                 giveTime: '',
                 giveTimeEnd: ''
             },
@@ -129,23 +132,22 @@ export default {
         // 重置
         resetForm(formName) {
             this.$refs[formName].resetFields();
-             this.$refs.DatePicker.handleClear()
-            this.query.giveTime =""
-            this.query.giveTimeEnd =""
+            this.$refs.DatePicker.handleClear();
+            this.query.giveTime = '';
+            this.query.giveTimeEnd = '';
         },
         // 改变时间
         changeDate(e) {
-            this.query.giveTime = e[0]?e[0] + ' 00:00:00':e[0];
-            this.query.giveTimeEnd = e[1]? e[1]  + ' 23:59:59': e[1] ;
+            this.query.giveTime = e[0] ? e[0] + ' 00:00:00' : e[0];
+            this.query.giveTimeEnd = e[1] ? e[1] + ' 23:59:59' : e[1];
         },
         loadData(search) {
-               this.query.pageNum=this.pagination.pageNum,
-                    this.query.pageSize=this.pagination.pageSize
+            (this.query.pageNum = this.pagination.pageNum), (this.query.pageSize = this.pagination.pageSize);
             this.axios
                 .post(`/fens/selectGivePage`, this.query)
                 .then((res) => {
                     this.table.data = res.data.list;
-                        this.pagination.total = res.data.total
+                    this.pagination.total = res.data.total;
                 })
                 .catch((err) => {
                     this.$Message.error(err);
@@ -153,7 +155,7 @@ export default {
         },
         // 触发搜索按钮
         handleSearch() {
-              this.pagination.pageNum = 1
+            this.pagination.pageNum = 1;
             // this.$set(this.query, 'pageIndex', 1);
             this.loadData(true);
         }

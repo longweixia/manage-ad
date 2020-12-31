@@ -1,11 +1,11 @@
 <template>
-    <div class='rank-list-week-tablelist'>
+    <div class="rank-list-week-tablelist">
         <div class="container">
             <div class="handle-box">
-                <Form  inline :model="query" class="demo-form-inline" ref="ruleForm">
+                <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
                     <FormItem label="周列表" prop="time">
-                        <Select v-model="query.startTime" style="width: 150px" clearable>
-                            <Option v-for="item in TimeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                        <Select style="width: 200px" v-model="dateValue" clearable @on-clear="clearDate">
+                            <Option v-for="item in TimeList" @click.native="changeDate(item)" :value="item.label" :key="item.label">{{ item.label }}</Option>
                         </Select>
                     </FormItem>
                     <FormItem label="姓名" prop="starName">
@@ -23,49 +23,30 @@
             </div>
 
             <Table border :columns="table.columns" :data="table.data" style="width: 100%"></Table>
-            <Page class="page-content" :total="total" show-elevator show-sizer />
+            <Pagination :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></Pagination>
         </div>
-        <Modal v-model="modalImg" title="查看图片" @on-ok="ok" @on-cancel="cancel" width="1000">
-            <div class="card-content">
-                <div class="card">
-                    <div class="text">首页轮播图预览</div>
-                    <img :src="homeImg" />
-                </div>
-                <div class="card">
-                    <div class="text">明星详细页预览</div>
-                    <img :src="detailImg" />
-                </div>
-                <div class="card">
-                    <div class="text">打榜弹窗预览</div>
-                    <img :src="hitPopupImg" />
-                </div>
-            </div>
-        </Modal>
     </div>
 </template>
 
 <script>
+import Pagination from './../../common/Pagination.vue';
+import { PAGE_PARAMS } from './../../../utils/constants.js';
+import { yearDay } from '../../../utils/helper.js';
 export default {
     name: 'myArticle',
+    components: {
+        Pagination
+    },
     data() {
         return {
-            modalImg: false,
-            homeImg: '', //首页轮播图
-            detailImg: '', //详情页
-            hitPopupImg: '', //打榜弹窗图
+            dateValue:"",
+            pagination: Object.assign({}, PAGE_PARAMS),
             time: '',
             TimeList: [
-                {
-                    value: '2020/12/22',
-                    label: '2020/12/29'
-                },
-                {
-                    value: '2020/12/29',
-                    label: '2021/01/05'
-                }
+              
             ],
             query: {
-                endTime: '2020-12-30', //周结束时间
+                endTime: '', //周结束时间
 
                 hitListType: 0, //榜单类型 0：周榜；1：月榜；2：总榜
 
@@ -73,17 +54,13 @@ export default {
 
                 monthNum: '', //具体月份值
 
-                pageNum: 1, //当前页码
-
-                pageSize: 20, //页面数量
-
                 sortType: 0, //排序 0：正序；1：倒序；
 
                 starId: '', //明星ID
 
                 starName: '', //明星姓名
 
-                startTime: '2020-12-09' //周开始时间
+                startTime: '' //周开始时间
             },
             table: {
                 data: [
@@ -128,7 +105,7 @@ export default {
                                 'div',
                                 {
                                     style: {
-                                        color: 'blue',
+                                        color: '#2d8cf0',
                                         cursor: 'pointer'
                                     },
                                     on: {
@@ -143,7 +120,7 @@ export default {
                                 'div',
                                 {
                                     style: {
-                                        color: 'blue',
+                                        color: '#2d8cf0',
                                         cursor: 'pointer'
                                     },
                                     on: {
@@ -169,9 +146,108 @@ export default {
     },
     created() {},
     mounted() {
+        this.getTimeList()
         this.loadData();
     },
     methods: {
+        // 情况日期
+        clearDate(){
+             this.query.startTime = ''
+        this.query.endTime =''
+        this.dateValue =''
+        },
+        // 改变日期
+        changeDate(date){
+        this.query.startTime = date.startTime
+        this.query.endTime = date.endTime
+        },
+        // 获取近三个月的周时间表
+        getTimeList(){
+            // 今天
+            let today = new Date().getTime()
+            let Week0 = yearDay(today)
+            // 一周前
+            let Week1 = yearDay(today-7*24*3600*1000)
+
+            let Week2 = yearDay(today-7*24*3600*1000*2)
+  
+            let Week3 = yearDay(today-7*24*3600*1000*3)
+            let Week4 = yearDay(today-7*24*3600*1000*4)
+            let Week5 = yearDay(today-7*24*3600*1000*5)
+            let Week6 = yearDay(today-7*24*3600*1000*6)
+            let Week7 = yearDay(today-7*24*3600*1000*7)
+            let Week8 = yearDay(today-7*24*3600*1000*8)
+            let Week9 = yearDay(today-7*24*3600*1000*9)
+            let Week10 = yearDay(today-7*24*3600*1000*10)
+            let Week11 = yearDay(today-7*24*3600*1000*11)
+            let Week12 = yearDay(today-7*24*3600*1000*12)
+            this.TimeList = [
+                {
+                    label: Week1+"-"+Week0,
+                    startTime: Week1,
+                    endTime: Week0
+                },
+                {
+                    label: Week2+"-"+Week1,
+                    startTime: Week2,
+                    endTime: Week1
+                },
+                {
+                    label: Week3+"-"+Week2,
+                    startTime: Week3,
+                    endTime: Week2
+                },
+                
+                {
+                    label: Week4+"-"+Week3,
+                    startTime: Week4,
+                    endTime: Week3
+                },
+                {
+                    label: Week5+"-"+Week4,
+                    startTime: Week5,
+                    endTime: Week4
+                },
+                {
+                    label: Week6+"-"+Week5,
+                    startTime: Week6,
+                    endTime: Week5
+                },
+                {
+                    label: Week7+"-"+Week6,
+                    startTime: Week7,
+                    endTime: Week6
+                },
+                {
+                    label: Week8+"-"+Week7,
+                    startTime: Week8,
+                    endTime: Week7
+                },
+                {
+                    label: Week9+"-"+Week8,
+                    startTime: Week9,
+                    endTime: Week8
+                },
+                {
+                    label: Week10+"-"+Week9,
+                    startTime: Week10,
+                    endTime: Week9
+                },
+                {
+                    label: Week11+"-"+Week10,
+                    startTime: Week11,
+                    endTime: Week10
+                },
+                {
+                    label: Week12+"-"+Week11,
+                    startTime: Week12,
+                    endTime: Week11
+                },
+                
+            ]
+
+
+        },
         ok() {},
         cancel() {},
         //去详情-粉丝贡献
@@ -183,27 +259,31 @@ export default {
                         id: data.starId
                     }
                 });
-            } else {
-            }
+            } else { //贡献榜
+            
             this.$router.push({
                 name: `${name}Detail`,
                 query: {
                     // id: data.starId,
-                    data: data
+                    data: encodeURIComponent(JSON.stringify(data))
                 }
             });
+            }
         },
 
         // 重置
         resetForm(formName) {
             this.$refs[formName].resetFields();
+            this.clearDate()
         },
-        loadData(search) {
+        loadData() {
+            this.query.pageNum = this.pagination.pageNum;
+            this.query.pageSize = this.pagination.pageSize;
             this.axios
                 .post(`/star/hitList/rankList`, this.query)
                 .then((res) => {
                     this.table.data = res.data.list;
-                    this.total = res.data.total;
+                     this.pagination.total = res.data.total&&Number(res.data.total);
                 })
                 .catch((err) => {
                     console.log('err', err);
@@ -212,70 +292,70 @@ export default {
         // 触发搜索按钮
         handleSearch() {
             // this.$set(this.query, 'pageIndex', 1);
-            this.loadData(true);
+            this.loadData();
         }
     }
 };
 </script>
 
 <style lang="less">
-.rank-list-week-tablelist{
-.handle-box {
-    margin-bottom: 20px;
-}
+.rank-list-week-tablelist {
+    .handle-box {
+        margin-bottom: 20px;
+    }
 
-.handle-select {
-    width: 120px;
-}
+    .handle-select {
+        width: 120px;
+    }
 
-.handle-input {
-    width: 300px;
-    display: inline-block;
-}
-.table {
-    width: 100%;
-    font-size: 14px;
-}
-.red {
-    color: #ff0000;
-}
-.mr10 {
-    margin-right: 10px;
-}
-.table-td-thumb {
-    display: block;
-    margin: auto;
-    width: 40px;
-    height: 40px;
-}
-.card-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 350px;
-    .card {
+    .handle-input {
         width: 300px;
-        height: 300px;
-        margin-right: 20px;
-        .text {
-            text-align: center;
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        img {
-            width: 100%;
-            height: 100%;
-            padding: 5px;
-            background: #ddd;
+        display: inline-block;
+    }
+    .table {
+        width: 100%;
+        font-size: 14px;
+    }
+    .red {
+        color: #ff0000;
+    }
+    .mr10 {
+        margin-right: 10px;
+    }
+    .table-td-thumb {
+        display: block;
+        margin: auto;
+        width: 40px;
+        height: 40px;
+    }
+    .card-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 350px;
+        .card {
+            width: 300px;
+            height: 300px;
+            margin-right: 20px;
+            .text {
+                text-align: center;
+                font-size: 14px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            img {
+                width: 100%;
+                height: 100%;
+                padding: 5px;
+                background: #ddd;
+            }
         }
     }
-}
-.page-content {
-    text-align: right;
-    margin-top: 40px;
-}
-   .ivu-form .ivu-form-item-label,
+    .page-content {
+        text-align: right;
+        margin-top: 40px;
+    }
+    .ivu-form .ivu-form-item-label,
     .ivu-form-item-content {
         display: inline-block;
     }

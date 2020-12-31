@@ -70,7 +70,7 @@ export default {
                 //     ]
                 // },
                 { index: '1',
-                    icon: 'el-icon-lx-home',
+                    icon: 'el-icon-s-check',
                     title: '明星管理',
                     subs: [
                         {
@@ -88,15 +88,15 @@ export default {
                     ]
                 },
                 { index: 'fenManage',
-                    icon: 'el-icon-lx-home',
+                    icon: 'el-icon-s-custom',
                     title: '粉丝管理',
                 },
                 { index: 'hotSetting',
-                    icon: 'el-icon-lx-home',
+                    icon: 'el-icon-s-opportunity',
                     title: '热力设置',
                 },
                  {
-                    icon: 'el-icon-lx-home',
+                    icon: 'el-icon-picture',
                     index: 'banner',
                     title: '轮播设置'
                 },
@@ -106,7 +106,7 @@ export default {
                     title: '资源管理'
                 },
                  {
-                    icon: 'el-icon-lx-home',
+                    icon: 'el-icon-user-solid',
                     index: 'account',
                     title: '账号管理'
                 },
@@ -168,35 +168,35 @@ export default {
                 //     index: 'tabs',
                 //     title: 'tab选项卡'
                 // },
-                {
-                    icon: 'el-icon-lx-calendar',
-                    index: '4',
-                    title: '表单相关',
-                    subs: [
-                        // {
-                        //     index: 'form',
-                        //     title: '基本表单'
-                        // },
-                        // {
-                        //     index: '4-2',
-                        //     title: '三级菜单',
-                        //     subs: [
-                        //         {
-                        //             index: 'editor',
-                        //             title: '富文本编辑器'
-                        //         },
-                        //         {
-                        //             index: 'markdown',
-                        //             title: 'markdown编辑器'
-                        //         }
-                        //     ]
-                        // },
-                        {
-                            index: 'upload',
-                            title: '文件上传'
-                        }
-                    ]
-                },
+                // {
+                //     icon: 'el-icon-lx-calendar',
+                //     index: '4',
+                //     title: '表单相关',
+                //     subs: [
+                //         // {
+                //         //     index: 'form',
+                //         //     title: '基本表单'
+                //         // },
+                //         // {
+                //         //     index: '4-2',
+                //         //     title: '三级菜单',
+                //         //     subs: [
+                //         //         {
+                //         //             index: 'editor',
+                //         //             title: '富文本编辑器'
+                //         //         },
+                //         //         {
+                //         //             index: 'markdown',
+                //         //             title: 'markdown编辑器'
+                //         //         }
+                //         //     ]
+                //         // },
+                //         {
+                //             index: 'upload',
+                //             title: '文件上传'
+                //         }
+                //     ]
+                // },
                 // {
                 //     icon: 'el-icon-lx-emoji',
                 //     index: 'icon',
@@ -227,21 +227,21 @@ export default {
                 //     index: 'i18n',
                 //     title: '国际化功能'
                 // },
-                {
-                    icon: 'el-icon-lx-warn',
-                    index: '7',
-                    title: '错误处理',
-                    subs: [
-                        {
-                            index: 'permission',
-                            title: '权限测试'
-                        },
-                        {
-                            index: '404',
-                            title: '404页面'
-                        }
-                    ]
-                },
+                // {
+                //     icon: 'el-icon-lx-warn',
+                //     index: '7',
+                //     title: '错误处理',
+                //     subs: [
+                //         {
+                //             index: 'permission',
+                //             title: '权限测试'
+                //         },
+                //         {
+                //             index: '404',
+                //             title: '404页面'
+                //         }
+                //     ]
+                // },
                 // {
                 //     icon: 'el-icon-lx-redpacket_fill',
                 //     index: '/donate',

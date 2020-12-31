@@ -22,13 +22,14 @@
                     </FormItem>
                 </Form>
                 <div>
-                    <Button type="primary" style="width:100px" @click="goDetail('add')">添加明星</Button>
+                    <Button type="primary" style="width: 100px" @click="goDetail('add')">添加明星</Button>
                 </div>
             </div>
 
             <Table border :columns="table.columns" :data="table.data"></Table>
-            <Page class="page-content" :total="total" show-elevator show-sizer />
+            <Pagination :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></Pagination>
         </div>
+
         <Modal v-model="modalImg" title="查看图片" @on-ok="ok" @on-cancel="cancel" width="600">
             <div class="card-content-startist">
                 <div class="card">
@@ -59,19 +60,24 @@
 <script>
 // import {getConfigsByProductId,addNewAndroidPlugin}  from '../../api/index.js';
 import { timeChange } from '../../utils/helper.js';
+import Pagination from './../common/Pagination.vue';
+import { PAGE_PARAMS } from './../../utils/constants.js';
 export default {
     name: 'myArticle',
+    components: {
+        Pagination
+    },
     data() {
         return {
+            pagination: Object.assign({}, PAGE_PARAMS),
             modalImg: false,
             homeImg: '', //首页轮播图
             detailImg: '', //详情页
             hitPopupImg: '', //打榜弹窗图
             query: {
                 id: '',
-                name: '',
-                pageIndex: 1,
-                pageSize: 10
+                name: ''
+                
             },
             table: {
                 data: [],
@@ -106,7 +112,7 @@ export default {
                                 'div',
                                 {
                                     style: {
-                                        color: 'blue',
+                                        color: '#2d8cf0',
                                         cursor: 'pointer'
                                     },
                                     on: {
@@ -205,12 +211,12 @@ export default {
                                 'div',
                                 {
                                     style: {
-                                        color: 'blue',
+                                        color: '#2d8cf0',
                                         cursor: 'pointer'
                                     },
                                     on: {
                                         click: () => {
-                                            this.goDetail('detail',params.row.id);
+                                            this.goDetail('detail', params.row.id);
                                         }
                                     }
                                 },
@@ -237,12 +243,12 @@ export default {
         ok() {},
         cancel() {},
         //去详情
-        goDetail(name,id) {
-     
-               this.$router.push({
+        goDetail(name, id) {
+            this.$router.push({
                 name: 'starDetail',
                 query: {
-                    id:id
+                    id: id,
+                    add:name=='add'?'add':''
                 }
             });
         },
@@ -262,17 +268,17 @@ export default {
         resetForm(formName) {
             this.$refs[formName].resetFields();
         },
-        loadData(search) {
+        loadData() {
             this.axios
                 .post(`/star/star/list`, {
-                    id: search ? this.query.id : '',
-                    name: search ? this.query.name : '',
-                    pageNum: 1,
-                    pageSize: 20
+                    id: this.query.id,
+                    name:  this.query.name,
+                    pageNum: this.pagination.pageNum,
+                    pageSize: this.pagination.pageSize
                 })
                 .then((res) => {
                     this.table.data = res.data.list;
-                    this.total = res.data.total&&Number(res.data.total);
+                    this.pagination.total = res.data.total&&Number(res.data.total);
                 })
                 .catch((err) => {
                     this.$Message.error(err);
@@ -280,8 +286,9 @@ export default {
         },
         // 触发搜索按钮
         handleSearch() {
+            this.pagination.pageNum = 1;
             // this.$set(this.query, 'pageIndex', 1);
-            this.loadData(true);
+            this.loadData();
         }
     }
 };

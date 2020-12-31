@@ -20,8 +20,8 @@ import 'viewerjs/dist/viewer.css';
 Vue.use(ViewUI);
 
 Vue.use(Viewer);
-// axios.defaults.baseURL = 'https://123.207.120.31:18001'; //接口的基础url
-axios.defaults.baseURL = "https://192.168.20.4:18001" //本地接口的基础url
+axios.defaults.baseURL = 'https://123.207.120.31:18001'; //接口的基础url
+// axios.defaults.baseURL = "https://192.168.20.4:18001" //本地接口的基础url
 // 请求拦截
 axios.interceptors.request.use(
     config => {
@@ -42,7 +42,7 @@ axios.interceptors.response.use(
             return Promise.reject(response.data.message);
             //   router.push("/login")
             //其余错误状态处理
-        } else if (response.data.code == '100001' || response.data.code == '200001'||response.data.code == '300001') {
+        } else if (response.data.code == '100001' || response.data.code == '200001'||response.data.code == '300001'||response.data.code == '200002') {
             return Promise.reject(response.data.message);
             //请求成功
         } else if (response.data.code == 200) {

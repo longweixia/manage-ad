@@ -288,7 +288,7 @@ export const filterDeadline = function (time) {
 	let newDate = Date.now()
 	let getTime = parseInt((deadlineDate - newDate)/1000);
 	if (getTime < 0) {
-		return ` 0 天 0 时 0 分 `
+		return ` 已过期 `
 	}
 	let day = parseInt(getTime/3600/24);   //  天数
 	let hour = parseInt((getTime - (day*3600*24))/3600)  //  小时
@@ -296,10 +296,11 @@ export const filterDeadline = function (time) {
 	function checkTime(time){
 		return time = time < 10 ? `0${time}` : time
   }
-  if(checkTime(day)<0&&checkTime(hour)<0&&checkTime(minute)<0){
-    return '已过期'
-  }else{
-    return ` ${checkTime(day)} 天 ${checkTime(hour)} 时 ${checkTime(minute)} 分 `
+  // if(day<=0&&hour<=0&&minute<=0){
+  //   return '已过期'
+  // }else
+  {
+    return ` 倒计时:${checkTime(day)} 天 ${checkTime(hour)} 时 ${checkTime(minute)} 分 `
   }
 	
 }

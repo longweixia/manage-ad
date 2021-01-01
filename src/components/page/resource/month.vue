@@ -3,7 +3,7 @@
         <div class="container">
             <div class="card-area">
                 <div class="row-text">
-                    {{ switchValWeek }}
+            
                     月榜奖励
                     <i-Switch size="large" v-model="switchValWeek">
                         <span slot="open">开启</span>
@@ -38,13 +38,13 @@
                 <Button type="primary" @click="uploadImg">上传图片</Button>
 
                 <div class="upload-area">
-                    {{getImageUrl}}
+
                     <upload :value.sync="imgUrl" @upImageUrl="getImageUrl" ref="upload" :fileFormat="true"></upload>
                 </div>
             </div>
             <div class="card-area">
                 <div class="row-text">
-                    {{ switchValHot }}
+       
                     最低热力值
                     <i-Switch size="large" v-model="switchValHot">
                         <span slot="open">开启</span>
@@ -134,6 +134,7 @@ export default {
         getImageUrl(data) {
             this.imgUrl = data[0];
             this.flieData = data[1];
+                 this.uploadFile()
         },
         // 上传文件，保存时才上传
         uploadFile() {
@@ -157,7 +158,7 @@ export default {
                 this.$Message.error('输入热力值前，需要先开启最低热力值按钮');
                 return false;
             }
-            this.uploadFile();
+       
             let type; //选中的tag
             this.tagList.forEach((item, index) => {
                 if (item.checked) {
@@ -169,12 +170,13 @@ export default {
                     code: 'MONTH', //WEEK:周榜 MONTH-月榜
                     img: this.uploadCompleteImg?this.uploadCompleteImg:this.imgUrl, //宣传页
                     minVal: this.minVal, //最低热力值
-                    open: this.switchValWeek, //是否开启
-                    openMin: this.switchValHot, //是否开启最低热力值
+                          open: this.switchValWeek?1:0, //是否开启
+                    openMin: this.switchValHot?1:0, //是否开启最低热力值
                     type: type //1-后援金 2-小程序开屏 3-首页轮播 4-户外大屏  todo type应该是一个数组
                 })
                 .then((res) => {
                       this.$Message.success('提交成功');
+                      this.loadData()
                 })
                 .catch((err) => {
                       this.$Message.error(err);

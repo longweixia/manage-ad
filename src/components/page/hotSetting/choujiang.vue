@@ -1,15 +1,15 @@
 <template>
     <div>
         <div class="container">
-            <div class="card-area">
+            <div class="card-area inp-top">
                 <div class="row-text">数值设置</div>
                 <div v-for="(item, index) in drawFieldNums" :key="index" class="num-list">
-                    <Input v-model="drawFieldNums[index]" placeholder="数值" style="width: 200px" clearable></Input>
+                    <Input v-model="drawFieldNums[index]" placeholder="数值" style="width: 200px;margin-top:10px" clearable></Input>
                 </div>
             </div>
             <div class="card-area">
                 <div class="row-text">每日限制次数</div>
-                <Input v-model="form.deawMaxNum" placeholder="数值" style="width: 200px" clearable></Input>次
+                <Input v-model="form.deawMaxNum" placeholder="数值"  style="width: 200px" clearable></Input>次
             </div>
             <div class="card-area">
                 <div class="row-text">
@@ -59,9 +59,9 @@ export default {
                 strategyDeawMinNum: '', //单个粉丝累计抽奖次数
                 scoreStrategyFlag: 0, //高分值策略开关  0：关闭；1开启；
                 drawFieldNums: '', //热力抽奖8栏位数值 例：11,13,43,55,22
-                vigourSendNum: null //具体赠送热力值
+                vigourSendNum: '' //具体赠送热力值
             },
-            drawFieldNums: [], //热力抽奖8栏位数值
+            drawFieldNums: [0,0,0,0,0,0,0,0], //热力抽奖8栏位数值
             scoreStrategyFlag: false //高分值策略
         };
     },
@@ -83,6 +83,7 @@ export default {
                 
             });
             pramas.drawFieldNums = str 
+            pramas.vigourSendNum = Number(pramas.vigourSendNum)
             // pramas.drawFieldNums = '1,2,3,4,5,6,7,8'
             // 处理高分值策略
             if (this.scoreStrategyFlag) {
@@ -203,5 +204,8 @@ export default {
 .num-list {
     display: inline-block;
     margin-right: 10px;
+}
+.inp-top{
+    width:900px;
 }
 </style>

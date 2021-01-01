@@ -13,7 +13,7 @@
             </div>
 
             <div>
-                <div class="row-text">轮播图1</div>{{modalBannaer1}}
+                <div class="row-text">轮播图1</div>
                 <Button type="primary" @click="showModalBannaer1">上传图片</Button>
             </div>
             <div class="card-area">
@@ -37,7 +37,7 @@
             </div>
             <div>
                 <div class="row-text">轮播图2</div>
-                <Button type="primary" @click="uploadImg">上传图片</Button>
+                <Button type="primary" @click="showModalBannaer2">上传图片</Button>
             </div>
             <div class="card-area">
                 <div class="card-content">
@@ -58,22 +58,26 @@
         </div>
         <!-- 轮播1 -->
         
-        <Banners1 :modalBannaer="modalBannaer1" @closeBanner1="closeBanner1" @upImageUrl1='upImageUrl1' :home1="home1" :level1="level1" :bannerData="bannerData"></Banners1>
+        <Banners1 :modalBannaer="modalBannaer1" @closeBanner1="closeBanner1"  :home1="home1" :level1="level1" :bannerData="bannerData"></Banners1>
+        <Banners2 :modalBannaer="modalBannaer2" @closeBanner1="closeBanner2"  :home1="home2" :level1="level2" :bannerData="bannerData"></Banners2>
     </div>
 </template>
 
 <script>
 import upload from '../common/upload/index.vue';
 import Banners1 from './Banners/Banners1.vue';
+import Banners2 from './Banners/Banners2.vue';
 export default {
     components: {
         upload,
-        Banners1
+        Banners1,
+        Banners2,
     },
     data() {
         return {
             bannerData:{}, //轮播数据
             modalBannaer1: false,
+            modalBannaer2: false,
             open: false, //是否开启
             home1: '',
             home2: '',
@@ -118,14 +122,11 @@ export default {
         this.loadData();
     },
     methods: {
-        upImageUrl1(){
-
-        },
-        upImageUrl(data){
-            // this.home1 = data[0]
-        },
+        
+   
         closeBanner1(data){
             this.modalBannaer1 = false
+            this.loadData()
         },
         showModalBannaer1() {
          
@@ -135,12 +136,21 @@ export default {
             this.home1 = data[0];
             this.flieData1 = data[1];
         },
+      
+    
+        closeBanner2(data){
+            this.modalBannaer2 = false
+            this.loadData()
+        },
+        showModalBannaer2() {
+         
+            this.modalBannaer2 = true;
+        },
         getImageUrl2(data) {
             this.home2 = data[0];
-            this.flieData2 = data[1];
+            this.flieData1 = data[1];
         },
-        // 上传图片
-        uploadImg() {},
+       
         //新增标签
         addTag() {},
         //关闭标签

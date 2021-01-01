@@ -10,7 +10,7 @@
                     <Input v-model="shareMaxNum" placeholder="数值" style="width: 200px" clearable></Input>次
                 </div>
 
-                <div>
+                <div style="margin-top:20px">
                     每次获得
                     <Input v-model="vigourShareNum" placeholder="数值" style="width: 200px" clearable></Input>热力值
                 </div>

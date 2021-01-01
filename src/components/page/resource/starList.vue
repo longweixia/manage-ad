@@ -4,7 +4,7 @@
             <div class="handle-box">
                 <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
                     <FormItem label="有效期" prop="time">
-                        <DatePicker @on-change="changeDate" type="daterange" placeholder="Select date" style="width: 200px"></DatePicker>
+                        <DatePicker @on-change="changeDate" type="daterange" placeholder="选择日期" style="width: 200px"></DatePicker>
                     </FormItem>
                     <FormItem label="资源类型" prop="type">
                         <Select v-model="query.type" style="width: 150px" clearable>
@@ -172,7 +172,7 @@ export default {
                                     },
                                  
                                 },
-                               `倒计时:${countDownText}`
+                               `${countDownText}`
                             );
                             return h('div', [time,countDown]);
                         }

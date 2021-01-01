@@ -5,21 +5,21 @@
             <div class="tips">图片格式必须为：png,bmp,jpeg,jpg,gif；不可大于2M</div>
             <div class="crop-demo-btn">
                 <Button>上传文件</Button>
-                <input class="crop-input" type="file" name="image" accept="image/*" @change="setImage" />
+                <input class="crop-input" type="file" name="image" @click="flag = 1" accept="image/*" @change="setImage" />
             </div>
-       
+
             <div class="crop-demo">
                 <img :src="home1Colone" class="pre-img" />
             </div>
-
+         
             <!-- 上传二级页面 -->
             <div class="row-text">上传二级页面</div>
             <div class="tips">图片格式必须为：png,bmp,jpeg,jpg,gif；不可大于7M M</div>
             <div class="crop-demo-btn">
                 <Button>上传文件 </Button>
-                <input class="crop-input" type="file" name="image" accept="image/*" @change="setImage" />
+                <input class="crop-input" type="file" name="image" @click="flag = 2" accept="image/*" @change="setImage" />
             </div>
-            {{ level1Colone }}
+  
             <div class="crop-demo">
                 <img :src="level1Colone" class="pre-img" />
             </div>
@@ -43,7 +43,7 @@
             <div style="text-align: center" slot="footer">
                 <Button type="primary" @click="confirm">提交</Button>
             </div>
-            {{bannerObj}}
+        
         </div>
     </Modal>
 </template>
@@ -71,8 +71,6 @@ export default {
         }
     },
     watch: {
-        
-       
         modalBannaer: {
             handler(newval, oldval) {
                 this.modalBannaerInit = newval;
@@ -96,34 +94,20 @@ export default {
                 this.level1Colone = newval;
             },
             immediate: true
-        }
-        // imgSrc: {
-        //     handler(newval, oldval) {
-        //          this.$emit("upImageUrl1", [newval,this.flieData])
-        //     },
-        //         immediate: true
-        // },
-        // modalBannaerInit(newval, oldval) {
-        //     this.$emit('closeBanner1', newval);
-
-        //     // if(this.fileFormat){
-        //     //     this.$emit("upImageUrl", [val,this.flieData])
-        //     // }else{
-        //     //     this.$emit("upImageUrl", val)
-        //     // }
-        // }
+        },
+   
     },
     data() {
         return {
-             bannerObj: this.bannerData, //轮播对象
+            flag: 1, //点击图片一还是图片2
+            bannerObj: this.bannerData, //轮播对象
             flieData: null, //上传的文件数据
             modalBannaerInit: this.modalBannaerInit,
             home1Colone: this.home1,
             level1Colone: this.level1,
             defaultSrc: require('../../../assets/img/img.jpg'),
             fileList: [],
-            imgSrc: '',
-
+imgSrc:"",
             dialogVisible: false
         };
     },
@@ -138,36 +122,43 @@ export default {
             //     "level1": this.level1Colone,
             //     "open": 1
             // }
-            this.bannerObj.home1 = this.home1Colone
+            this.bannerObj.home1 = this.home1Colone;
+            this.bannerObj.level1 = this.level1Colone;
             // console.log(this.bannerObj.id,22)
             // this.bannerObj.id = BigInt(this.bannerObj.id)
-          
-            
-        
 
             this.axios
-                .post(`/carousel/addOrUpdateCarousel`,this.bannerObj)
+                .post(`/carousel/addOrUpdateCarousel`, this.bannerObj)
                 .then((res) => {
-                       this.$emit('closeBanner1', false);
-                       this.$Message.success('上传成功');
+                    this.$emit('closeBanner1', false);
+                    this.$Message.success('上传成功');
                 })
                 .catch((err) => {
                     this.$Message.error(err);
                 });
-
-         
         },
         okUpload() {
-            const formData = new FormData();
-            formData.append('file', this.flieData); //todo 接口类型错误，应该是file不是string
+             if(!this.home1Colone&&!this.level1Colone){
+               this.$Message.error('请先上传图片');
+               return false
+            }
+        
             this.axios
-                .post(`/common/upload`, formData)
+                .post(`/common/uploadBase64`, {
+                     baseStr: this.flag == 1?this.home1Colone:this.level1Colone 
+                })
                 .then((res) => {
-                    this.home1Colone = res.data;
+                    // 图片1
+                    if (this.flag == 1) {
+                        this.home1Colone = res.data;
+                    } else {
+                        this.level1Colone = res.data;
+                    }
+
                     this.dialogVisible = false;
                 })
                 .catch((err) => {
-                    console.log('err', err);
+                     this.$Message.error(err);
                 });
         },
         setImage(e) {
@@ -187,11 +178,19 @@ export default {
         },
 
         cropImage() {
-            this.home1Colone = this.$refs.cropper.getCroppedCanvas().toDataURL();
+            if (this.flag == 1) {
+                this.home1Colone = this.$refs.cropper.getCroppedCanvas().toDataURL();
+            } else {
+                this.level1Colone = this.$refs.cropper.getCroppedCanvas().toDataURL();
+            }
         },
         cancelCrop() {
             this.dialogVisible = false;
-            this.home1Colone = this.defaultSrc;
+            if (this.flag == 1) {
+                this.home1Colone = this.defaultSrc;
+            } else {
+                this.level1Colone = this.defaultSrc;
+            }
         },
         imageuploaded(res) {
             console.log(res);
@@ -205,6 +204,7 @@ export default {
     },
     mounted() {
         this.home1Colone = this.home1Colone ? this.home1Colone : this.defaultSrc;
+        this.level1Colone = this.level1Colone ? this.level1Colone : this.defaultSrc;
     }
 };
 </script>

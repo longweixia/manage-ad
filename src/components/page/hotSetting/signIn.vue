@@ -63,6 +63,7 @@ export default {
                 .post(`/hitSettings/edit`, pramas)
                 .then((res) => {
                     this.$Message.success('保存成功');
+                     this.loadData();
                 })
                 .catch((err) => {
                     this.$Message.error(err);

@@ -1,5 +1,10 @@
 <template>
     <div>
+          <div class="crumbs">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item>{{titles=='add'?'添加资源':'资源详情'}}</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
         <div class="container">
             <div class="card-area">
                 <div class="row-text">资源类型</div>

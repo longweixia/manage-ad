@@ -60,7 +60,7 @@ export default {
     },
     data() {
         return {
-                  pagination: Object.assign({}, PAGE_PARAMS),
+            pagination: Object.assign({}, PAGE_PARAMS),
             modalOneData: {}, //选择单行的数据
             uploadModel: false, //批量导入
             vigourVal: null, //赠送的热力数量
@@ -173,7 +173,7 @@ export default {
                                 'div',
                                 {
                                     style: {
-                                        color: 'blue',
+                                        color: '#2d8cf0',
                                         cursor: 'pointer'
                                     },
                                     on: {

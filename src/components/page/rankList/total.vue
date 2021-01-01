@@ -3,7 +3,6 @@
         <div class="container">
             <div class="handle-box">
                 <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
-
                     <FormItem label="明星" prop="starName">
                         <Input v-model="query.starName" placeholder="明星" clearable></Input>
                     </FormItem>
@@ -18,8 +17,8 @@
                 </Form>
             </div>
 
-            <Table border :columns="table.columns" :data="table.data" style="width:100%"></Table>
-            <Page class="page-content" :total="total" show-elevator show-sizer />
+            <Table border :columns="table.columns" :data="table.data" style="width: 100%"></Table>
+            <Pagination :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></Pagination>
         </div>
         <Modal v-model="modalImg" title="查看图片" @on-ok="ok" @on-cancel="cancel" width="1000">
             <div class="card-content">
@@ -41,10 +40,16 @@
 </template>
 
 <script>
+import Pagination from './../../common/Pagination.vue';
+import { PAGE_PARAMS } from './../../../utils/constants.js';
 export default {
     name: 'myArticle',
+    components: {
+        Pagination
+    },
     data() {
         return {
+            pagination: Object.assign({}, PAGE_PARAMS),
             modalImg: false,
             homeImg: '', //首页轮播图
             detailImg: '', //详情页
@@ -61,13 +66,13 @@ export default {
                 }
             ],
             query: {
-                endTime: '', //周结束时间
+                // endTime: '', //周结束时间
 
                 hitListType: 2, //榜单类型 0：周榜；1：月榜；2：总榜
 
-                listType: '', //列表类型 默认空， 0：本周；1：近三个月周时间段；2：具体某个月份
+                // listType: '', //列表类型 默认空， 0：本周；1：近三个月周时间段；2：具体某个月份
 
-                monthNum: '', //具体月份值
+                // monthNum: '', //具体月份值
 
                 pageNum: 1, //当前页码
 
@@ -79,14 +84,11 @@ export default {
 
                 starName: '', //明星姓名
 
-                startTime: '' //周开始时间
+                // startTime: '' //周开始时间
             },
             table: {
-                data: [
-                   
-                ],
+                data: [],
                 columns: [
-    
                     {
                         title: '明星',
                         key: 'starName',
@@ -104,7 +106,7 @@ export default {
                         title: '活力值',
                         key: 'totalVigourVal',
                         align: 'center',
-      
+
                         minWidth: 150
                     },
                     {
@@ -125,7 +127,7 @@ export default {
                                 'div',
                                 {
                                     style: {
-                                        color: 'blue',
+                                        color: '#2d8cf0',
                                         cursor: 'pointer'
                                     },
                                     on: {
@@ -136,7 +138,7 @@ export default {
                                 },
                                 '明星详情'
                             );
-                      
+
                             return h('div', [detail]);
                         }
                     }
@@ -161,8 +163,8 @@ export default {
         goDetail(data) {
             this.$router.push({
                 name: 'starDetail',
-                 query: {
-                    id: data.starId,
+                query: {
+                    id: data.starId
                     // data: data
                 }
             });
@@ -172,12 +174,14 @@ export default {
         resetForm(formName) {
             this.$refs[formName].resetFields();
         },
-        loadData(search) {
+        loadData() {
+            this.query.pageNum = this.pagination.pageNum;
+            this.query.pageSize = this.pagination.pageSize;
             this.axios
                 .post(`/star/hitList/rankList`, this.query)
                 .then((res) => {
                     this.table.data = res.data.list;
-                    this.total = res.data.total;
+                    this.pagination.total = res.data.total && Number(res.data.total);
                 })
                 .catch((err) => {
                     console.log('err', err);
@@ -185,73 +189,74 @@ export default {
         },
         // 触发搜索按钮
         handleSearch() {
+            this.pagination.pageNum = 1;
             // this.$set(this.query, 'pageIndex', 1);
-            this.loadData(true);
+            this.loadData();
         }
     }
 };
 </script>
 
 <style lang="less" scoped>
-.rank-list-month-tablelist{
-.handle-box {
-    margin-bottom: 20px;
-}
+.rank-list-month-tablelist {
+    .handle-box {
+        margin-bottom: 20px;
+    }
 
-.handle-select {
-    width: 120px;
-}
+    .handle-select {
+        width: 120px;
+    }
 
-.handle-input {
-    width: 300px;
-    display: inline-block;
-}
-.table {
-    width: 100%;
-    font-size: 14px;
-}
-.red {
-    color: #ff0000;
-}
-.mr10 {
-    margin-right: 10px;
-}
-.table-td-thumb {
-    display: block;
-    margin: auto;
-    width: 40px;
-    height: 40px;
-}
-.card-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 350px;
-    .card {
+    .handle-input {
         width: 300px;
-        height: 300px;
-        margin-right: 20px;
-        .text {
-            text-align: center;
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        img {
-            width: 100%;
-            height: 100%;
-            padding: 5px;
-            background: #ddd;
+        display: inline-block;
+    }
+    .table {
+        width: 100%;
+        font-size: 14px;
+    }
+    .red {
+        color: #ff0000;
+    }
+    .mr10 {
+        margin-right: 10px;
+    }
+    .table-td-thumb {
+        display: block;
+        margin: auto;
+        width: 40px;
+        height: 40px;
+    }
+    .card-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 350px;
+        .card {
+            width: 300px;
+            height: 300px;
+            margin-right: 20px;
+            .text {
+                text-align: center;
+                font-size: 14px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            img {
+                width: 100%;
+                height: 100%;
+                padding: 5px;
+                background: #ddd;
+            }
         }
     }
-}
-.page-content {
-    text-align: right;
-    margin-top: 40px;
-}
-   .ivu-form .ivu-form-item-label,
+    .page-content {
+        text-align: right;
+        margin-top: 40px;
+    }
+    .ivu-form .ivu-form-item-label,
     .ivu-form-item-content {
         display: inline-block;
     }
-    }
+}
 </style>

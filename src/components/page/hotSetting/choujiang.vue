@@ -22,7 +22,7 @@
                 <div>
                     单个粉丝累计抽奖
                     <Input v-model="form.strategyDeawMinNum" placeholder="数值" style="width: 200px" clearable></Input>次， 获得超过（含）
-                    <Select v-model="form.drawFieldNums" style="width: 150px" clearable>
+                    <Select v-model="form.vigourSendNum" style="width: 150px" clearable>
                         <Option v-for="item in drawFieldNums" :value="item" :key="item">{{ item }}</Option>
                     </Select>
                     以上的随机热力值
@@ -58,9 +58,10 @@ export default {
                 deawMaxNum: null, //每日抽奖最高次数
                 strategyDeawMinNum: '', //单个粉丝累计抽奖次数
                 scoreStrategyFlag: 0, //高分值策略开关  0：关闭；1开启；
-                drawFieldNums: null //热力抽奖8栏位数值 例：11,13,43,55,22
+                drawFieldNums: '', //热力抽奖8栏位数值 例：11,13,43,55,22
+                vigourSendNum: null //具体赠送热力值
             },
-            drawFieldNums: [11, 22, 33, 44, 55, 66, 77, 88], //热力抽奖8栏位数值
+            drawFieldNums: [], //热力抽奖8栏位数值
             scoreStrategyFlag: false //高分值策略
         };
     },
@@ -68,14 +69,21 @@ export default {
         this.loadData();
     },
     methods: {
-        // 随机热力值赠送方式 0：超过（含）具体值；1：超过（含）当前八档数值；
-        changeInP(data) {
-            let inpVal = this.form.strategyDeawMinNum;
-
-            this.form.drawFieldNums[8] = inpVal;
-        },
+        
         save() {
             let pramas = Object.assign({}, this.form);
+            let str = "";
+            this.drawFieldNums.forEach((e,i) => {
+                if(!str){
+                    str = e
+                }else{
+                     str =str+"," +e
+                }
+             
+                
+            });
+            pramas.drawFieldNums = str 
+            // pramas.drawFieldNums = '1,2,3,4,5,6,7,8'
             // 处理高分值策略
             if (this.scoreStrategyFlag) {
                 pramas.scoreStrategyFlag = 1;
@@ -88,6 +96,7 @@ export default {
                 .post(`/hitSettings/edit`, pramas)
                 .then((res) => {
                     this.$Message.success('保存成功');
+                    this.loadData()
                 })
                 .catch((err) => {
                     this.$Message.error(err);

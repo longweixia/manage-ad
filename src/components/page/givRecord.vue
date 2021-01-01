@@ -141,8 +141,9 @@ export default {
             this.query.giveTime = e[0] ? e[0] + ' 00:00:00' : e[0];
             this.query.giveTimeEnd = e[1] ? e[1] + ' 23:59:59' : e[1];
         },
-        loadData(search) {
-            (this.query.pageNum = this.pagination.pageNum), (this.query.pageSize = this.pagination.pageSize);
+        loadData() {
+            this.query.pageNum = this.pagination.pageNum;
+            this.query.pageSize = this.pagination.pageSize;
             this.axios
                 .post(`/fens/selectGivePage`, this.query)
                 .then((res) => {
@@ -157,7 +158,7 @@ export default {
         handleSearch() {
             this.pagination.pageNum = 1;
             // this.$set(this.query, 'pageIndex', 1);
-            this.loadData(true);
+            this.loadData();
         }
     }
 };

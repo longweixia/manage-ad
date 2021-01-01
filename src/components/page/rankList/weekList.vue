@@ -289,8 +289,9 @@ export default {
                     console.log('err', err);
                 });
         },
-        // 触发搜索按钮
+           // 触发搜索按钮
         handleSearch() {
+            this.pagination.pageNum = 1;
             // this.$set(this.query, 'pageIndex', 1);
             this.loadData();
         }

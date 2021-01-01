@@ -3,8 +3,8 @@
         <div class="container">
             <div class="handle-box">
                 <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
-                    <FormItem label="选择月" prop="time">
-                        <Select v-model="query.monthNum" style="width: 150px" clearable>
+                    <FormItem label="选择月">
+                        <Select v-model="query.monthNum" style="width: 150px" clearable @on-clear="clearDate">
                             <Option v-for="item in TimeList" :value="item.value" :key="item.value">{{ item.value }}</Option>
                         </Select>
                     </FormItem>
@@ -24,7 +24,6 @@
 
             <Table border :columns="table.columns" :data="table.data" style="width: 100%"></Table>
             <Pagination :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></Pagination>
-
         </div>
         <Modal v-model="modalImg" title="查看图片" @on-ok="ok" @on-cancel="cancel" width="1000">
             <div class="card-content">
@@ -50,12 +49,12 @@ import Pagination from './../../common/Pagination.vue';
 import { PAGE_PARAMS } from './../../../utils/constants.js';
 export default {
     name: 'myArticle',
-        components: {
+    components: {
         Pagination
     },
     data() {
         return {
-                  pagination: Object.assign({}, PAGE_PARAMS),
+            pagination: Object.assign({}, PAGE_PARAMS),
             modalImg: false,
             homeImg: '', //首页轮播图
             detailImg: '', //详情页
@@ -78,11 +77,11 @@ export default {
 
                 listType: 2, //列表类型 默认空， 0：本周；1：近三个月周时间段；2：具体某个月份
 
-                monthNum: null, //具体月份值
+                monthNum: '', //具体月份值
 
-                pageNum: 1, //当前页码
+                // pageNum: 1, //当前页码
 
-                pageSize: 20, //页面数量
+                // pageSize: 20, //页面数量
 
                 sortType: 0, //排序 0：正序；1：倒序；
 
@@ -132,7 +131,7 @@ export default {
                                 'div',
                                 {
                                     style: {
-                                        color: 'blue',
+                                        color: '#2d8cf0',
                                         cursor: 'pointer'
                                     },
                                     on: {
@@ -147,7 +146,7 @@ export default {
                                 'div',
                                 {
                                     style: {
-                                        color: 'blue',
+                                        color: '#2d8cf0',
                                         cursor: 'pointer'
                                     },
                                     on: {
@@ -173,68 +172,64 @@ export default {
     },
     created() {},
     mounted() {
-        this.getTimeList()
+        this.getTimeList();
         this.loadData();
     },
     methods: {
+        // 清除日期
+        clearDate() {
+            this.query.monthNum = '';
+        },
         // 获取近三个月的周时间表
         getTimeList() {
             let current = new Date().getMonth(); //当前月
-         
+
             let month1 = current - 1 <= 0 ? 12 : current - 1;
-               
+
             let month2 = month1 - 1 <= 0 ? 12 : month1 - 1;
-            console.log(current,month1,month2)
+            console.log(current, month1, month2);
             let month3 = month2 - 1 <= 0 ? 12 : month2 - 1;
             let month4 = month3 - 1 <= 0 ? 12 : month3 - 1;
             let month5 = month4 - 1 <= 0 ? 12 : month4 - 1;
-            if(current===0){
-                current=1
+            if (current === 0) {
+                current = 1;
             }
-            if(month1===0){
-                month1=1
+            if (month1 === 0) {
+                month1 = 1;
             }
-            if(month2===0){
-                month2=1
+            if (month2 === 0) {
+                month2 = 1;
             }
-            if(month3===0){
-                month3=1
+            if (month3 === 0) {
+                month3 = 1;
             }
-            if(month4===0){
-                month4=1
+            if (month4 === 0) {
+                month4 = 1;
             }
-            if(month5===0){
-                month5=1
+            if (month5 === 0) {
+                month5 = 1;
             }
 
-            this.TimeList=[
+            this.TimeList = [
                 {
                     value: current
-                   
                 },
                 {
                     value: month1
-                   
                 },
                 {
                     value: month2
-                
                 },
                 {
                     value: month3
-                   
                 },
                 {
                     value: month4
-                   
                 },
                 {
                     value: month5
-                   
-                },
-                
-            ]
-
+                }
+            ];
         },
         ok() {},
         cancel() {},
@@ -247,16 +242,19 @@ export default {
 
         // 重置
         resetForm(formName) {
-            this.$refs[formName].resetFields();
+            // this.$refs[formName].resetFields();
+            this.query.starId = '';
+            this.query.starName = '';
+            this.clearDate();
         },
         loadData() {
-             this.query.pageNum = this.pagination.pageNum;
+            this.query.pageNum = this.pagination.pageNum;
             this.query.pageSize = this.pagination.pageSize;
             this.axios
                 .post(`/star/hitList/rankList`, this.query)
                 .then((res) => {
                     this.table.data = res.data.list;
-                  this.pagination.total = res.data.total&&Number(res.data.total);
+                    this.pagination.total = res.data.total && Number(res.data.total);
                 })
                 .catch((err) => {
                     console.log('err', err);
@@ -264,8 +262,9 @@ export default {
         },
         // 触发搜索按钮
         handleSearch() {
+            this.pagination.pageNum = 1;
             // this.$set(this.query, 'pageIndex', 1);
-            this.loadData(true);
+            this.loadData();
         }
     }
 };

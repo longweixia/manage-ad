@@ -1,41 +1,36 @@
 <template>
     <div>
-          <div class="card-area">
-                <div class="row-text">小程序开屏图(选填)</div>
-                <div  class="tips">
-                    添加明星时可不上传，可等该明星开屏资源快要满足时上传
-
-
-                </div>
-                <Button type="primary" @click="uploadImg">上传开屏图</Button>
-                <!-- <div class="card-header">
+        <div class="card-area">
+            <div class="row-text">小程序开屏图(选填)</div>
+            <div class="tips">添加明星时可不上传，可等该明星开屏资源快要满足时上传</div>
+            <Button type="primary" @click="uploadImg">上传开屏图</Button>
+            <!-- <div class="card-header">
                     <img :src="imgHeader" />
                 </div> -->
-            </div>
-  
+        </div>
+
         <Modal v-model="modalCarousel" title="上传开屏图" width="600" footer-hide>
             <div>
                 <div class="tips">图片格式必须为：png,bmp,jpeg,jpg,gif；不可大于2M</div>
                 <div class="crop-demo-btn">
-                    <Button type="primary" style="margin-top:20px;">上传文件</Button>
+                    <Button type="primary" style="margin-top: 20px">上传文件</Button>
                     <input class="crop-input" type="file" name="image" accept="image/*" @change="setImage" />
                 </div>
 
-                <div class="crop-demo" >
-                    <img :src="home1Colone" class="pre-img" />
-                    <div class="card-area" >
-                    <div class="card-content">
-                        <div class="card">
-                            <div class="text">开屏图预览</div>
-                              <viewer :images="[home1Colone]">
-                            <img :src="home1Colone" class="img" />
-                              </viewer>
+                <div class="crop-demo">
+                    <!-- <img v-if="home1Colone" :src="home1Colone" class="pre-img" />   -->
+                    <div class="card-area" v-if="home1Colone">
+                        <div class="card-content">
+                            <div class="card">
+                                <div class="text">开屏图预览</div>
+                                <viewer :images="[home1Colone]">
+                                    <img :src="home1Colone" class="img" />
+                                </viewer>
+                            </div>
                         </div>
-                     
                     </div>
                 </div>
-                </div>
-                
+
                 <el-dialog title="上传文件" :visible.sync="dialogVisible" width="30%">
                     <vue-cropper
                         ref="cropper"
@@ -51,7 +46,7 @@
                     </span>
                 </el-dialog>
                 <template> </template>
-                <div style="text-align: center;margin-top:20px" slot="footer">
+                <div style="text-align: center; margin-top: 20px" slot="footer">
                     <Button type="primary" @click="confirm">提交</Button>
                 </div>
             </div>
@@ -81,7 +76,7 @@ export default {
                 this.home1Colone = newval;
             },
             immediate: true
-        },
+        }
 
         // imgSrc: {
         //     handler(newval, oldval) {
@@ -124,22 +119,22 @@ export default {
         },
         // 截取图片上传图片，拿到图片url
         okUpload() {
-            if(!this.flieData){
-               this.$Message.error('请先上传图片');
-               return false
+            if (!this.flieData) {
+                this.$Message.error('请先上传图片');
+                return false;
             }
             // const formData = new FormData();
             // formData.append('file', this.flieData); //todo 接口类型错误，应该是file不是string
             this.axios
-                .post(`/common/uploadBase64`, { baseStr: this.home1Colone})
-                .then(res => {
+                .post(`/common/uploadBase64`, { baseStr: this.home1Colone })
+                .then((res) => {
                     this.home1Colone = res.data;
-                    
-                    this.$emit("updateCarouselImg", this.home1Colone)
-                    this.modalCarousel = false
+
+                    this.$emit('updateCarouselImg', this.home1Colone);
+                    this.modalCarousel = false;
                 })
-                .catch(err => {
-                     this.$Message.error(err);
+                .catch((err) => {
+                    this.$Message.error(err);
                 });
         },
         setImage(e) {
@@ -148,7 +143,7 @@ export default {
                 return;
             }
             const reader = new FileReader();
-            reader.onload = event => {
+            reader.onload = (event) => {
                 this.dialogVisible = true;
                 this.imgSrc = event.target.result;
                 this.$refs.cropper && this.$refs.cropper.replace(event.target.result);
@@ -176,15 +171,15 @@ export default {
         }
     },
     mounted() {
-        this.home1Colone = this.home1Colone ? this.home1Colone : this.defaultSrc;
+        // this.home1Colone = this.home1Colone ? this.home1Colone : this.defaultSrc;
     }
 };
 </script>
 
 <style lang="less" scoped>
 .card-area {
-    display:inline-block;
-    
+    display: inline-block;
+
     .card-content {
         display: flex;
         justify-content: left;

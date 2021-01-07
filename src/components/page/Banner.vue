@@ -12,11 +12,11 @@
                 <div>轮播图按下方顺序展示在首页，最多配置两个，本页配置会顶替月榜周榜轮播（如有），下方播完周榜月榜继续</div>
             </div>
 
-            <div>
+            <div v-if="open"> 
                 <div class="row-text">轮播图1</div>
                 <Button type="primary" @click="showModalBannaer1">上传图片</Button>
             </div>
-            <div class="card-area">
+            <div class="card-area"  v-if="open">
                 <div class="card-content">
                     <div class="card">
                         <div class="text">首页轮播图</div>
@@ -35,11 +35,11 @@
                     </div>
                 </div>
             </div>
-            <div>
+            <div  v-if="open">
                 <div class="row-text">轮播图2</div>
                 <Button type="primary" @click="showModalBannaer2">上传图片</Button>
             </div>
-            <div class="card-area">
+            <div class="card-area"  v-if="open">
                 <div class="card-content">
                     <div class="card">
                         <div class="text">首页轮播图</div>

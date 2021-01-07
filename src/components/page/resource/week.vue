@@ -10,7 +10,7 @@
                         <span slot="close">关闭</span>
                     </i-Switch>
                 </div>
-                <div>开启后在小程序-个人中心显示“榜单奖励”按钮，点击按钮显示宣传页</div>
+                <div class="tips">开启后在小程序-个人中心显示“榜单奖励”按钮，点击按钮显示宣传页</div>
             </div>
             <div class="card-area">
                 <div>
@@ -33,7 +33,7 @@
 
             <div class="card-area">
                 <div class="row-text tag-text">宣传页</div>
-                <div>图片格式必须为：png,bmp,jpeg,jpg,gif；不可大于2M</div>
+                <div class="tips">图片格式必须为：png,bmp,jpeg,jpg,gif；不可大于2M</div>
 
                 <Button type="primary" @click="uploadImg">上传图片</Button>
 
@@ -50,7 +50,7 @@
                         <span slot="close">关闭</span>
                     </i-Switch>
                 </div>
-                <div>为避免以极低热力值获得冠军导致发起方亏损，可设置热力值阈值，低于阈值即使获得冠军仍不能得到奖励</div>
+                <div class="tips">为避免以极低热力值获得冠军导致发起方亏损，可设置热力值阈值，低于阈值即使获得冠军仍不能得到奖励</div>
                 <div style="margin-top: 20px">
                     低于 <Input placeholder="输入数字，最多8位" style="width: 200px" v-model="minVal" /> 热力值无法获得奖励
                 </div>

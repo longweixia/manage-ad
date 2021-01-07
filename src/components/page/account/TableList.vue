@@ -289,7 +289,7 @@ export default {
                                 firstBTn = '启用';
                             }
                             let disableBtn = h(
-                                'div',
+                                'span',
                                 {
                                     style: {
                                         color: '#409EFF',
@@ -306,11 +306,12 @@ export default {
                             );
 
                             let deleteBtn = h(
-                                'div',
+                                'span',
                                 {
                                     style: {
                                         color: '#409EFF',
-                                        cursor: 'pointer'
+                                        cursor: 'pointer',
+                                        margin:'10px'
                                     },
                                     on: {
                                         click: () => {
@@ -322,7 +323,7 @@ export default {
                             );
 
                             let detail = h(
-                                'div',
+                                'span',
                                 {
                                     style: {
                                         color: '#409EFF',

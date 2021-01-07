@@ -79,7 +79,8 @@
             },
             cancelCrop(){
                 this.dialogVisible = false;
-                this.cropImg = this.defaultSrc;
+                // this.cropImg = this.defaultSrc;
+                this.cropImg = ''
             },
             imageuploaded(res) {
                 console.log(res)
@@ -92,7 +93,7 @@
             }
         },
         created(){
-            this.cropImg = this.defaultSrc;
+            // this.cropImg = this.defaultSrc;
         }
     }
 </script>

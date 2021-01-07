@@ -1,13 +1,23 @@
 <template>
     <div class="header">
         <!-- 折叠按钮 -->
-        <div class="collapse-btn" @click="collapseChage">
+        <!-- <div class="collapse-btn" @click="collapseChage">
             <i v-if="!collapse" class="el-icon-s-fold"></i>
             <i v-else class="el-icon-s-unfold"></i>
-        </div>
-        <div class="logo">打榜小程序</div>
-        <div class="header-right">
-            <div class="header-user-con">
+        </div> -->
+        <!-- <div class="logo">打榜小程序</div> -->
+        <div class="header-right" >
+                 <el-dropdown class="user-name" trigger="click" @command="handleCommand">
+                    <span class="el-dropdown-link">
+                        {{username}}
+                        <i class="el-icon-caret-bottom"></i>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+               
+                        <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+            <div class="header-user-con" v-if="false">
                 <!-- 全屏显示 -->
                 <div class="btn-fullscreen" @click="handleFullScreen">
                     <el-tooltip effect="dark" :content="fullscreen?`取消全屏`:`全屏`" placement="bottom">
@@ -32,18 +42,16 @@
                     <img src="../../assets/img/img.jpg" />
                 </div> -->
                 <!-- 用户名下拉菜单 -->
-                <el-dropdown class="user-name" trigger="click" @command="handleCommand">
+                <!-- <el-dropdown class="user-name" trigger="click" @command="handleCommand">
                     <span class="el-dropdown-link">
                         {{username}}
                         <i class="el-icon-caret-bottom"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                        <!-- <a href="https://github.com/lin-xin/vue-manage-system" target="_blank">
-                            <el-dropdown-item>项目仓库</el-dropdown-item>
-                        </a> -->
+               
                         <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
-                </el-dropdown>
+                </el-dropdown> -->
             </div>
         </div>
     </div>
@@ -171,6 +179,8 @@ export default {
 }
 .user-name {
     margin-left: 10px;
+    z-index: 1000;
+    
 }
 .user-avator {
     margin-left: 20px;
@@ -182,7 +192,7 @@ export default {
     border-radius: 50%;
 }
 .el-dropdown-link {
-    color: #fff;
+    color: #000;
     cursor: pointer;
 }
 .el-dropdown-menu__item {

@@ -445,8 +445,8 @@ export default {
                 height: 200px;
                 margin-top: 10px;
                 img {
-                    width: 200px;
-                  height: 200px;
+                    width: auto;
+                  height: 100%;
                 }
             }
             .card-screen-btn {

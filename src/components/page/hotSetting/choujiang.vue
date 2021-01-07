@@ -61,7 +61,7 @@ export default {
                 drawFieldNums: '', //热力抽奖8栏位数值 例：11,13,43,55,22
                 vigourSendNum: '' //具体赠送热力值
             },
-            drawFieldNums: [0,0,0,0,0,0,0,0], //热力抽奖8栏位数值
+            drawFieldNums: [], //热力抽奖8栏位数值
             scoreStrategyFlag: false //高分值策略
         };
     },

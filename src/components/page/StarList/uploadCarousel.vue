@@ -12,28 +12,32 @@
                     <input class="crop-input" type="file" name="image" accept="image/*" @change="setImage" />
                 </div>
 
-                <div class="crop-demo">
-                    <img :src="home1Colone" class="pre-img" />
-                </div>
+                <!-- <div class="crop-demo">
+                    <img v-if="home1Colone" :src="home1Colone" class="pre-img" />
+                      <div v-if="!home1Colone" style="font-size: 16px; margin-top: 20px; text-align: center">无图片</div>
+                </div> -->
                 <div class="card-area">
                     <div class="card-content">
-                        <div class="card">
+                        <div class="card" v-if="home1Colone">
                             <div class="text">首页轮播图预览</div>
-                              <viewer :images="[home1Colone]">
-                            <img :src="home1Colone" class="img" />
-                              </viewer>
+                            <viewer :images="[home1Colone]">
+                                <img  :src="home1Colone" class="img" />
+                            </viewer>
+                  
                         </div>
-                        <div class="card">
+                        <div class="card" v-if="home1Colone">
                             <div class="text">明星详细页预览</div>
-                                 <viewer :images="[home1Colone]">
-                            <img :src="home1Colone" class="img" />
-                              </viewer>
+                             <viewer :images="[home1Colone]">
+                                <img :src="home1Colone" class="img" />
+                            </viewer>
+                           
                         </div>
-                        <div class="card">
+                        <div class="card" v-if="home1Colone">
                             <div class="text">打榜弹窗预览</div>
-                                 <viewer :images="[home1Colone]">
-                            <img :src="home1Colone" class="img" />
-                              </viewer>
+                              <viewer :images="[home1Colone]">
+                                <img  :src="home1Colone" class="img" />
+                            </viewer>
+                          
                         </div>
                     </div>
                 </div>
@@ -52,7 +56,7 @@
                     </span>
                 </el-dialog>
                 <template> </template>
-                <div style="text-align: center;margin-top:20px" slot="footer">
+                <div style="text-align: center; margin-top: 20px" slot="footer">
                     <Button type="primary" @click="confirm">提交</Button>
                 </div>
             </div>
@@ -82,7 +86,7 @@ export default {
                 this.home1Colone = newval;
             },
             immediate: true
-        },
+        }
 
         // imgSrc: {
         //     handler(newval, oldval) {
@@ -106,7 +110,7 @@ export default {
             modalCarousel: false,
             home1Colone: this.homeImg,
 
-            defaultSrc: require('../../../assets/img/icon_add.png'),
+            // defaultSrc: require('../../../assets/img/icon_add.png'),
             fileList: [],
             imgSrc: '',
 
@@ -135,7 +139,7 @@ export default {
         //         .post(`/common/upload`, formData)
         //         .then(res => {
         //             this.home1Colone = res.data;
-                    
+
         //             this.$emit("updateCarouselImg", this.home1Colone)
         //             this.modalCarousel = false
         //         })
@@ -144,23 +148,23 @@ export default {
         //         });
         // },
         okUpload() {
-               if(!this.flieData){
-               this.$Message.error('请先上传图片');
-               return false
+            if (!this.flieData) {
+                this.$Message.error('请先上传图片');
+                return false;
             }
-      
+
             this.axios
-                .post(`/common/uploadBase64`,  {
+                .post(`/common/uploadBase64`, {
                     baseStr: this.home1Colone
                 })
-                .then(res => {
+                .then((res) => {
                     this.home1Colone = res.data;
-                    
-                    this.$emit("updateCarouselImg", this.home1Colone)
-                    this.modalCarousel = false
+
+                    this.$emit('updateCarouselImg', this.home1Colone);
+                    this.modalCarousel = false;
                 })
-                .catch(err => {
-                     this.$Message.error(err);
+                .catch((err) => {
+                    this.$Message.error(err);
                 });
         },
         setImage(e) {
@@ -169,7 +173,7 @@ export default {
                 return;
             }
             const reader = new FileReader();
-            reader.onload = event => {
+            reader.onload = (event) => {
                 this.dialogVisible = true;
                 this.imgSrc = event.target.result;
                 this.$refs.cropper && this.$refs.cropper.replace(event.target.result);
@@ -184,7 +188,8 @@ export default {
         },
         cancelCrop() {
             this.dialogVisible = false;
-            this.home1Colone = this.defaultSrc;
+            this.home1Colone = '';
+            // this.home1Colone = this.defaultSrc;
         },
         imageuploaded(res) {
             console.log(res);
@@ -197,7 +202,7 @@ export default {
         }
     },
     mounted() {
-        this.home1Colone = this.home1Colone ? this.home1Colone : this.defaultSrc;
+        this.home1Colone = this.home1Colone;
     }
 };
 </script>

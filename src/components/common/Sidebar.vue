@@ -265,7 +265,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .sidebar {
     display: block;
     position: absolute;
@@ -278,9 +278,15 @@ export default {
     width: 0;
 }
 .sidebar-el-menu:not(.el-menu--collapse) {
-    width: 200px;
+    width: 130px;
 }
 .sidebar > ul {
     height: 100%;
+}
+li{
+padding-left: 5px!important;
+}
+/deep/ .el-submenu__title{
+padding:0!important;
 }
 </style>

@@ -1,5 +1,10 @@
 <template>
     <div class="fen-manage-area">
+          <div class="crumbs">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item> <i class="el-icon-s-custom"></i> 榜单排名 </el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
         <div class="container">
             <div class="handle-box">
                 <Form inline :model="query" class="demo-form-inline" ref="ruleForm">

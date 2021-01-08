@@ -1,5 +1,10 @@
 <template>
     <div>
+           <div class="crumbs">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item> <i class="el-icon-s-check"></i> 榜单排名 </el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
         <Button
             class="btn"
             :type="activeIndex == i ? 'primary' : 'default'"

@@ -83,7 +83,7 @@ export default {
         },
         // 侧边栏折叠
         collapseChage() {
-            this.collapse = !this.collapse;
+            this.collapse = false;
             bus.$emit('collapse', this.collapse);
         },
         // 全屏事件
@@ -129,12 +129,14 @@ export default {
     height: 70px;
     font-size: 22px;
     color: #fff;
+    /* top:10px; */
 }
 .collapse-btn {
     float: left;
     padding: 0 21px;
     cursor: pointer;
     line-height: 70px;
+    top: 100px;
 }
 .header .logo {
     float: left;

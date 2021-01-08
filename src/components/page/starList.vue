@@ -1,10 +1,10 @@
 <template>
     <div class="star-list-table">
-        <!-- <div class="crumbs">
+        <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item> <i class="el-icon-lx-cascades"></i> 基础表格 </el-breadcrumb-item>
+                <el-breadcrumb-item> <i class="el-icon-s-check"></i> 明星列表 </el-breadcrumb-item>
             </el-breadcrumb>
-        </div> -->
+        </div>
         <!-- <Button type="primary" @click="getToken">获取token</Button> -->
         <div class="container">
             <div class="handle-box">

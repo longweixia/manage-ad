@@ -74,7 +74,7 @@
                         <el-button type="text" icon="el-icon-edit" @click="articleEdit(scope.$index, scope.row)">修改文章</el-button>
                     </template>
                 </el-table-column>
-                3535
+  
             </el-table>
             <div class="pagination">
                 <el-pagination

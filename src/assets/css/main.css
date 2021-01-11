@@ -28,6 +28,7 @@ a {
     top: 0;
     bottom: 0;
     padding-bottom: 30px;
+    padding-top: 10px;
     -webkit-transition: left .3s ease-in-out;
     transition: left .3s ease-in-out;
     background: #f0f0f0;

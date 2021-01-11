@@ -7,12 +7,12 @@
 
                 <div>
                     每日最高
-                    <Input v-model="shareMaxNum" placeholder="数值" style="width: 200px" clearable></Input>次
+                    <Input v-model="form.shareMaxNum" placeholder="数值" style="width: 200px" clearable></Input>次
                 </div>
 
                 <div style="margin-top:20px">
                     每次获得
-                    <Input v-model="vigourShareNum" placeholder="数值" style="width: 200px" clearable></Input>热力值
+                    <Input v-model="form.vigourShareNum" placeholder="数值" style="width: 200px" clearable></Input>热力值
                 </div>
             </div>
 
@@ -27,10 +27,10 @@
 export default {
     data: function () {
         return {
-            shareMaxNum: '', //每日限制次数
-            vigourShareNum: '', //每日限制次数
+           
             form: {
-                name: '' //姓名
+                 shareMaxNum: '', //每日限制次数
+            vigourShareNum: '', //每日限制次数
             }
         };
     },
@@ -42,8 +42,9 @@ export default {
             this.axios
                 .get(`/hitSettings/select`)
                 .then((res) => {
-                    this.shareMaxNum = res.data.shareMaxNum;
-                    this.vigourShareNum = res.data.vigourShareNum;
+                    this.form = res.data
+                    // this.form.shareMaxNum = res.data.shareMaxNum;
+                    // this.form.vigourShareNum = res.data.vigourShareNum;
                 })
                 .catch((err) => {
                     this.$Message.error(err);
@@ -51,12 +52,12 @@ export default {
         },
 
         save() {
-            let pramas = {
-                shareMaxNum: Number(this.shareMaxNum),
-                vigourShareNum: Number(this.vigourShareNum)
-            };
+            // let pramas = {
+            //     shareMaxNum: Number(this.form.shareMaxNum),
+            //     vigourShareNum: Number(this.form.vigourShareNum)
+            // };
             this.axios
-                .post(`/hitSettings/edit`, pramas)
+                .post(`/hitSettings/edit`, this.form)
                 .then((res) => {
                     this.$Message.success('保存成功');
                 })

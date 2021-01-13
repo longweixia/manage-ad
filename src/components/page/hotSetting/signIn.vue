@@ -5,13 +5,13 @@
             <div class="card-area">
                 <div class="row-text">每日签到次数</div>
                  每日最高
-                     <Input v-model="signMaxNum" placeholder="数值" style="width:200px" clearable></Input>次
+                     <Input v-model="form.signMaxNum" placeholder="数值" style="width:200px" clearable></Input>次
                 
             </div>
             <div class="card-area">
                 <div class="row-text">签到获得热力值</div>
                  每次获得
-                     <Input v-model="vigourSignNum" placeholder="数值" style="width:200px" clearable></Input>热力值
+                     <Input v-model="form.vigourSignNum" placeholder="数值" style="width:200px" clearable></Input>热力值
 
                 
             </div>
@@ -30,10 +30,10 @@
 export default {
     data: function() {
         return {
-            signMaxNum:"",
-            vigourSignNum:"",//每日限制次数
+           
             form: {
-                name: '', //姓名
+                signMaxNum:"",
+            vigourSignNum:"",//每日限制次数
             },
             
         };
@@ -46,8 +46,7 @@ export default {
             this.axios
                 .get(`/hitSettings/select`)
                 .then((res) => {
-                    this.signMaxNum = res.data.signMaxNum;
-                    this.vigourSignNum = res.data.vigourSignNum;
+                  this.form = res.data
                 })
                 .catch((err) => {
                     this.$Message.error(err);
@@ -56,8 +55,9 @@ export default {
 
         save() {
             let pramas = {
-                signMaxNum: Number(this.signMaxNum),
-                vigourSignNum: Number(this.vigourSignNum)
+                signMaxNum: Number(this.form.signMaxNum),
+                vigourSignNum: Number(this.form.vigourSignNum),
+                  id:this.form.id
             };
             this.axios
                 .post(`/hitSettings/edit`, pramas)
@@ -79,7 +79,7 @@ export default {
         .row-text {
             margin-top: 10px;
             margin-bottom: 10px;
-            font-size: 20px;
+            font-size: 16px;
             font-weight: bold;
         }
         .card-content {

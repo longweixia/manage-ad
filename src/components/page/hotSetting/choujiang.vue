@@ -1,6 +1,7 @@
 <template>
     <div>
         <div class="container">
+            {{drawFieldNums}}
             <div class="card-area inp-top">
                 <div class="row-text">数值设置</div>
                 <div v-for="(item, index) in drawFieldNums" :key="index" class="num-list">
@@ -9,7 +10,7 @@
             </div>
             <div class="card-area">
                 <div class="row-text">每日限制次数</div>
-                <Input v-model="form.deawMaxNum" placeholder="数值"  style="width: 200px" clearable></Input>次
+                <Input v-model="form.deawMaxNum" placeholder="数值" style="width: 200px" clearable></Input>次
             </div>
             <div class="card-area">
                 <div class="row-text">
@@ -23,13 +24,15 @@
                     单个粉丝累计抽奖
                     <Input v-model="form.strategyDeawMinNum" placeholder="数值" style="width: 200px" clearable></Input>次， 获得超过（含）
                     <Select v-model="form.vigourSendNum" style="width: 150px" clearable>
-                        <Option v-for="item in drawFieldNums" :value="item" :key="item">{{ item }}</Option>
+                        <Option v-for="(item,index) in drawFieldNums" :value="item" :key="item" @click.native="selectvigourSendNum(item, index)">{{
+                            item
+                        }}</Option>
                     </Select>
                     以上的随机热力值
                 </div>
             </div>
             <div>
-                <Button type="primary" @click='save'>保存</Button>
+                <Button type="primary" @click="save">保存</Button>
             </div>
         </div>
     </div>
@@ -37,7 +40,7 @@
 
 <script>
 export default {
-    data: function () {
+    data: function() {
         return {
             selectHotList: [
                 {
@@ -53,6 +56,7 @@ export default {
                 { name: '', value: '' },
                 { name: '', value: '' }
             ],
+            vigourSendNumSrting: '', // 具体赠送热力值拼接的字符串
 
             form: {
                 deawMaxNum: null, //每日抽奖最高次数
@@ -69,21 +73,38 @@ export default {
         this.loadData();
     },
     methods: {
-        
-        save() {
-            let pramas = Object.assign({}, this.form);
-            let str = "";
-            this.drawFieldNums.forEach((e,i) => {
-                if(!str){
-                    str = e
-                }else{
-                     str =str+"," +e
+        // 获得超过以上的热力值
+        selectvigourSendNum(item, index) {
+            let vigourSendNumSrting = '';
+            this.drawFieldNums.forEach((i, index1) => {
+                // 选中项目以上的值需要传过去
+                if (index1 >= index) {
+                    if (!vigourSendNumSrting) {
+                        vigourSendNumSrting = vigourSendNumSrting+i;
+                    } else {
+                        vigourSendNumSrting = vigourSendNumSrting + ',' + i;
+                    }
                 }
-             
-                
             });
-            pramas.drawFieldNums = str 
-            pramas.vigourSendNum = Number(pramas.vigourSendNum)
+            this.vigourSendNumSrting = vigourSendNumSrting;
+        },
+
+        save() {
+            if (!this.form.id) {
+                this.$Message.error('未获取到id,无法保存');
+                return false;
+            }
+            let pramas = Object.assign({}, this.form);
+            let str = '';
+            this.drawFieldNums.forEach((e, i) => {
+                if (!str) {
+                    str = e;
+                } else {
+                    str = str + ',' + e;
+                }
+            });
+            pramas.drawFieldNums = str;
+            pramas.vigourSendNum = this.vigourSendNumSrting;
             // pramas.drawFieldNums = '1,2,3,4,5,6,7,8'
             // 处理高分值策略
             if (this.scoreStrategyFlag) {
@@ -92,21 +113,20 @@ export default {
                 pramas.scoreStrategyFlag = 0;
             }
             // vigourSendType //随机热力值赠送方式 0：超过（含）具体值；1：超过（含）当前八档数值；
-
             this.axios
                 .post(`/hitSettings/edit`, pramas)
-                .then((res) => {
+                .then(res => {
                     this.$Message.success('保存成功');
-                    this.loadData()
+                    this.loadData();
                 })
-                .catch((err) => {
+                .catch(err => {
                     this.$Message.error(err);
                 });
         },
         loadData() {
             this.axios
                 .get(`/hitSettings/select`)
-                .then((res) => {
+                .then(res => {
                     this.form = res.data;
                     // 处理高分值策略
                     if (res.data.scoreStrategyFlag) {
@@ -116,7 +136,7 @@ export default {
                     }
                     this.drawFieldNums = res.data.drawFieldNums;
                 })
-                .catch((err) => {
+                .catch(err => {
                     this.$Message.error(err);
                 });
         }
@@ -130,7 +150,7 @@ export default {
         .row-text {
             margin-top: 10px;
             margin-bottom: 10px;
-            font-size: 20px;
+            font-size: 16px;
             font-weight: bold;
         }
         .card-content {
@@ -205,7 +225,7 @@ export default {
     display: inline-block;
     margin-right: 10px;
 }
-.inp-top{
-    width:900px;
+.inp-top {
+    width: 900px;
 }
 </style>

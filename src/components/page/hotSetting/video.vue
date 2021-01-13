@@ -5,13 +5,13 @@
             <div class="card-area">
                 <div class="row-text">每日看视频次数</div>
                  每日最高
-                     <Input v-model="videoMaxNum" placeholder="数值" style="width:200px" clearable></Input>次
+                     <Input v-model="form.videoMaxNum" placeholder="数值" style="width:200px" clearable></Input>次
                 
             </div>
             <div class="card-area">
                 <div class="row-text">看视频获得热力值</div>
                  每次获得
-                     <Input v-model="vigourVideoNum" placeholder="数值" style="width:200px" clearable></Input>热力值
+                     <Input v-model="form.vigourVideoNum" placeholder="数值" style="width:200px" clearable></Input>热力值
 
                 
             </div>
@@ -45,10 +45,11 @@ export default {
                 {name:"",value:""},
                 {name:"",value:""},
             ],
-            videoMaxNum:"",//每日限制次数
-            vigourVideoNum:"",//每日限制次数
+          
             form: {
-                name: '', //姓名
+             
+                  videoMaxNum:"",//每日限制次数
+            vigourVideoNum:"",//每日限制次数
             },
             imgObj:{
                 homeImg:"", //首页轮播图
@@ -71,8 +72,7 @@ export default {
             this.axios
                 .get(`/hitSettings/select`)
                 .then((res) => {
-                    this.videoMaxNum = res.data.videoMaxNum;
-                    this.vigourVideoNum = res.data.vigourVideoNum;
+                     this.form = res.data
                 })
                 .catch((err) => {
                     this.$Message.error(err);
@@ -80,8 +80,9 @@ export default {
         },
           save() {
             let pramas = {
-                videoMaxNum: Number(this.videoMaxNum),
-                vigourVideoNum: Number(this.vigourVideoNum)
+                videoMaxNum: Number(this.form.videoMaxNum),
+                vigourVideoNum: Number(this.form.vigourVideoNum),
+                id:this.form.id
             };
             this.axios
                 .post(`/hitSettings/edit`, pramas)
@@ -102,7 +103,7 @@ export default {
         .row-text {
             margin-top: 10px;
             margin-bottom: 10px;
-            font-size: 20px;
+            font-size: 16px;
             font-weight: bold;
         }
         .card-content {

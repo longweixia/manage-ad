@@ -57,7 +57,11 @@ export default {
             //     vigourShareNum: Number(this.form.vigourShareNum)
             // };
             this.axios
-                .post(`/hitSettings/edit`, this.form)
+                .post(`/hitSettings/edit`, {
+                    id:this.form.id,
+                    shareMaxNum:this.form.shareMaxNum,
+                    vigourShareNum:this.form.vigourShareNum,
+                })
                 .then((res) => {
                     this.$Message.success('保存成功');
                 })
@@ -75,7 +79,7 @@ export default {
         .row-text {
             margin-top: 10px;
             margin-bottom: 10px;
-            font-size: 20px;
+            font-size: 16px;
             font-weight: bold;
         }
         .card-content {

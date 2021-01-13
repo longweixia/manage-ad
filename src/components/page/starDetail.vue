@@ -282,6 +282,7 @@ export default {
                 });
         },
         updateCarouselImg(data) {
+       
             this.homeImg = data;
         },
         updateCarouselimgHeader(data) {

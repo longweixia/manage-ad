@@ -22,6 +22,7 @@
                 </div>
 
                 <div class="crop-demo">
+                 
                     <!-- <img :src="home1Colone" class="pre-img" /> -->
                     <div class="card-area" v-if="home1Colone">
                         <div class="card-content">
@@ -248,7 +249,7 @@ export default {
         },
         cancelCrop() {
             this.dialogVisible = false;
-            this.home1Colone = this.defaultSrc;
+            // this.home1Colone = "";
         },
         imageuploaded(res) {
             console.log(res);

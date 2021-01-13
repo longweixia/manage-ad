@@ -12,6 +12,8 @@ import 'babel-polyfill';
 import axios from 'axios';
 import ViewUI from 'view-design';
 
+
+
 // import style
 import 'view-design/dist/styles/iview.css';
 import Viewer from 'v-viewer';

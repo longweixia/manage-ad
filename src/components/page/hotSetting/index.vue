@@ -1,5 +1,11 @@
 <template>
     <div>
+           <div class="crumbs">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item>热力设置</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+          <div class="container">
         <Button
             class="btn"
             :type="activeIndex == i ? 'primary' : 'default'"
@@ -14,6 +20,7 @@
         <SignIn v-if="activeIndex === 1"></SignIn>
         <Video v-if="activeIndex === 2"></Video>
         <Share v-if="activeIndex === 3"></Share>
+    </div>
     </div>
 </template>
 
@@ -53,5 +60,6 @@ export default {
 .btn {
     margin-right: 10px;
     margin-bottom: 20px;
+    
 }
 </style>

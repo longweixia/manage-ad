@@ -236,7 +236,7 @@ export default {
             min-height: 350px;
             .card {
                 width: 200px;
-                // height: 200px;
+                max-height: 200px;
                 margin-right: 20px;
                 .text {
                     text-align: center;
@@ -245,7 +245,7 @@ export default {
                     margin-bottom: 10px;
                 }
                 img {
-                    width: 100%;
+                    // width: 100%;
                     // height: 100%;
                     padding: 5px;
                     background: #ddd;
@@ -303,7 +303,7 @@ export default {
 }
 .img-content {
     width: 200px;
-    height: 200px;
+    max-height: 200px;
 }
 .row-text {
     margin-top: 10px;

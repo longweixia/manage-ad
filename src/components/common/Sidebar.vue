@@ -24,13 +24,13 @@
                                     threeItem.title
                                 }}</el-menu-item>
                             </el-submenu>
-                            <el-menu-item v-else :index="subItem.index" :key="subItem.index">{{ subItem.title }}</el-menu-item>
+                            <el-menu-item :style="flag==subItem.title?'color:#409EFF':''"  v-else :index="subItem.index" :key="subItem.index">{{ subItem.title }}</el-menu-item>
                         </template>
                     </el-submenu>
                 </template>
                 <template v-else>
-                    <el-menu-item :index="item.index" :key="item.index">
-                        <i :class="item.icon"></i>
+                    <el-menu-item :index="item.index" :key="item.index"  :style="flag==item.title?'color:#409EFF':''">
+                        <i :class="item.icon" :style="flag==item.title?'color:#409EFF':''"></i>
                         <span slot="title">{{ item.title }}</span>
                     </el-menu-item>
                 </template>
@@ -44,6 +44,7 @@ import bus from '../common/bus';
 export default {
     data() {
         return {
+            flag:"",
             collapse: false,
             items: [
                 // {
@@ -260,6 +261,9 @@ export default {
         bus.$on('collapse', msg => {
             this.collapse = msg;
             bus.$emit('collapse-content', msg);
+        });
+        bus.$on('getFlag', msg => {
+           this.flag = msg
         });
     }
 };

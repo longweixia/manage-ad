@@ -20,29 +20,29 @@
             </div> -->
                 <UploadCarousel @updateCarouselImg="updateCarouselImg" :homeImg="homeImg"></UploadCarousel>
                 <div class="card-area">
-                    <div class="card-content">
-                        <FormItem prop="homeImg">
+                    <div class="card-content" v-if="homeImg">
+                        
                             <div class="card">
                                 <div class="text">首页轮播图预览</div>
-                                <viewer :images="[homeImg]" v-if="homeImg">
+                                <viewer :images="[homeImg]">
                                     <img :src="homeImg" class="img" />
                                 </viewer>
-                                <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" />
+                                <!-- <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" /> -->
                             </div>
-                        </FormItem>
+                    
                         <div class="card">
                             <div class="text">明星详细页预览</div>
-                            <viewer :images="[homeImg]" v-if="homeImg">
+                            <viewer :images="[homeImg]">
                                 <img :src="homeImg" class="img" />
                             </viewer>
-                            <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" />
+                            <!-- <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" /> -->
                         </div>
                         <div class="card">
                             <div class="text">打榜弹窗预览</div>
-                            <viewer :images="[homeImg]" v-if="homeImg">
-                                <img :src="homeImg" class="img" />
+                            <viewer :images="[homeImg]">
+                                <img :src="homeImg" class="img img-modal" />
                             </viewer>
-                            <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" />
+                            <!-- <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" /> -->
                         </div>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                         <viewer :images="[avatar]" v-if="avatar">
                             <img :src="avatar" class="img" style="width:100px;height:100px;border-radius:50px" />
                         </viewer>
-                        <img v-if="!avatar" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" />
+                        <!-- <img v-if="!avatar" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" /> -->
                     </div>
                 </div>
                 <div class="card-area">
@@ -90,7 +90,7 @@
                     <viewer :images="[openImg]" v-if="openImg">
                         <img :src="openImg" class="img" />
                     </viewer>
-                    <img v-if="!openImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" />
+                    <!-- <img v-if="!openImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" /> -->
                 </div>
             </div>
             <div>
@@ -129,6 +129,7 @@
 import UploadCarousel from '../page/StarList/uploadCarousel.vue';
 import UploadHeader from '../page/StarList/uploadHeader.vue';
 import UploadScreen from '../page/StarList/uploadScreen.vue';
+import bus from '../common/bus';
 export default {
     components: {
         UploadCarousel,
@@ -174,6 +175,13 @@ export default {
         if (this.id) {
             this.loadData();
         }
+    },
+     beforeRouteLeave (to, from, next) {
+             bus.$emit('getFlag', '');
+             next()
+        },
+    created(){
+         bus.$emit('getFlag', '明星列表');
     },
     methods: {
         reback(){
@@ -401,7 +409,7 @@ export default {
                 min-height: 350px;
                 .card {
                     width: 200px;
-                    height: 200px;
+                    // height: 200px;
                     margin-right: 20px;
                     .text {
                         text-align: center;
@@ -415,11 +423,17 @@ export default {
                         padding: 5px;
                         background: #ddd;
                     }
+                    .img-modal{
+                        max-width:200px;
+
+                 
+                height: calc(145/347*200px);
+                    }
                 }
             }
             .card-header {
                 width: 100px;
-                height: 100px;
+                // height: 100px;
                 border-radius: 50px;
                 margin-top: 10px;
                 img {
@@ -441,11 +455,11 @@ export default {
 
             // 开屏
             .card-screen {
-                width: 200px;
-                height: 200px;
+                max-width: 200px;
+                // max-height: 200px;
                 margin-top: 10px;
-                img {
-                    width: auto;
+                .img {
+                    width: 100%;
                   height: 100%;
                 }
             }

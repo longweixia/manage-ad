@@ -18,7 +18,7 @@
                 <div class="tips">图片格式必须为：png,bmp,jpeg,jpg,gif；不可大于2M</div>
                 <div class="crop-demo-btn">
                     <Button type="primary" style="margin-top: 20px">上传文件</Button>
-                    <input class="crop-input" type="file" name="image" accept="image/*" @change="setImage" />
+                    <input class="crop-input" type="file" name="image" accept="image/*" @change="setImage" :value="upload_input" />
                 </div>
 
                 <div class="crop-demo">
@@ -162,6 +162,7 @@ export default {
     },
     data() {
         return {
+            upload_input:"",
             option: {
                 img: '', // 裁剪图片的地址
                 info: true, // 裁剪框的大小信息
@@ -229,6 +230,7 @@ export default {
                 });
         },
         setImage(e) {
+            this.upload_input = ""
             const file = e.target.files[0];
             if (!file.type.includes('image/')) {
                 return;
@@ -358,4 +360,10 @@ export default {
 //     height: 200px!important;
 //     border-radius: 100px;
 // }
+/deep/ .vue-cropper{
+    background-image:none;
+}
+/deep/ .cropper-modal{
+   background: rgba(255, 255, 255, .5);
+}
 </style>

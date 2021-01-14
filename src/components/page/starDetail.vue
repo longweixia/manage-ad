@@ -5,6 +5,7 @@
                 <el-breadcrumb-item>{{titles=='add'?'添加明星':'明星详情'}}</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
+        
 
         <div class="container">
             <Form ref="formInline" :rules="rules" inline>

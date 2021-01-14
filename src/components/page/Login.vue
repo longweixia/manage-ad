@@ -1,5 +1,6 @@
 <template>
     <div class="login-wrap">
+        <video src="./bgvide.mp4" autoplay="autoplay" muted="muted" loop="loop" class="bg-video"></video>
         <div class="ms-login">
             <div class="ms-title">后台管理系统</div>
             <el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
@@ -9,12 +10,7 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="pwd">
-                    <el-input
-                        type="pwd"
-                        placeholder="请输入密码"
-                        v-model="param.pwd"
-                        @keyup.enter.native="submitForm()"
-                    >
+                    <el-input type="pwd" placeholder="请输入密码" v-model="param.pwd" @keyup.enter.native="submitForm()">
                         <el-button slot="prepend" icon="el-icon-lx-lock"></el-button>
                     </el-input>
                 </el-form-item>
@@ -33,50 +29,57 @@ export default {
         return {
             param: {
                 account: '',
-                pwd: '',
+                pwd: ''
             },
             rules: {
                 account: [{ required: true, message: '手机号不能为空', trigger: 'blur' }],
-                pwd: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
-            },
+                pwd: [{ required: true, message: '密码不能为空', trigger: 'blur' }]
+            }
         };
     },
     methods: {
         submitForm() {
             this.$refs.login.validate(valid => {
                 if (valid) {
-                    this.login()
+                    this.login();
                 } else {
                     this.$message.error('请输入手机号和密码');
                     return false;
                 }
             });
         },
-        login(){
-              this.axios
+        login() {
+            this.axios
                 .post(`/common/login`, this.param)
-                .then((res) => {
-                  this.$message.success('登录成功');
+                .then(res => {
+                    this.$message.success('登录成功');
                     localStorage.setItem('Authorization', res.data.token);
                     localStorage.setItem('ms_username', this.param.account);
                     this.$router.push('/');
                 })
-                .catch((err) => {
-                
-                        this.$Message.error(err);
+                .catch(err => {
+                    this.$Message.error(err);
                 });
         }
-    },
+    }
 };
 </script>
 
-<style scoped>
+<style scoped lang="less">
 .login-wrap {
     position: relative;
-    width: 100%;
-    height: 100%;
-    background-image: url(../../assets/img/login-bg.jpg);
+    // width: 100%;
+    // height: 100%;
+    /* background-image: url(../../assets/img/login-bg.jpg); */
     background-size: 100%;
+}
+.bg-video {
+    height: 100%;
+    width: 100%;
+    transform: translateX(-50%);
+    position: relative;
+    left: 50%;
+    top: -100px;
 }
 .ms-title {
     width: 100%;

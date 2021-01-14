@@ -14,7 +14,7 @@
                 <div class="tips">图片格式必须为：png,bmp,jpeg,jpg,gif；不可大于2M</div>
                 <div class="crop-demo-btn">
                     <Button type="primary" style="margin-top: 20px">上传文件</Button>
-                    <input class="crop-input" type="file" name="image" accept="image/*" @change="setImage" />
+                    <input class="crop-input" type="file" name="image" accept="image/*" @change="setImage" :value="upload_input" />
                 </div>
 
                 <div class="crop-demo">
@@ -123,6 +123,7 @@ export default {
     },
     data() {
         return {
+            upload_input:"",
             flieData: null, //上传的文件数据
             modalCarousel: false,
             home1Colone: this.homeImg,
@@ -192,6 +193,7 @@ export default {
                 });
         },
         setImage(e) {
+             this.upload_input = ""
             const file = e.target.files[0];
             if (!file.type.includes('image/')) {
                 return;
@@ -231,6 +233,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+/deep/ .vue-cropper{
+    background-image:none;
+}
+/deep/ .cropper-modal{
+   background: rgba(255, 255, 255, .5);
+}
 .card-area {
     display: inline-block;
 

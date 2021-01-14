@@ -6,7 +6,7 @@
                 <div class="tips">图片格式必须为：png,bmp,jpeg,jpg,gif；不可大于2M</div>
                 <div class="crop-demo-btn">
                     <Button>上传文件</Button>
-                    <input class="crop-input" type="file" name="image" @click="flag = 1" accept="image/*" @change="setImage" />
+                    <input class="crop-input" type="file" name="image" @click="flag = 1" accept="image/*" @change="setImage"  :value="upload_input" />
                 </div>
 
                 <div class="crop-demo">
@@ -21,7 +21,7 @@
                 <div class="crop-demo-btn">
                     <Button>上传文件 </Button>
                 
-                    <input class="crop-input" type="file" name="image" @click="flag = 2" accept="image/*" @change="setImage" />
+                    <input class="crop-input" type="file" name="image" @click="flag = 2" accept="image/*" @change="setImage" :value="upload_input1" />
             
                 </div>
 
@@ -60,7 +60,7 @@
                 :fixedNumber="option.fixedNumber"
                 :centerBox="option.centerBox"
                 :infoTrue="option.infoTrue"
-                :fixedBox="option.fixedBox"
+                :fixedBox="option.fixedBox" 
             ></VueCropper>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="cancelCrop">取 消</el-button>
@@ -116,22 +116,33 @@ export default {
                 this.level1Colone = newval;
             },
             immediate: true
+        },
+        modalBannaerInit: {
+            handler(newval, oldval) {
+                if(!newval){
+                    this.$emit('closeBanner1')
+                }
+               
+            },
+            immediate: true
         }
     },
     data() {
         return {
+            upload_input:"",
+            upload_input1:"",
             option: {
                 img: '', // 裁剪图片的地址
                 info: true, // 裁剪框的大小信息
-                outputSize: 0.8, // 裁剪生成图片的质量
+                outputSize: 1, // 裁剪生成图片的质量
                 outputType: 'jpeg', // 裁剪生成图片的格式
                 canScale: false, // 图片是否允许滚轮缩放
                 autoCrop: true, // 是否默认生成截图框
-                autoCropWidth: 375, // 默认生成截图框宽度
-                autoCropHeight: 295, // 默认生成截图框高度
+                autoCropWidth: 375*0.8, // 默认生成截图框宽度
+                autoCropHeight: 295*0.8, // 默认生成截图框高度
                 fixedBox: true, // 固定截图框大小 不允许改变
                 fixed: true, // 是否开启截图框宽高固定比例
-                fixedNumber: [375, 295], // 截图框的宽高比例
+                fixedNumber: [375*0.8, 295*0.8], // 截图框的宽高比例
                 full: true, // 是否输出原图比例的截图
                 canMoveBox: false, // 截图框能否拖动
                 original: false, // 上传图片按照原始比例渲染
@@ -154,18 +165,12 @@ export default {
         VueCropper
     },
     methods: {
+  
         confirm() {
-            // let params = {
-            //     "home1": this.home1Colone,
-            //     "id": 0,
-            //     "level1": this.level1Colone,
-            //     "open": 1
-            // }
+     
             this.bannerObj.home1 = this.home1Colone;
             this.bannerObj.level1 = this.level1Colone;
-            // console.log(this.bannerObj.id,22)
-            // this.bannerObj.id = BigInt(this.bannerObj.id)
-
+ 
             this.axios
                 .post(`/carousel/addOrUpdateCarousel`, this.bannerObj)
                 .then((res) => {
@@ -181,15 +186,12 @@ export default {
                 this.$Message.error('请先上传图片');
                 return false;
             }
+   
              this.$refs.cropper.getCropData((data) => {
-                //   console.log(data)
-                // this.imgSrc = data;
+            
                 this.flag == 1 ? this.home1Colone=data : this.level1Colone=data
              this.dialogVisible = false;
-            });
-
-
-            this.axios
+              this.axios
                 .post(`/common/uploadBase64`, {
                     baseStr: this.flag == 1 ? this.home1Colone : this.level1Colone
                 })
@@ -206,8 +208,16 @@ export default {
                 .catch((err) => {
                     this.$Message.error(err);
                 });
+
+            });
+          
+
+
+           
         },
         setImage(e) {
+            this.upload_input = ""
+            this.upload_input1 = ""
             const file = e.target.files[0];
             if (!file.type.includes('image/')) {
                 return;
@@ -232,11 +242,11 @@ export default {
         },
         cancelCrop() {
             this.dialogVisible = false;
-            if (this.flag == 1) {
-                this.home1Colone = this.defaultSrc;
-            } else {
-                this.level1Colone = this.defaultSrc;
-            }
+            // if (this.flag == 1) {
+            //     this.home1Colone = this.defaultSrc;
+            // } else {
+            //     this.level1Colone = this.defaultSrc;
+            // }
         },
         imageuploaded(res) {
             console.log(res);
@@ -255,7 +265,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .content-title {
     font-weight: 400;
     line-height: 50px;
@@ -304,5 +314,11 @@ export default {
     margin-bottom: 10px;
     font-size: 20px;
     font-weight: bold;
+}
+/deep/ .vue-cropper{
+    background-image:none;
+}
+/deep/ .cropper-modal{
+   background: rgba(255, 255, 255, .5);
 }
 </style>

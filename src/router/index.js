@@ -65,7 +65,14 @@ export default new Router({
                 name: 'fenManage',
                 component: () =>
                     import( /* webpackChunkName: "dashboard" */ '../components/page/fenManage.vue'),
-                meta: { title: '粉丝管理' }
+                meta: { title: '注册粉丝' }
+            },
+            {
+                path: '/addfenManage',
+                name: 'addfenManage',
+                component: () =>
+                    import( /* webpackChunkName: "dashboard" */ '../components/page/addfenManage.vue'),
+                meta: { title: '自建粉丝' }
             },
             {
                 path: '/givRecord',

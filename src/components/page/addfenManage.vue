@@ -1,8 +1,8 @@
 <template>
     <div class="fen-manage-area">
-          <div class="crumbs">
+        <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item> 注册粉丝 </el-breadcrumb-item>
+                <el-breadcrumb-item> 自建粉丝 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
@@ -10,38 +10,44 @@
                 <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
                     <FormItem label="ID" prop="id">
                         <!-- todo  id 搜索不匹配 -->
-                        <InputNumber  v-model="query.id" placeholder="ID" clearable style="width:200px"></InputNumber>
+                        <InputNumber v-model="query.id" placeholder="ID" clearable style="width: 200px"></InputNumber>
                     </FormItem>
 
                     <FormItem>
                         <Button type="primary" @click="handleSearch">搜索</Button>
-                        <Button @click="resetForm('ruleForm')" style="margin-left:10px">重置</Button>
+                        <Button @click="resetForm('ruleForm')" style="margin-left: 10px">重置</Button>
                     </FormItem>
                     <div>
-                        <Button type="primary" @click="batchModal">批量赠送</Button>
-                        <Button style="float:right" @click="seeGivRecord">赠送记录</Button>
+                        <Button type="primary" @click="batchModal">新增粉丝</Button>
+                        <Button type="primary" @click="batchModal" style="margin-left: 20px">批量打榜</Button>
+                        <!-- <Button style="float:right" @click="seeGivRecord">赠送记录</Button> -->
                     </div>
                 </Form>
             </div>
 
             <Table border :columns="table.columns" :data="table.data"></Table>
-    <pagination  :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></pagination>        </div>
+            <pagination :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></pagination>
+        </div>
         <!-- 赠送活力值 -->
-        <Modal v-model="modalOne" title="赠送活力值" @on-ok="ok" @on-cancel="cancel" width="400">
+        <Modal v-model="modalOne" title="打榜" @on-ok="ok" @on-cancel="cancel" width="400">
             <div class="card-content">
                 <div class="card">
-                    <div class="text">
+                    <!-- <div class="text">
                         粉丝：
                         <span style="font-weight:normal">{{ modalOneData.nickName }}</span>
                         ，ID：
                         <span style="font-weight:normal">{{ modalOneData.fensId }}</span>
-                    </div>
-                    <Input v-model="vigourVal" style="margin-top:10px" />
+                    </div> -->
+                    输入明星姓名
+                    <Input v-model="starName" style="margin-top: 10px" />
+                    打榜热力值
+                    <Input v-model="vigourVal" style="margin-top: 10px" />
+                    当前热力值：{{ rowvigourVal }}
                     <!-- <img :src="homeImg"/> -->
                 </div>
             </div>
-            <div slot="footer" style="text-align:center">
-                <Button type="primary" style="width:100px" @click="submitOne">提交</Button>
+            <div slot="footer" style="text-align: center">
+                <Button type="primary" style="width: 100px" @click="submitOne">提交</Button>
             </div>
         </Modal>
         <!-- 批量导入 -->
@@ -52,10 +58,10 @@
 
 <script>
 // import { getConfigsByProductId, addNewAndroidPlugin } from '../../api/index.js';
-import ExcelUploadModal from '../common/ExcelUploadModal.vue';
-import {timeChange} from '../../utils/helper.js';
-import Pagination from './../common/Pagination.vue'
-import { PAGE_PARAMS } from './../../utils/constants.js'
+import ExcelUploadModal from '../common/ExcelUploadModalAdd.vue';
+import { timeChange } from '../../utils/helper.js';
+import Pagination from './../common/Pagination.vue';
+import { PAGE_PARAMS } from './../../utils/constants.js';
 
 export default {
     name: 'myArticle',
@@ -65,10 +71,13 @@ export default {
     },
     data() {
         return {
+            starName:"",
+            starId:"",
             pagination: Object.assign({}, PAGE_PARAMS),
             modalOneData: {}, //选择单行的数据
             uploadModel: false, //批量导入
             vigourVal: null, //赠送的热力数量
+            rowvigourVal: null, //赠送的热力数量
             modalOne: false,
             homeImg: '', //首页轮播图
             detailImg: '', //详情页
@@ -143,27 +152,20 @@ export default {
                         key: 'addTime',
                         align: 'center',
                         minWidth: 150,
-                         render: (h, params) => {
-                             let {addTime} = params.row
-                            let clickBtn = h(
-                                'div',
-                                timeChange(addTime)||"无"
-                            );
+                        render: (h, params) => {
+                            let { addTime } = params.row;
+                            let clickBtn = h('div', timeChange(addTime) || '无');
                             return h('div', [clickBtn]);
                         }
-
                     },
                     {
                         title: '最后登录时间',
                         key: 'lastVisitTime', //todo 时间需要格式化
                         align: 'center',
                         minWidth: 180,
-                          render: (h, params) => {
-                             let {lastVisitTime} = params.row
-                            let clickBtn = h(
-                                'div',
-                                timeChange(lastVisitTime)||"无"
-                            );
+                        render: (h, params) => {
+                            let { lastVisitTime } = params.row;
+                            let clickBtn = h('div', timeChange(lastVisitTime) || '无');
                             return h('div', [clickBtn]);
                         }
                     },
@@ -184,11 +186,12 @@ export default {
                                     on: {
                                         click: () => {
                                             this.modalOneData = params.row;
+                                            this.rowvigourVal = params.row.vigourVal;
                                             this.showModalOne();
                                         }
                                     }
                                 },
-                                '赠送活力值'
+                                '打榜'
                             );
                             return h('div', [clickBtn]);
                         }
@@ -244,20 +247,18 @@ export default {
         // 单个提交
         submitOne() {
             let id = this.modalOneData.id,
-            vigourVal =this.vigourVal;
+                vigourVal = this.vigourVal;
             this.axios
                 .post(`/fens/giveVigourVal?id=${id}&vigourVal=${vigourVal}`)
-                .then(res => {
-                
-                        this.$Message.success('赠送成功');
-                        this.loadData()
-                        this.modalOneData = {}
-                        this.vigourVal= ""
-                        this.modalOne = false;
-                    
+                .then((res) => {
+                    this.$Message.success('赠送成功');
+                    this.loadData();
+                    this.modalOneData = {};
+                    this.vigourVal = '';
+                    this.modalOne = false;
                 })
-                .catch(err => {
-                  this.$Message.error(err);
+                .catch((err) => {
+                    this.$Message.error(err);
                 });
         },
 
@@ -266,25 +267,39 @@ export default {
             this.$refs[formName].resetFields();
         },
         loadData(search) {
-
             this.axios
                 .post(`/fens/selectFensPage`, {
-                    bulid:0,//是否自建粉丝，0是注册
+                    bulid: 1, //是否自建粉丝，0是注册
                     id: search ? this.query.id : '',
-                    pageNum:  this.pagination.pageNum,
+                    pageNum: this.pagination.pageNum,
                     pageSize: this.pagination.pageSize
                 })
-                .then(res => {
-                    this.table.data = res.data.list;
-                      this.pagination.total = res.data.total
+                .then((res) => {
+                    // this.table.data = res.data.lis;
+                    this.table.data = [
+                        {
+                            addTime: '2021-01-14T18:43:21.646Z',
+                            consumeVigourVal: 0,
+                            fensId: 0,
+                            gender: 0,
+                            id: 0,
+                            lastStar: 'string',
+                            lastVisitTime: '2021-01-14T18:43:21.646Z',
+                            nickName: 'string',
+                            phone: 'string',
+                            totalVigourVal: 0,
+                            vigourVal: 10
+                        }
+                    ];
+                    this.pagination.total = res.data.total;
                 })
-                .catch(err => {
+                .catch((err) => {
                     this.$Message.error(err);
                 });
         },
         // 触发搜索按钮
         handleSearch() {
-            this.pagination.pageNum = 1
+            this.pagination.pageNum = 1;
             // this.$set(this.query, 'pageIndex', 1);
             this.loadData(true);
         }
@@ -293,63 +308,63 @@ export default {
 </script>
 
 <style lang="less">
-.fen-manage-area{
-.handle-box {
-    margin-bottom: 20px;
-}
+.fen-manage-area {
+    .handle-box {
+        margin-bottom: 20px;
+    }
 
-.handle-select {
-    width: 120px;
-}
+    .handle-select {
+        width: 120px;
+    }
 
-.handle-input {
-    width: 300px;
-    display: inline-block;
-}
-.table {
-    width: 100%;
-    font-size: 14px;
-}
-.red {
-    color: #ff0000;
-}
-.mr10 {
-    margin-right: 10px;
-}
-.table-td-thumb {
-    display: block;
-    margin: auto;
-    width: 40px;
-    height: 40px;
-}
-.card-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .card {
+    .handle-input {
         width: 300px;
-        margin-right: 20px;
-        .text {
-            text-align: center;
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        img {
-            width: 100%;
-            height: 100%;
-            padding: 5px;
-            background: #ddd;
+        display: inline-block;
+    }
+    .table {
+        width: 100%;
+        font-size: 14px;
+    }
+    .red {
+        color: #ff0000;
+    }
+    .mr10 {
+        margin-right: 10px;
+    }
+    .table-td-thumb {
+        display: block;
+        margin: auto;
+        width: 40px;
+        height: 40px;
+    }
+    .card-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .card {
+            width: 300px;
+            margin-right: 20px;
+            .text {
+                text-align: center;
+                font-size: 14px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            img {
+                width: 100%;
+                height: 100%;
+                padding: 5px;
+                background: #ddd;
+            }
         }
     }
-}
-.page-content {
-    text-align: right;
-    margin-top: 40px;
-}
-.ivu-form .ivu-form-item-label,
-.ivu-form-item-content{
-    display: inline-block;
-}
+    .page-content {
+        text-align: right;
+        margin-top: 40px;
+    }
+    .ivu-form .ivu-form-item-label,
+    .ivu-form-item-content {
+        display: inline-block;
+    }
 }
 </style>

@@ -88,10 +88,28 @@ export default {
                         // }
                     ]
                 },
-                { index: 'fenManage',
+                { index: '2',
                     icon: 'el-icon-s-custom',
                     title: '粉丝管理',
+                    subs: [
+                        {
+                            index: 'fenManage',
+                            title: '注册粉丝'
+                        },
+                        {
+                            index: 'addfenManage',
+                            title: '自建粉丝'
+                        },
+                        // {
+                        //     index: 'markdown',
+                        //     title: '编辑文章-markdown编辑器'
+                        // }
+                    ]
                 },
+                // { index: 'fenManage',
+                //     icon: 'el-icon-s-custom',
+                //     title: '粉丝管理',
+                // },
                 { index: 'hotSetting',
                     icon: 'el-icon-s-opportunity',
                     title: '热力设置',

@@ -39,7 +39,12 @@
                         <span style="font-weight:normal">{{ modalOneData.fensId }}</span>
                     </div> -->
                     输入明星姓名
-                    <Input v-model="starName" style="margin-top: 10px" />
+                    <Input v-model="starName" style="margin-top: 10px" @on-change="changeStarName" />
+                    <div>
+                        <div v-for="(item,index) in starList" :key="index">
+                            {{item.name}}
+                        </div>
+                    </div>
                     打榜热力值
                     <Input v-model="vigourVal" style="margin-top: 10px" />
                     当前热力值：{{ rowvigourVal }}
@@ -71,8 +76,9 @@ export default {
     },
     data() {
         return {
-            starName:"",
-            starId:"",
+            starList:[],//搜索的明星列表
+            starName: '',
+            starId: '',
             pagination: Object.assign({}, PAGE_PARAMS),
             modalOneData: {}, //选择单行的数据
             uploadModel: false, //批量导入
@@ -211,6 +217,26 @@ export default {
         this.loadData();
     },
     methods: {
+        changeStarName() {
+            if(!this.starName){
+                this.starList = []
+                return false
+            }
+            if (this.starName && this.starName.length > 1) {
+                this.axios
+                    .get('/fens/selectStarByName', {
+                        params: {
+                            starName: this.starName
+                        }
+                    })
+                    .then((res) => {
+                        this.starList = res.data;
+                    })
+                    .catch((err) => {
+                        this.$Message.error(err);
+                    });
+            }
+        },
         // 赠送活力值
         showModalOne() {
             this.modalOne = true;

@@ -2,7 +2,7 @@
     <div>
           <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item>{{titles=='add'?'添加资源':'资源详情'}}</el-breadcrumb-item>
+                <el-breadcrumb-item>添加资源</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
@@ -86,6 +86,7 @@
 </template>
 
 <script>
+import bus from '../../common/bus';
 import Preview from './preview.vue';
 export default {
     components: {
@@ -223,6 +224,13 @@ export default {
             const index = this.tagList.indexOf(name);
             this.tagList.splice(index, 1);
         }
+    },
+    beforeRouteLeave (to, from, next) {
+             bus.$emit('getFlag', '');
+             next()
+        },
+    created(){
+         bus.$emit('getFlag', '资源管理');
     }
 };
 </script>

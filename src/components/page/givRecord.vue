@@ -1,5 +1,10 @@
 <template>
     <div class="fens-give-tablelist">
+            <div class="crumbs">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item>赠送记录</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
         <div class="container">
             <div class="handle-box">
                 <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
@@ -39,6 +44,7 @@
 import { timeChange } from '../../utils/helper.js';
 import Pagination from './../common/Pagination.vue';
 import { PAGE_PARAMS } from './../../utils/constants.js';
+import bus from '../common/bus';
 export default {
     name: 'myArticle',
     components: {
@@ -112,7 +118,13 @@ export default {
             total: 0
         };
     },
-    created() {},
+ beforeRouteLeave (to, from, next) {
+             bus.$emit('getFlag', '');
+             next()
+        },
+    created(){
+         bus.$emit('getFlag', '粉丝管理');
+    },
     mounted() {
         this.loadData();
     },

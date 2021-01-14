@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="container">
-            {{drawFieldNums}}
+       
             <div class="card-area inp-top">
                 <div class="row-text">数值设置</div>
                 <div v-for="(item, index) in drawFieldNums" :key="index" class="num-list">

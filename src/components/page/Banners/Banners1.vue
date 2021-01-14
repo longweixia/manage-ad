@@ -1,55 +1,77 @@
 <template>
-    <Modal v-model="modalBannaerInit" title="上传" width="600" footer-hide>
-        <div>
-            <div class="row-text">上传轮播图</div>
-            <div class="tips">图片格式必须为：png,bmp,jpeg,jpg,gif；不可大于2M</div>
-            <div class="crop-demo-btn">
-                <Button>上传文件</Button>
-                <input class="crop-input" type="file" name="image" @click="flag = 1" accept="image/*" @change="setImage" />
-            </div>
+    <div>
+        <Modal v-model="modalBannaerInit" title="上传" width="600" footer-hide>
+            <div>
+                <div class="row-text">上传轮播图</div>
+                <div class="tips">图片格式必须为：png,bmp,jpeg,jpg,gif；不可大于2M</div>
+                <div class="crop-demo-btn">
+                    <Button>上传文件</Button>
+                    <input class="crop-input" type="file" name="image" @click="flag = 1" accept="image/*" @change="setImage" />
+                </div>
 
-            <div class="crop-demo">
-                <img :src="home1Colone" class="pre-img" />
-            </div>
-         
-            <!-- 上传二级页面 -->
-            <div class="row-text">上传二级页面</div>
-            <div class="tips">图片格式必须为：png,bmp,jpeg,jpg,gif；不可大于7M M</div>
-            <div class="crop-demo-btn">
-                <Button>上传文件 </Button>
-                <input class="crop-input" type="file" name="image" @click="flag = 2" accept="image/*" @change="setImage" />
-            </div>
-  
-            <div class="crop-demo">
-                <img :src="level1Colone" class="pre-img" />
-            </div>
-            <!--  -->
+                <div class="crop-demo">
+                         <viewer :images="[home1Colone]" >
+                    <img :src="home1Colone" class="pre-img" />
+                         </viewer>
+                </div>
 
-            <el-dialog title="上传文件" :visible.sync="dialogVisible" width="30%">
-                <vue-cropper
-                    ref="cropper"
-                    :src="imgSrc"
-                    :ready="cropImage"
-                    :zoom="cropImage"
-                    :cropmove="cropImage"
-                    style="width: 100%; height: 300px"
-                ></vue-cropper>
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="cancelCrop">取 消</el-button>
-                    <el-button type="primary" @click="okUpload">确 定</el-button>
-                </span>
-            </el-dialog>
-            <template> </template>
-            <div style="text-align: center" slot="footer">
-                <Button type="primary" @click="confirm">提交</Button>
+                <!-- 上传二级页面 -->
+                <div class="row-text">上传二级页面</div>
+                <div class="tips">图片格式必须为：png,bmp,jpeg,jpg,gif；不可大于7M M</div>
+                <div class="crop-demo-btn">
+                    <Button>上传文件 </Button>
+                
+                    <input class="crop-input" type="file" name="image" @click="flag = 2" accept="image/*" @change="setImage" />
+            
+                </div>
+
+                <div class="crop-demo">
+                              <viewer :images="[level1Colone]" >
+                    <img :src="level1Colone" class="pre-img" />
+                              </viewer>
+                </div>
+                <!--  -->
+
+                <div style="text-align: center" slot="footer">
+                    <Button type="primary" @click="confirm">提交</Button>
+                </div>
             </div>
-        
-        </div>
-    </Modal>
+        </Modal>
+
+        <el-dialog title="上传文件" :visible.sync="dialogVisible" width="30%">
+            <VueCropper
+                style="width: auto; height: 300px"
+                ref="cropper"
+                :img="imgSrc"
+                :cropmove="cropImage"
+                :zoom="cropImage"
+                :ready="cropImage"
+                :outputSize="option.size"
+                :outputType="option.outputType"
+                :info="true"
+                :full="option.full"
+                :canMove="option.canMove"
+                :canMoveBox="option.canMoveBox"
+                :autoCropWidth="option.autoCropWidth"
+                :autoCropHeight="option.autoCropHeight"
+                :original="option.original"
+                :autoCrop="option.autoCrop"
+                :fixed="option.fixed"
+                :fixedNumber="option.fixedNumber"
+                :centerBox="option.centerBox"
+                :infoTrue="option.infoTrue"
+                :fixedBox="option.fixedBox"
+            ></VueCropper>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="cancelCrop">取 消</el-button>
+                <el-button type="primary" @click="okUpload">确 定</el-button>
+            </span>
+        </el-dialog>
+    </div>
 </template>
 
 <script>
-import VueCropper from 'vue-cropperjs';
+import { VueCropper } from 'vue-cropper';
 export default {
     name: 'upload',
     props: {
@@ -94,11 +116,28 @@ export default {
                 this.level1Colone = newval;
             },
             immediate: true
-        },
-   
+        }
     },
     data() {
         return {
+            option: {
+                img: '', // 裁剪图片的地址
+                info: true, // 裁剪框的大小信息
+                outputSize: 0.8, // 裁剪生成图片的质量
+                outputType: 'jpeg', // 裁剪生成图片的格式
+                canScale: false, // 图片是否允许滚轮缩放
+                autoCrop: true, // 是否默认生成截图框
+                autoCropWidth: 375, // 默认生成截图框宽度
+                autoCropHeight: 295, // 默认生成截图框高度
+                fixedBox: true, // 固定截图框大小 不允许改变
+                fixed: true, // 是否开启截图框宽高固定比例
+                fixedNumber: [375, 295], // 截图框的宽高比例
+                full: true, // 是否输出原图比例的截图
+                canMoveBox: false, // 截图框能否拖动
+                original: false, // 上传图片按照原始比例渲染
+                centerBox: false, // 截图框是否被限制在图片里面
+                infoTrue: true // true 为展示真实输出图片宽高 false 展示看到的截图框宽高
+            },
             flag: 1, //点击图片一还是图片2
             bannerObj: this.bannerData, //轮播对象
             flieData: null, //上传的文件数据
@@ -107,7 +146,7 @@ export default {
             level1Colone: this.level1,
             defaultSrc: require('../../../assets/img/img.jpg'),
             fileList: [],
-imgSrc:"",
+            imgSrc: '',
             dialogVisible: false
         };
     },
@@ -138,14 +177,21 @@ imgSrc:"",
                 });
         },
         okUpload() {
-             if(!this.home1Colone&&!this.level1Colone){
-               this.$Message.error('请先上传图片');
-               return false
+            if (!this.home1Colone && !this.level1Colone) {
+                this.$Message.error('请先上传图片');
+                return false;
             }
-        
+             this.$refs.cropper.getCropData((data) => {
+                //   console.log(data)
+                // this.imgSrc = data;
+                this.flag == 1 ? this.home1Colone=data : this.level1Colone=data
+             this.dialogVisible = false;
+            });
+
+
             this.axios
                 .post(`/common/uploadBase64`, {
-                     baseStr: this.flag == 1?this.home1Colone:this.level1Colone 
+                    baseStr: this.flag == 1 ? this.home1Colone : this.level1Colone
                 })
                 .then((res) => {
                     // 图片1
@@ -158,7 +204,7 @@ imgSrc:"",
                     this.dialogVisible = false;
                 })
                 .catch((err) => {
-                     this.$Message.error(err);
+                    this.$Message.error(err);
                 });
         },
         setImage(e) {
@@ -203,8 +249,8 @@ imgSrc:"",
         }
     },
     mounted() {
-        this.home1Colone = this.home1Colone ? this.home1Colone : this.defaultSrc;
-        this.level1Colone = this.level1Colone ? this.level1Colone : this.defaultSrc;
+        // this.home1Colone = this.home1Colone ? this.home1Colone : this.defaultSrc;
+        // this.level1Colone = this.level1Colone ? this.level1Colone : this.defaultSrc;
     }
 };
 </script>
@@ -219,7 +265,7 @@ imgSrc:"",
 }
 .pre-img {
     width: 100px;
-    height: 100px;
+    max-height: 100px;
     background: #f8f8f8;
     border: 1px solid #eee;
     border-radius: 5px;

@@ -1,9 +1,8 @@
 <template>
     <div class="login-wrap">
         <video src="./bgvide.mp4" autoplay="autoplay" muted="muted" loop="loop" class="bg-video"></video>
-        
+        <img src="./logoText.png" class="img-area" />
         <div class="ms-login">
-            <img src="./logoText.png" class="img-area" />
             <div class="ms-title"></div>
             <el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
                 <el-form-item prop="account">
@@ -68,25 +67,15 @@ export default {
 </script>
 
 <style scoped lang="less">
-.img-area{
-    position: absolute;
-    left: 100px;
-    margin-top: -80px;
-    width: 271.8*1.8px;
-    height: 63.2*1.8px;
-}
 .login-wrap {
     position: relative;
     width: 100%;
     height: 100%;
-    min-width: 1375px;
-    min-height: 755px;
     /* background-image: url(../../assets/img/login-bg.jpg); */
     background-size: 100%;
     background: linear-gradient(to right, #8eaeb3, #aac4c8, #8eaeb3);
     display: flex;
     justify-content: center;
-    align-items: center;
 }
 .bg-video {
     height: 100%;
@@ -110,16 +99,14 @@ export default {
     background-size: cover;
 }
 .ms-login {
-    // position: absolute;
-    // left: 50%;
-    // top: 50%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
     width: 350px;
-    // margin: -190px 0 0 -250px;
-    // border-radius: 5px;
-    margin-left: -100px;
+    margin: -190px 0 0 -250px;
+    border-radius: 5px;
     background: rgba(255, 255, 255, 0.3);
     overflow: hidden;
-    z-index: 1000;
 }
 .ms-content {
     padding: 30px 30px;

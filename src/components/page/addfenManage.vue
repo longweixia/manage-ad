@@ -18,7 +18,7 @@
                         <Button @click="resetForm('ruleForm')" style="margin-left: 10px">重置</Button>
                     </FormItem>
                     <div>
-                        <Button type="primary" @click="batchModal">新增粉丝</Button>
+                        <Button type="primary" @click="addfensBtn">新增粉丝</Button>
                         <Button type="primary" @click="batchModal" style="margin-left: 20px">批量打榜</Button>
                         <!-- <Button style="float:right" @click="seeGivRecord">赠送记录</Button> -->
                     </div>
@@ -28,55 +28,80 @@
             <Table border :columns="table.columns" :data="table.data"></Table>
             <pagination :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></pagination>
         </div>
-        <!-- 赠送活力值 -->
-        <Modal v-model="modalOne" title="打榜" @on-ok="ok" @on-cancel="cancel" width="400">
-            <div class="card-content">
-                <div class="card">
-                    <!-- <div class="text">
-                        粉丝：
-                        <span style="font-weight:normal">{{ modalOneData.nickName }}</span>
-                        ，ID：
-                        <span style="font-weight:normal">{{ modalOneData.fensId }}</span>
-                    </div> -->
-                    输入明星姓名
-                    <Input v-model="starName" style="margin-top: 10px" @on-change="changeStarName" />
-                    <div>
-                        <div v-for="(item,index) in starList" :key="index">
-                            {{item.name}}
+        <!-- 打榜送热力值 -->
+        <div v-if="modalHotModal">
+            <Modal v-model="modalHotModal" title="打榜" @on-ok="ok" @on-cancel="cancel" width="400">
+                <div class="card-content">
+                    <div class="card">
+                        <div style="margin-top:10px;margin-bottom:5px">输入明星姓名</div>
+                    
+                        <Select v-model="starId" filterable @on-query-change="remoteMethod">
+                            <Option v-for="(option, index) in starList" :value="option.id" :key="index">{{ option.name }}</Option>
+                        </Select>
+                          <div style="margin-top:10px;margin-bottom:5px">打榜热力值</div>
+                        <Input v-model="vigourVal" style="margin-bottom: 10px" />
+                        当前热力值：{{ rowvigourVal }}
+                    </div>
+                </div>
+                <div slot="footer" style="text-align: center">
+                    <Button type="primary" style="width: 100px" @click="sendHot">提交</Button>
+                </div>
+            </Modal>
+        </div>
+        <!-- 新增粉丝 -->
+        <div v-if="addfensModal">
+            <Modal v-model="addfensModal" title="新增粉丝" @on-ok="ok" @on-cancel="cancel" width="400">
+                <div class="card-content">
+                    <div class="card">
+                        <div style="margin-top:10px;margin-bottom:5px">输入昵称</div>
+                           <Input v-model="nickName" style="margin-bottom: 10px" />
+                           <UploadHeader @updateCarouselImg="updateCarouselimgHeader" :homeImg="avatar"></UploadHeader>
+                             <div class="card-area" v-if="avatar" style="margin-top:20px">
+                        <div class="card-content">
+                            <div class="card">
+                                <div class="text">头像预览</div>
+                                <viewer :images="[avatar]">
+                                    <div style="display: inline-block; margin: 0 auto">
+                                        <div class="preview-headers">
+                                            <img :src="avatar" style="width: 100px; height: 100px; border-radius: 50px" />
+                                        </div>
+                                    </div>
+                                </viewer>
+                            </div>
                         </div>
                     </div>
-                    打榜热力值
-                    <Input v-model="vigourVal" style="margin-top: 10px" />
-                    当前热力值：{{ rowvigourVal }}
-                    <!-- <img :src="homeImg"/> -->
+
+                    </div>
                 </div>
-            </div>
-            <div slot="footer" style="text-align: center">
-                <Button type="primary" style="width: 100px" @click="submitOne">提交</Button>
-            </div>
-        </Modal>
-        <!-- 批量导入 -->
+                <div slot="footer" style="text-align: center">
+                    <Button type="primary" style="width: 100px" @click="addfensconfirm">提交</Button>
+                </div>
+            </Modal>
+        </div>
         <!-- 批量导入 -->
         <ExcelUploadModal :upload-model.sync="uploadModel" @success="handleExcelUploadModalSuccess"></ExcelUploadModal>
     </div>
 </template>
 
 <script>
-// import { getConfigsByProductId, addNewAndroidPlugin } from '../../api/index.js';
 import ExcelUploadModal from '../common/ExcelUploadModalAdd.vue';
 import { timeChange } from '../../utils/helper.js';
 import Pagination from './../common/Pagination.vue';
 import { PAGE_PARAMS } from './../../utils/constants.js';
+import UploadHeader from '../page/StarList/uploadHeaderFens.vue';
 
 export default {
     name: 'myArticle',
     components: {
         ExcelUploadModal,
-        Pagination
+        Pagination,
+        UploadHeader
     },
     data() {
         return {
-            starList:[],//搜索的明星列表
+            avatar:"",
+            nickName:"",
+            starList: [], //搜索的明星列表
             starName: '',
             starId: '',
             pagination: Object.assign({}, PAGE_PARAMS),
@@ -84,7 +109,8 @@ export default {
             uploadModel: false, //批量导入
             vigourVal: null, //赠送的热力数量
             rowvigourVal: null, //赠送的热力数量
-            modalOne: false,
+            modalHotModal: false,
+            addfensModal: false,
             homeImg: '', //首页轮播图
             detailImg: '', //详情页
             hitPopupImg: '', //打榜弹窗图
@@ -109,70 +135,51 @@ export default {
                         minWidth: 100
                     },
                     {
-                        title: '性别',
-                        key: 'gender',
+                        title: '末次赠送明星',
+                        key: 'lastStar',
                         align: 'center',
-                        minWidth: 80, // todo  男女值分别为什么
+                        minWidth: 120, // todo  男女值分别为什么
                         render: (h, params) => {
-                            let { gender } = params.row;
-                            let text = '无';
-                            if (gender === 0) {
-                                text = '女';
-                            } else if (gender === 1) {
-                                text = '男';
-                            }
+                            let { lastStar } = params.row;
 
-                            return h('div', text);
+                            return h('div', lastStar || '无');
                         }
                     },
-                    {
-                        title: '手机号',
-                        key: 'phone',
-                        align: 'center',
-                        minWidth: 150
-                    },
-                    {
-                        title: '累计活力值',
-                        key: 'totalVigourVal',
-                        align: 'center',
-                        sortable: true,
-                        minWidth: 130
-                    },
+
                     {
                         title: '消耗活力值',
                         key: 'consumeVigourVal',
                         align: 'center',
                         sortable: true,
-                        minWidth: 130
+                        minWidth: 130,
+                        render: (h, params) => {
+                            let { consumeVigourVal } = params.row;
+
+                            return h('div', consumeVigourVal || '无');
+                        }
                     },
                     {
                         title: '当前活力值',
                         key: 'vigourVal',
                         align: 'center',
                         sortable: true,
-                        minWidth: 130
+                        minWidth: 130,
+                        render: (h, params) => {
+                            let { vigourVal } = params.row;
+
+                            return h('div', vigourVal || '无');
+                        }
                     },
 
                     {
-                        title: '注册时间',
+                        title: '新增时间',
                         key: 'addTime',
                         align: 'center',
                         minWidth: 150,
                         render: (h, params) => {
                             let { addTime } = params.row;
-                            let clickBtn = h('div', timeChange(addTime) || '无');
-                            return h('div', [clickBtn]);
-                        }
-                    },
-                    {
-                        title: '最后登录时间',
-                        key: 'lastVisitTime', //todo 时间需要格式化
-                        align: 'center',
-                        minWidth: 180,
-                        render: (h, params) => {
-                            let { lastVisitTime } = params.row;
-                            let clickBtn = h('div', timeChange(lastVisitTime) || '无');
-                            return h('div', [clickBtn]);
+
+                            return h('div', addTime || '无');
                         }
                     },
 
@@ -217,12 +224,25 @@ export default {
         this.loadData();
     },
     methods: {
-        changeStarName() {
-            if(!this.starName){
-                this.starList = []
-                return false
+         updateCarouselimgHeader(data) {
+       
+            this.avatar = data;
+            console.log(data)
+        },
+        // 新增粉丝弹窗
+        addfensBtn(){
+            this.addfensModal = true
+
+        },
+        remoteMethod(starName) {
+            console.log(starName);
+            this.starName = starName;
+
+            if (!starName || starName.length < 2) {
+                this.starList = [];
+                return false;
             }
-            if (this.starName && this.starName.length > 1) {
+            if (starName && starName.length > 1) {
                 this.axios
                     .get('/fens/selectStarByName', {
                         params: {
@@ -237,9 +257,9 @@ export default {
                     });
             }
         },
-        // 赠送活力值
+
         showModalOne() {
-            this.modalOne = true;
+            this.modalHotModal = true;
         },
         // 批量赠送
         batchModal() {
@@ -270,18 +290,61 @@ export default {
                 name: 'givRecord'
             });
         },
-        // 单个提交
-        submitOne() {
-            let id = this.modalOneData.id,
-                vigourVal = this.vigourVal;
+        // 打榜送热力值
+        sendHot() {
+            if(!this.starName){
+                this.$Message.error('请选择明星');
+                return false
+            }
+            if(!this.vigourVal){
+                this.$Message.error('请输入热力值');
+                return false
+            }
             this.axios
-                .post(`/fens/giveVigourVal?id=${id}&vigourVal=${vigourVal}`)
+                .post(`/fens/bulidFensHit`, {
+                    id: this.modalOneData.id,
+                    starId: this.starId,
+                    starName: this.starName,
+                    vigourVal: this.vigourVal
+                })
                 .then((res) => {
                     this.$Message.success('赠送成功');
                     this.loadData();
                     this.modalOneData = {};
                     this.vigourVal = '';
-                    this.modalOne = false;
+                    this.starId = '';
+                    this.starName = '';
+                    this.starList = [];
+                    this.modalHotModal = false;
+                })
+                .catch((err) => {
+                    this.$Message.error(err);
+                });
+        },
+        // 新增粉丝
+        addfensconfirm() {
+            if(!this.nickName){
+                this.$Message.error('请输入粉丝昵称');
+                return false
+            }
+            if(!this.avatar){
+                this.$Message.error('请上传头像');
+                return false
+            }
+            this.axios
+                .post(`/fens/addBulidFens`, {
+                    avatarUrl: this.avatar,
+                    nickName: this.nickName,
+               
+                })
+                .then((res) => {
+                    this.$Message.success('新增粉丝成功');
+                    this.loadData();
+                  
+                    this.nickName = '';
+                    this.avatar = '';
+              
+                    this.addfensModal = false;
                 })
                 .catch((err) => {
                     this.$Message.error(err);
@@ -301,23 +364,9 @@ export default {
                     pageSize: this.pagination.pageSize
                 })
                 .then((res) => {
-                    // this.table.data = res.data.lis;
-                    this.table.data = [
-                        {
-                            addTime: '2021-01-14T18:43:21.646Z',
-                            consumeVigourVal: 0,
-                            fensId: 0,
-                            gender: 0,
-                            id: 0,
-                            lastStar: 'string',
-                            lastVisitTime: '2021-01-14T18:43:21.646Z',
-                            nickName: 'string',
-                            phone: 'string',
-                            totalVigourVal: 0,
-                            vigourVal: 10
-                        }
-                    ];
-                    this.pagination.total = res.data.total;
+                    this.table.data = res.data.list || [];
+
+                    this.pagination.total = res.data.total || 0;
                 })
                 .catch((err) => {
                     this.$Message.error(err);

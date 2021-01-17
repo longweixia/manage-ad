@@ -288,8 +288,8 @@ export default {
                     
                             let { addTime} = params.row,text;
                             
-                            text = timeChange(addTime)
-                            return h('div', text);
+                       
+                            return h('div', addTime||'无');
                         }
                    
                     },

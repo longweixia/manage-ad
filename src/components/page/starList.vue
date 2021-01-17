@@ -26,33 +26,60 @@
                 </div>
             </div>
 
-            <Table border :columns="table.columns" :data="table.data"></Table>
+            <Table border :columns="table.columns" :data="table.data" :loading="table.loading"></Table>
             <Pagination :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></Pagination>
         </div>
 
-        <Modal v-model="modalImg" title="查看图片" @on-ok="ok" @on-cancel="cancel" width="600">
-            <div class="card-content-startist">
-                <div class="card">
-                    <div class="text">首页轮播图预览</div>
-                    <viewer :images="[homeImg]">
-                        <img :src="homeImg" class="img" />
-                    </viewer>
-                </div>
-                <div class="card">
-                    <div class="text">明星详细页预览</div>
+        <Modal class="card-area" v-model="modalImg" title="查看图片" @on-ok="ok" @on-cancel="cancel" width="700">
+            <div>
+                <div class="card-content-starlist" v-if="homeImg">
+                    <div class="card">
+                        <div class="text">首页轮播图预览</div>
+                        <viewer :images="[homeImg]">
+                            <img :src="homeImg" class="img" />
+                        </viewer>
+                        <!-- <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" /> -->
+                    </div>
 
-                    <viewer :images="[detailImg]">
-                        <img :src="detailImg" class="img" />
-                    </viewer>
-                </div>
-                <div class="card">
-                    <div class="text">打榜弹窗预览</div>
-
-                    <viewer :images="[hitPopupImg]">
-                        <img :src="hitPopupImg" class="img" />
-                    </viewer>
+                    <div class="card">
+                        <div class="text">明星详细页预览</div>
+                        <viewer :images="[detailImg]">
+                            <img :src="detailImg" class="img" />
+                        </viewer>
+                        <!-- <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" /> -->
+                    </div>
+                    <div class="card">
+                        <div class="text">打榜弹窗预览</div>
+                        <div class="img-modal-area">
+                            <div class="img-modal" :style="style1"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <!-- <div class="card-area">
+                <div class="card-content" v-if="homeImg">
+                    <div class="card">
+                        <div class="text">首页轮播图预览</div>
+                        <viewer :images="[homeImg]">
+                            <img :src="homeImg" class="img" />
+                        </viewer>
+                    </div>
+
+                    <div class="card">
+                        <div class="text">明星详细页预览</div>
+                        <viewer :images="[homeImg]">
+                            <img :src="homeImg" class="img" />
+                        </viewer>
+                    </div>
+                    <div class="card">
+                        <div class="text">明星详细页预览</div>
+                        <viewer :images="[hitPopupImg]">
+                            <img :src="hitPopupImg" class="img" />
+                        </viewer>
+                    </div>
+                
+                </div>
+            </div> -->
         </Modal>
     </div>
 </template>
@@ -67,8 +94,17 @@ export default {
     components: {
         Pagination
     },
+    watch: {
+        hitPopupImg: {
+            handler(newval, oldval) {
+                this.style1 = `background:url(${newval}) center center / cover no-repeat;`;
+            },
+            immediate: true
+        }
+    },
     data() {
         return {
+            style1: '',
             pagination: Object.assign({}, PAGE_PARAMS),
             modalImg: false,
             homeImg: '', //首页轮播图
@@ -77,7 +113,6 @@ export default {
             query: {
                 id: '',
                 name: ''
-                
             },
             table: {
                 data: [],
@@ -99,7 +134,7 @@ export default {
                         key: 'avatar',
 
                         align: 'center',
-                        minWidth: 100,
+                        minWidth: 80,
                         render: (h, params) => {
                             //  homeImg 首页轮播图
                             //  detailImg 详情页
@@ -134,7 +169,7 @@ export default {
                         key: 'address',
                         align: 'center',
                         sortable: true,
-                        minWidth: 150,
+                        minWidth: 100,
                         render: (h, params) => {
                             let { rankWeekChampionNum, rankMonthChampionNum } = params.row;
                             let week = h('span', rankWeekChampionNum + '/');
@@ -147,7 +182,7 @@ export default {
                         key: 'name',
                         align: 'center',
                         sortable: true,
-                        minWidth: 150,
+                        minWidth: 100,
                         render: (h, params) => {
                             let { rankWeekSecondNum, rankMonthSecondNum } = params.row;
                             let week = h('span', rankWeekSecondNum + '/');
@@ -160,7 +195,7 @@ export default {
                         key: 'name',
                         sortable: true,
                         align: 'center',
-                        minWidth: 150,
+                        minWidth: 100,
                         render: (h, params) => {
                             let { rankWeekThirdNum, rankWeekChampionNum } = params.row;
                             let week = h('span', rankWeekThirdNum + '/');
@@ -169,24 +204,24 @@ export default {
                         }
                     },
                     {
-                        title: '当前周排名',
+                        title: '周排名',
                         key: 'thisWeekRank',
                         sortable: true,
                         align: 'center',
-                        minWidth: 130
+                        minWidth: 100
                     },
                     {
-                        title: '当前月排名',
+                        title: '月排名',
                         key: 'thisMonthRank',
                         sortable: true,
                         align: 'center',
-                        minWidth: 130
+                        minWidth: 100
                     },
                     {
                         title: '标签',
                         key: 'tags',
                         align: 'center',
-                        minWidth: 100
+                        minWidth: 200
                     },
                     {
                         title: '添加时间',
@@ -194,11 +229,11 @@ export default {
                         align: 'center',
                         minWidth: 180,
                         render: (h, params) => {
-                            let { createTime } = params.row,
-                                text;
+                            let { createTime } = params.row;
+                            //     text;
 
-                            text = timeChange(createTime);
-                            return h('div', text || '无');
+                            // text = timeChange(createTime);
+                            return h('div', createTime || '无');
                         }
                     },
                     {
@@ -225,7 +260,8 @@ export default {
                             return h('div', [clickBtn]);
                         }
                     }
-                ]
+                ],
+                loading: false
             },
             tableData: [
                 {
@@ -248,7 +284,7 @@ export default {
                 name: 'starDetail',
                 query: {
                     id: id,
-                    add:name=='add'?'add':''
+                    add: name == 'add' ? 'add' : ''
                 }
             });
         },
@@ -269,19 +305,22 @@ export default {
             this.$refs[formName].resetFields();
         },
         loadData() {
+            this.table.loading = true;
             this.axios
                 .post(`/star/star/list`, {
                     id: this.query.id,
-                    name:  this.query.name,
+                    name: this.query.name,
                     pageNum: this.pagination.pageNum,
                     pageSize: this.pagination.pageSize
                 })
                 .then((res) => {
                     this.table.data = res.data.list;
-                    this.pagination.total = res.data.total&&Number(res.data.total);
+                    this.pagination.total = res.data.total && Number(res.data.total);
+                    this.table.loading = false;
                 })
                 .catch((err) => {
                     this.$Message.error(err);
+                    this.table.loading = false;
                 });
         },
         // 触发搜索按钮
@@ -295,7 +334,43 @@ export default {
 </script>
 
 <style lang="less">
+.card-content-starlist {
+    display: flex;
+    justify-content: left;
+    // align-items: center;
+    // min-height: 200px;
+    .card {
+        width: 200px;
+        // height: 200px;
+        margin-right: 20px;
+        .text {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        img {
+            width: 100%;
+            height: 100%;
+            padding: 5px;
+            background: #ddd;
+        }
+         .img-modal-area {
+            width: 200px;
+            height: 89px;
+            background: #ddd;
+            padding: 5px;
+            .img-modal {
+                width: 190px;
+                height: 79px;
+            }
+        }
+    }
+}
 .star-list-table {
+    .card-area {
+        margin-bottom: 20px;
+    }
     .handle-box {
         margin-bottom: 20px;
     }
@@ -337,11 +412,11 @@ export default {
 .card-content-startist {
     display: flex;
     justify-content: center;
-    align-items: center;
+    // align-items: center;
     // min-height: 350px;
     .card {
-        width: 100px;
-        height: 100px;
+        width: 200px;
+        // height: 100px;
         margin-right: 20px;
         .text {
             text-align: center;
@@ -355,6 +430,12 @@ export default {
             padding: 5px;
             background: #ddd;
         }
+        // .img-modal {
+        //     max-width: 200px;
+
+        //     height: calc(145 / 347 * 200px);
+        // }
+      
     }
 }
 </style>

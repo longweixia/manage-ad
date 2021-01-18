@@ -1,5 +1,8 @@
 <template>
     <div class="sidebar">
+           <!-- <div class="logo">
+            <img src="./logosider.png" />
+        </div> -->
         <el-menu
             class="sidebar-el-menu"
             :default-active="onRoutes"
@@ -10,7 +13,9 @@
             unique-opened
             router
         >
+
             <template v-for="item in items">
+                
                 <template v-if="item.subs">
                     <el-submenu :index="item.index" :key="item.index">
                         <template slot="title">
@@ -20,11 +25,11 @@
                         <template v-for="subItem in item.subs">
                             <el-submenu v-if="subItem.subs" :index="subItem.index" :key="subItem.index">
                                 <template slot="title">{{ subItem.title }}</template>
-                                <el-menu-item v-for="(threeItem, i) in subItem.subs" :key="i" :index="threeItem.index">{{
+                                <el-menu-item v-for="(threeItem, i) in subItem.subs" :key="i" :index="threeItem.index" class="has-sub">{{
                                     threeItem.title
                                 }}</el-menu-item>
                             </el-submenu>
-                            <el-menu-item :style="flag==subItem.title?'color:#409EFF':''"  v-else :index="subItem.index" :key="subItem.index">{{ subItem.title }}</el-menu-item>
+                            <el-menu-item :style="flag==subItem.title?'color:#409EFF':''" class="has-sub"  v-else :index="subItem.index" :key="subItem.index">{{ subItem.title }}</el-menu-item>
                         </template>
                     </el-submenu>
                 </template>
@@ -288,27 +293,62 @@ export default {
 </script>
 
 <style scoped lang="less">
+/deep/ .is-active{
+    background-color: #2d8cf0!important;
+    color:#fff!important;
+}
+//  .logo {
+//     // z-index: 10000;
+//     // float: left;
+//     width: 150px;
+//     height: 60px;
+//     padding: 5px;
+//     // background: url("./logo.png");
+//     /* background:url("./logo.png") no-repeat 4px 5px */
+//     img{
+//         width:100%;
+//         height: 100%;
+//     }
+// }
 .sidebar {
     display: block;
     position: absolute;
     left: 0;
-    top: 0;
+    top: 60px;
     bottom: 0;
     overflow-y: scroll;
 }
 .sidebar::-webkit-scrollbar {
     width: 0;
 }
-.sidebar-el-menu:not(.el-menu--collapse) {
-    width: 130px;
+// 一级菜单
+.el-menu-item{
+    // padding:0!important;
+    // margin-left: 20px;
 }
+// 有二级菜单那
+.el-submenu{
+// margin-left: 20px!important;
+}
+.sidebar-el-menu:not(.el-menu--collapse) {
+    width: 203px;
+    background: #313b4a!important;   
+}
+.sidebar-el-menu {
+
+    background: #313b4a!important;   
+}
+
 .sidebar > ul {
     height: 100%;
 }
-li{
-padding-left: 5px!important;
+/deep/ .el-submenu__title{
+// margin-left: 10px!important;
 }
 /deep/ .el-submenu__title{
-padding:0!important;
+// padding:0!important;
+}
+.el-menu-item{
+    min-width: 0;
 }
 </style>

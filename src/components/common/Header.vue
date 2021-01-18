@@ -6,7 +6,9 @@
             <i v-else class="el-icon-s-unfold"></i>
         </div> -->
         <!-- <div class="logo">打榜小程序</div> -->
-        <div class="logo"></div>
+        <!-- <div class="logo">
+            <img src="./logo.png" />
+        </div> -->
         <div class="header-right" >
                  <el-dropdown class="user-name" trigger="click" @command="handleCommand">
                     <span class="el-dropdown-link">
@@ -144,8 +146,8 @@ export default {
     float: left;
     width: 250px;
     line-height: 70px;
-    /* background: url("./logo.png"); */
-    background:url("./logo.png") no-repeat 4px 5px
+    background: url("./logo.png");
+    /* background:url("./logo.png") no-repeat 4px 5px */
 }
 .header-right {
     float: right;

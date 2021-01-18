@@ -3,9 +3,9 @@
         <video src="./bgvide.mp4" autoplay="autoplay" muted="muted" loop="loop" class="bg-video"></video>
         
         <div class="ms-login">
-            <img src="./logoText.png" class="img-area" />
+            <img src="./logoText.png" class="img-area-text" />
             <div class="ms-title"></div>
-            <el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
+            <el-form :model="param"  ref="login" label-width="0px" class="ms-content">
                 <el-form-item prop="account">
                     <el-input v-model="param.account" placeholder="请输入手机号">
                         <el-button slot="prepend" icon="el-icon-lx-people"></el-button>
@@ -41,16 +41,22 @@ export default {
     },
     methods: {
         submitForm() {
-            this.$refs.login.validate(valid => {
-                if (valid) {
-                    this.login();
-                } else {
-                    this.$message.error('请输入手机号和密码');
-                    return false;
-                }
-            });
+            this.login();
+            // this.$refs.login.validate(valid => {
+            //     if (valid) {
+            //         this.login();
+            //     } else {
+            //         this.$message.error('请输入手机号和密码');
+            //         return false;
+            //     }
+            // });
         },
         login() {
+           
+            if(!this.param.account||!this.param.pwd){
+                 this.$message.error('请输入手机号和密码');
+                 return false
+            }
             this.axios
                 .post(`/common/login`, this.param)
                 .then(res => {
@@ -68,12 +74,12 @@ export default {
 </script>
 
 <style scoped lang="less">
-.img-area{
+.img-area-text{
     position: absolute;
-    left: 100px;
-    margin-top: -80px;
-    width: 271.8*1.8px;
-    height: 63.2*1.8px;
+    margin-left: -20px;
+    margin-top: -100px;
+    width: 271.8*2px;
+    height: 63.2*2px;
 }
 .login-wrap {
     position: relative;
@@ -89,12 +95,12 @@ export default {
     align-items: center;
 }
 .bg-video {
-    height: 100%;
+    // height: 100%;
     width: 100%;
     transform: translateX(-50%);
     position: relative;
     left: 50%;
-    top: -100px;
+    // top: -100px;
     position: absolute;
 }
 .ms-title {

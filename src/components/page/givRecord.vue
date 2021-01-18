@@ -94,11 +94,10 @@ export default {
                         sortable: true,
                         minWidth: 150,
                         render: (h, params) => {
-                            let { addTime } = params.row,
-                                text;
+                            let { addTime } = params.row
 
-                            text = timeChange(addTime);
-                            return h('div', text);
+                            ;
+                            return h('div', addTime||'无');
                         }
                     },
 

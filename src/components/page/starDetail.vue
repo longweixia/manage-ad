@@ -2,17 +2,16 @@
     <div class="star-area-detail">
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item>{{titles=='add'?'添加明星':'明星详情'}}</el-breadcrumb-item>
+                <el-breadcrumb-item>{{ titles == 'add' ? '添加明星' : '明星详情' }}</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        
 
         <div class="container">
-            <Form ref="formInline"  inline>
+            <Form ref="formInline" :rules="rules" inline :model="form">
                 <FormItem prop="name">
                     <div class="card-area">
                         <div class="row-text">姓名</div>
-                        <Input v-model="name" placeholder="姓名" style="width: 200px" clearable></Input>
+                        <Input v-model="form.name" placeholder="姓名" style="width: 200px" clearable></Input>
                     </div>
                 </FormItem>
                 <!-- <div class="card-area">
@@ -20,17 +19,16 @@
                 <Button type="primary" @click="uploadImg('Carousel')">上传图片</Button>
             </div> -->
                 <UploadCarousel @updateCarouselImg="updateCarouselImg" :homeImg="homeImg"></UploadCarousel>
-                <div class="card-area">
+                <div class="card-area" style="margin-top:10px">
                     <div class="card-content" v-if="homeImg">
-                        
-                            <div class="card">
-                                <div class="text">首页轮播图预览</div>
-                                <viewer :images="[homeImg]">
-                                    <img :src="homeImg" class="img" />
-                                </viewer>
-                                <!-- <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" /> -->
-                            </div>
-                    
+                        <div class="card">
+                            <div class="text">首页轮播图预览</div>
+                            <viewer :images="[homeImg]">
+                                <img :src="homeImg" class="img" />
+                            </viewer>
+                            <!-- <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" /> -->
+                        </div>
+
                         <div class="card">
                             <div class="text">明星详细页预览</div>
                             <viewer :images="[homeImg]">
@@ -40,12 +38,12 @@
                         </div>
                         <div class="card">
                             <div class="text">打榜弹窗预览</div>
-                            <!-- <viewer :images="[homeImg]">
-                                <img :src="homeImg" class="img img-modal" />
-                            </viewer> -->
                             <div class="img-modal-area">
                                 <div class="img-modal" :style="style1"></div>
                             </div>
+                            <!-- <viewer :images="[homeImg]">
+                                <img :src="homeImg" class="img img-modal" />
+                            </viewer> -->
                             <!-- <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" /> -->
                         </div>
                     </div>
@@ -57,7 +55,7 @@
                 <Button type="primary" @click="uploadImg">上传头像</Button> -->
                     <div class="card-header">
                         <viewer :images="[avatar]" v-if="avatar">
-                            <img :src="avatar" class="img" style="width:100px;height:100px;border-radius:50px" />
+                            <img :src="avatar" class="img" style="width: 100px; height: 100px; border-radius: 50px" />
                         </viewer>
                         <!-- <img v-if="!avatar" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" /> -->
                     </div>
@@ -68,7 +66,7 @@
                         <span class="addTag-text" @click="addTag">新增标签</span>
                         <div class="tips">标签可在发布资源时选择，便于快速关联明星</div>
                     </div>
-      
+
                     <div class="tag-area">
                         <!-- <Tag class="tag" checkable color="primary">热门明星</Tag> -->
                         <Tag
@@ -98,18 +96,17 @@
                 </div>
             </div>
             <div>
-                <Button  @click="reback" style="display:inline-block">返回</Button>
-                <Button type="primary" @click="save" style="display:inline-block;margin-left:20px">保存</Button>
+                <Button @click="reback" style="display: inline-block">返回</Button>
+                <Button type="primary" @click="save" style="display: inline-block; margin-left: 20px">保存</Button>
             </div>
-          
 
             <!-- 新增按钮，弹窗 -->
             <Modal v-model="modalTag" title="新增标签">
                 <div>
                     <Input v-model="tagText" placeholder="最多6个字" maxlength="6" style="width: 200px" clearable></Input>
-                    <Button class="card-screen-btn" type="primary" @click="okAddTag" style="margin-left:10px">增加</Button>
+                    <Button class="card-screen-btn" type="primary" @click="okAddTag" style="margin-left: 10px">增加</Button>
                 </div>
-                <p style="margin-top:20px">当前标签</p>
+                <p style="margin-top: 20px">当前标签</p>
                 <div class="tag-area">
                     <!-- <Tag class="tag" checkable color="primary">热门明星</Tag> -->
                     <Tag
@@ -140,7 +137,15 @@ export default {
         UploadHeader,
         UploadScreen
     },
-    data: function() {
+    watch: {
+        homeImg: {
+            handler(newval, oldval) {
+                this.style1 = `background:url(${newval}) no-repeat center center;background-size: cover;`;
+            },
+            immediate: true
+        }
+    },
+    data: function () {
         //     const logisticValid = (rule, value, cb) => {
         //   let { isCollect, isLine, isInBoard, isAboard } = this.form,
         //       arr = [isCollect, isLine, isInBoard, isAboard]
@@ -148,59 +153,58 @@ export default {
         //   else cb(new Error(rule.message))
         // }
         return {
-            style1:"",
-            // rules: {
-            //     name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }]
-            // },
+            style1: '',
+            rules: {
+                name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }]
+            },
             modalBannaerInit: false,
             modalTag: false,
             id: null, //明星id
-
-            name: '', //姓名
-
+            form: {
+                name: '' //姓名
+            },
             homeImg: '', //首页轮播图
             avatar: '', //头像url
             openImg: '', //头像url
-            tagList: [
-                // { name: '小程序开屏', value: 2, checked: false, id: 1 },
-                // { name: '首页轮播', value: 3, checked: false, id: 12 },
-                // { name: '后援金', value: 1, checked: false, id: 13 },
-                // { name: '户外大屏', value: 4, checked: false, id: 14 }
-            ], //标签集合
+            tagList: [], //标签集合
             addTagList: [], //新增标签上的列表
             tagText: '',
-            titles:"明星详情",//详情标题
+            titles: '明星详情' //详情标题
         };
     },
     mounted() {
-        this.titles = this.$route.query.add
-        this.getTags()
+        this.titles = this.$route.query.add;
         this.id = this.$route.query.id;
-     
         if (this.id) {
-            this.loadData();
+            this.axios
+                .post(`/star/tags/list`)
+                .then((res) => {
+                    this.tagList = res.data;
+                    this.loadData();
+                })
+                .catch((err) => {
+                    this.$Message.error(err);
+                    this.loadData();
+                });
+        } else {
+            this.getTags();
         }
     },
-     beforeRouteLeave (to, from, next) {
-             bus.$emit('getFlag', '');
-             next()
-        },
-    created(){
-         bus.$emit('getFlag', '明星列表');
+    beforeRouteLeave(to, from, next) {
+        bus.$emit('getFlag', '');
+        next();
+    },
+    created() {
+        bus.$emit('getFlag', '明星列表');
     },
     methods: {
-        reback(){
+        reback() {
             this.$router.push({
-                name:'starList'
-            })
-
+                name: 'starList'
+            });
         },
         // 保存，有id为修改，否则为新增
         save() {
-            if(!this.name){
-                  this.$Message.error('请输入姓名');
-                  return false
-            }
             if (this.id) {
                 //修改
                 this.changeStar();
@@ -240,11 +244,11 @@ export default {
                     homeImg: this.homeImg, //首页轮播图
                     hotSearch: 0, //是否热门搜索
                     id: 0,
-                    name: this.name, //姓名
+                    name: this.form.name, //姓名
                     openImg: this.openImg, //所属开屏图
                     tags: tagArry
                 })
-                .then(res => {
+                .then((res) => {
                     // this.tagList = res.data;
                     this.$Message.success('新增成功');
                     // this.loadData()
@@ -252,7 +256,7 @@ export default {
                         name: 'starList'
                     });
                 })
-                .catch(err => {
+                .catch((err) => {
                     this.$Message.error(err);
                 });
         },
@@ -277,23 +281,21 @@ export default {
                     homeImg: this.homeImg, //首页轮播图
                     hotSearch: 0, //是否热门搜索
                     id: this.id,
-                    name: this.name, //姓名
+                    name: this.form.name, //姓名
                     openImg: this.openImg, //所属开屏图
                     tags: tagArry
                 })
-                .then(res => {
+                .then((res) => {
                     // this.tagList = res.data;
                     this.$Message.success('修改成功');
                     this.loadData();
                 })
-                .catch(err => {
+                .catch((err) => {
                     this.$Message.error(err);
                 });
         },
         updateCarouselImg(data) {
-       
             this.homeImg = data;
-             this.style1 = `background:url(${this.homeImg}) no-repeat center center;background-size: cover;`;
         },
         updateCarouselimgHeader(data) {
             this.avatar = data;
@@ -301,7 +303,6 @@ export default {
         updateCarouselimgScreen(data) {
             this.openImg = data;
         },
-      
         // 上传图片
         uploadImg() {},
         changeTag(data) {
@@ -319,7 +320,6 @@ export default {
         //新增标签
         addTag() {
             this.modalTag = true;
-          
         },
         // 确认新增
         okAddTag() {
@@ -333,28 +333,27 @@ export default {
                         signature: this.tagText
                     }
                 })
-                .then(res => {
+                .then((res) => {
                     this.$Message.success('添加成功');
                     this.getTags();
                 })
-                .catch(err => {
+                .catch((err) => {
                     this.$Message.error(err);
                 });
         },
         //关闭标签
         handleClose(data) {
-            console.log(data)
+            console.log(data);
             this.axios
                 .get(`/star/tags/deleteTags`, {
                     params: {
                         id: data.id
                     }
                 })
-                .then(res => {
-               
+                .then((res) => {
                     this.getTags();
                 })
-                .catch(err => {
+                .catch((err) => {
                     this.$Message.error(err);
                 });
             // const index = this.tagList.indexOf(name);
@@ -363,40 +362,37 @@ export default {
         // 查询标签
         loadData() {
             this.axios
-                        .get(`/star/star/selectStatById`, {
-                            params: {
-                                id: this.id
-                            }
-                        })
-                        .then(res => {
-                            this.name = res.data.name;
-                            this.homeImg = res.data.homeImg;
-                            this.avatar = res.data.avatar;
-                            this.openImg = res.data.openImg;
-                            let tags = res.data.tags || [];
-                            // 处理标签
-                            this.tagList.forEach((item, index) => {
-                                tags.forEach((item1, index1) => {
-                                    if (item1.id == item.id) {
-                                        this.tagList[index].checked = true;
-                                    }
-                                });
-                            });
-                            this.style1 = `background:url(${this.homeImg}) no-repeat center center;background-size: cover;`;
-                        })
-                        .catch(err => {
-                            this.$Message.error(err);
-                        });
-           
-        },
-        getTags(){
-             this.axios
-                .post(`/star/tags/list`)
-                .then(res => {
-                    this.tagList = res.data;
-                    
+                .get(`/star/star/selectStatById`, {
+                    params: {
+                        id: this.id
+                    }
                 })
-                .catch(err => {
+                .then((res) => {
+                    this.form.name = res.data.name;
+                    this.homeImg = res.data.homeImg;
+                    this.avatar = res.data.avatar;
+                    this.openImg = res.data.openImg;
+                    let tags = res.data.tags || [];
+                    // 处理标签
+                    this.tagList.forEach((item, index) => {
+                        tags.forEach((item1, index1) => {
+                            if (item1.id == item.id) {
+                                this.tagList[index].checked = true;
+                            }
+                        });
+                    });
+                })
+                .catch((err) => {
+                    this.$Message.error(err);
+                });
+        },
+        getTags() {
+            this.axios
+                .post(`/star/tags/list`)
+                .then((res) => {
+                    this.tagList = res.data;
+                })
+                .catch((err) => {
                     this.$Message.error(err);
                 });
         }
@@ -405,6 +401,16 @@ export default {
 </script>
 <style lang="less" scoped>
 .star-area-detail {
+    .img-modal-area {
+        width: 200px;
+        height: 89px;
+        background: #ddd;
+        padding: 5px;
+        .img-modal {
+            width: 190px;
+            height:  79px;
+        }
+    }
     .container {
         .card-area {
             margin-bottom: 20px;
@@ -417,8 +423,8 @@ export default {
             .card-content {
                 display: flex;
                 justify-content: left;
-                align-items: center;
-                min-height: 350px;
+                // align-items: center;
+                min-height: 20px;
                 .card {
                     width: 200px;
                     // height: 200px;
@@ -435,12 +441,10 @@ export default {
                         padding: 5px;
                         background: #ddd;
                     }
-                    .img-modal{
-                        max-width:200px;
-
-                 
-                height: calc(145/347*200px);
-                    }
+                    // .img-modal {
+                    //     max-width: 200px;
+                    //     height: calc(145 / 347 * 200px);
+                    // }
                 }
             }
             .card-header {
@@ -464,7 +468,6 @@ export default {
                 cursor: pointer;
                 margin-left: 20px;
             }
-
             // 开屏
             .card-screen {
                 max-width: 200px;
@@ -472,7 +475,7 @@ export default {
                 margin-top: 10px;
                 .img {
                     width: 100%;
-                  height: 100%;
+                    height: 100%;
                 }
             }
             .card-screen-btn {
@@ -488,7 +491,6 @@ export default {
         .tag {
             cursor: pointer;
             margin-right: 10px;
-
             border: 1px solid #ddd;
         }
         .tagTrue {
@@ -502,6 +504,5 @@ export default {
             }
         }
     }
-
 }
 </style>

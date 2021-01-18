@@ -147,7 +147,7 @@ export default {
     created() {},
     mounted() {
         this.getTimeList()
-        this.loadData();
+        // this.loadData();
     },
     methods: {
         // 情况日期
@@ -245,7 +245,10 @@ export default {
                 },
                 
             ]
-
+            this.query.startTime=this.TimeList[0].startTime
+            this.dateValue=this.TimeList[0].label
+            this.query.endTime=this.TimeList[0].endTime
+            this.loadData()
 
         },
         ok() {},

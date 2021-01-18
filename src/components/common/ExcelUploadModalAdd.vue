@@ -9,24 +9,22 @@
             </div>
         </div>
         <Form ref="uploadForm" inline>
-            <input ref="upload" type="file" id="upload" style="display:none" @change="fileChange" accept=".csv, .xlsx, .xls" />
-            <FormItem style="cursor: pointer;text-align:left">
+            <input ref="upload" type="file" id="upload" style="display: none" @change="fileChange" accept=".csv, .xlsx, .xls" />
+            <FormItem style="cursor: pointer; text-align: left">
                 <span class="tip-text">{{ filename }}</span>
 
                 <Icon
                     v-if="filename"
                     @click="deleteFile"
                     type="md-close-circle"
-                    style="font-size: 20px;cursor: pointer;margin-left:5px;line-height: 25px;"
+                    style="font-size: 20px; cursor: pointer; margin-left: 5px; line-height: 25px"
                 />
-                <Button style="margin-top:10px;display:inline-block;margin-left:10px" @click="flieClick">
-                    选择文件
-                </Button>
+                <Button style="margin-top: 10px; display: inline-block; margin-left: 10px" @click="flieClick"> 选择文件 </Button>
             </FormItem>
         </Form>
 
         <template slot="footer">
-            <div style="text-align:center">
+            <div style="text-align: center">
                 <Button type="primary" :loading="submitLoading" @click="confirm">提交</Button>
             </div>
         </template>
@@ -41,10 +39,6 @@ export default {
     },
     data() {
         return {
-            filingstatusList: [
-                { label: '上海口岸', value: '2200' },
-                { label: '杭州口岸', value: '2900' }
-            ],
             visible: this.uploadModel,
             portData: {
                 visible: true,
@@ -90,7 +84,7 @@ export default {
         downModel(name) {
             this.axios
                 .get(`/fens/downStarHitModel`, { responseType: 'arraybuffer' })
-                .then(res => {
+                .then((res) => {
                     let data = res;
                     let blob = new Blob([data], { type: 'application/vnd.ms-excel' }); //res 就是文件流了
                     let a = document.createElement('a');
@@ -100,7 +94,7 @@ export default {
 
                     // window.location.href = objectUrl;
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log('err', err);
                 });
         },
@@ -116,11 +110,11 @@ export default {
             formData.append('file', file);
             this.axios
                 .post(`/fens/importHitSatrVigourVal`, formData)
-                .then(res => {
+                .then((res) => {
                     this.$Message.success('提交成功');
                     this.visible = false;
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log('err', err);
                 });
         }

@@ -3,7 +3,7 @@
         <div class="container">
             <div class="card-area">
                 <div class="row-text">分享微信获得热力值</div>
-                <div class="row-text">需对方点击分享内容进入小程序才算完成</div>
+                <div style="margin-top:10px;margin-bottom:10px">需对方点击分享内容进入小程序才算完成</div>
 
                 <div>
                     每日最高

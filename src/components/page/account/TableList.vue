@@ -268,10 +268,10 @@ export default {
                         minWidth: 150,
                              render: (h, params) => {
                     
-                            let { addTime} = params.row,text;
+                            let { addTime} = params.row
+                         
+                            return h('div', addTime||'无');
                             
-                            text = timeChange(addTime)
-                            return h('div', text);
                         }
                     },
                     {

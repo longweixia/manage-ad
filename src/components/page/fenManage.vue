@@ -145,11 +145,8 @@ export default {
                         minWidth: 150,
                          render: (h, params) => {
                              let {addTime} = params.row
-                            let clickBtn = h(
-                                'div',
-                                timeChange(addTime)||"无"
-                            );
-                            return h('div', [clickBtn]);
+                        
+                            return h('div', addTime||'无');
                         }
 
                     },
@@ -160,11 +157,8 @@ export default {
                         minWidth: 180,
                           render: (h, params) => {
                              let {lastVisitTime} = params.row
-                            let clickBtn = h(
-                                'div',
-                                timeChange(lastVisitTime)||"无"
-                            );
-                            return h('div', [clickBtn]);
+                         
+                            return h('div', lastVisitTime||"无");
                         }
                     },
 

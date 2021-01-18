@@ -1,8 +1,13 @@
 <template>
     <div class="wrapper">
+        <div class="top-logo">
+            <div class="logo"></div>
+
+            <!-- <img src="./logosider.png" /> -->
+        </div>
         <v-head></v-head>
         <v-sidebar></v-sidebar>
-        <div class="content-box" :class="{'content-collapse':collapse}">
+        <div class="content-box" :class="{ 'content-collapse': collapse }">
             <!-- <v-tags></v-tags> -->
             <div class="content">
                 <transition name="move" mode="out-in">
@@ -49,3 +54,28 @@ export default {
     }
 };
 </script>
+<style lang="less" scoped>
+.top-logo {
+    width: 202px;
+    height: 70px;
+    padding: 5px 20px;
+    background-color: #3d4a5d;
+    .logo {
+        width: 167px;
+        height: 48px;
+        line-height: 50px;
+
+    
+        // padding: 5px;
+        // background: url("./logosider.png");
+        // background:url("./logosider.png") no-repeat 4px 5px ;
+        background: url(./logosider.png) center center / cover no-repeat;
+        background-color: #3d4a5d;
+        // background-size: cover;
+        // img{
+        //     width:100%;
+        //     height: 100%;
+        // }
+    }
+}
+</style>

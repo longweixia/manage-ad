@@ -8,7 +8,7 @@
         
 
         <div class="container">
-            <Form ref="formInline" :rules="rules" inline>
+            <Form ref="formInline"  inline>
                 <FormItem prop="name">
                     <div class="card-area">
                         <div class="row-text">姓名</div>
@@ -40,9 +40,12 @@
                         </div>
                         <div class="card">
                             <div class="text">打榜弹窗预览</div>
-                            <viewer :images="[homeImg]">
+                            <!-- <viewer :images="[homeImg]">
                                 <img :src="homeImg" class="img img-modal" />
-                            </viewer>
+                            </viewer> -->
+                            <div class="img-modal-area">
+                                <div class="img-modal" :style="style1"></div>
+                            </div>
                             <!-- <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" /> -->
                         </div>
                     </div>
@@ -145,9 +148,10 @@ export default {
         //   else cb(new Error(rule.message))
         // }
         return {
-            rules: {
-                name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }]
-            },
+            style1:"",
+            // rules: {
+            //     name: [{ required: true, message: '姓名不能为空', trigger: 'blur' }]
+            // },
             modalBannaerInit: false,
             modalTag: false,
             id: null, //明星id
@@ -193,6 +197,10 @@ export default {
         },
         // 保存，有id为修改，否则为新增
         save() {
+            if(!this.name){
+                  this.$Message.error('请输入姓名');
+                  return false
+            }
             if (this.id) {
                 //修改
                 this.changeStar();
@@ -268,7 +276,7 @@ export default {
                     hitPopupImg: this.homeImg, //打榜弹窗图
                     homeImg: this.homeImg, //首页轮播图
                     hotSearch: 0, //是否热门搜索
-                    id: Number(this.id),
+                    id: this.id,
                     name: this.name, //姓名
                     openImg: this.openImg, //所属开屏图
                     tags: tagArry
@@ -285,6 +293,7 @@ export default {
         updateCarouselImg(data) {
        
             this.homeImg = data;
+             this.style1 = `background:url(${this.homeImg}) no-repeat center center;background-size: cover;`;
         },
         updateCarouselimgHeader(data) {
             this.avatar = data;
@@ -373,6 +382,7 @@ export default {
                                     }
                                 });
                             });
+                            this.style1 = `background:url(${this.homeImg}) no-repeat center center;background-size: cover;`;
                         })
                         .catch(err => {
                             this.$Message.error(err);
@@ -492,5 +502,6 @@ export default {
             }
         }
     }
+
 }
 </style>

@@ -18,7 +18,7 @@
                         <Button @click="resetForm('ruleForm')" style="margin-left: 10px">重置</Button>
                     </FormItem>
                     <div>
-                        <Button type="primary" @click="batchModal">新增粉丝</Button>
+                        <Button type="primary" @click="addfensModal">新增粉丝</Button>
                         <Button type="primary" @click="batchModal" style="margin-left: 20px">批量打榜</Button>
                         <!-- <Button style="float:right" @click="seeGivRecord">赠送记录</Button> -->
                     </div>
@@ -38,21 +38,37 @@
                         ，ID：
                         <span style="font-weight:normal">{{ modalOneData.fensId }}</span>
                     </div> -->
-                    输入明星姓名
-                    <Input v-model="starName" style="margin-top: 10px" @on-change="changeStarName" />
+
+                    <div style="width:100px">输入明星姓名</div>
+
+                    <Select @on-query-change="changeStarName" filterable v-model="modelStar" style="width:200px;margin-top:10px;">
+                        <Option v-for="(item, index) in starList" :key="index" :value="item.id">{{ item.name }}</Option>
+                    </Select>
+
                     <div>
-                        <div v-for="(item,index) in starList" :key="index">
-                            {{item.name}}
-                        </div>
+                        <div style="width:100px;margin-top:10px">打榜热力值</div>
+                        <Input v-model="vigourVal" style="margin-top: 10px;width:200px" />
                     </div>
-                    打榜热力值
-                    <Input v-model="vigourVal" style="margin-top: 10px" />
+                    <br />
                     当前热力值：{{ rowvigourVal }}
                     <!-- <img :src="homeImg"/> -->
                 </div>
             </div>
             <div slot="footer" style="text-align: center">
                 <Button type="primary" style="width: 100px" @click="submitOne">提交</Button>
+            </div>
+        </Modal>
+        <!-- 新增粉丝 -->
+        <Modal v-model="modalfens" title="新增粉丝" @on-ok="ok" @on-cancel="cancel" width="400">
+            <div class="card-content">
+                <div class="card">
+                    输入昵称
+                    <Input v-model="nickName" style="margin-top: 10px" />
+                    <UploadHeader @updateCarouselImg="updateCarouselimgHeader" :homeImg="avatar"></UploadHeader>
+                </div>
+            </div>
+            <div slot="footer" style="text-align: center">
+                <Button type="primary" style="width: 100px" @click="submitOnefens">提交</Button>
             </div>
         </Modal>
         <!-- 批量导入 -->
@@ -65,6 +81,7 @@
 // import { getConfigsByProductId, addNewAndroidPlugin } from '../../api/index.js';
 import ExcelUploadModal from '../common/ExcelUploadModalAdd.vue';
 import { timeChange } from '../../utils/helper.js';
+import UploadHeader from './StarList/fensuploadHeader.vue';
 import Pagination from './../common/Pagination.vue';
 import { PAGE_PARAMS } from './../../utils/constants.js';
 
@@ -72,11 +89,17 @@ export default {
     name: 'myArticle',
     components: {
         ExcelUploadModal,
-        Pagination
+        Pagination,
+        UploadHeader
     },
     data() {
         return {
-            starList:[],//搜索的明星列表
+            modelStar: '',
+            nickName: '',
+            avatar: '', //头像
+            modalfens: false,
+            nickNameList: [],
+            starList: [], //搜索的明星列表
             starName: '',
             starId: '',
             pagination: Object.assign({}, PAGE_PARAMS),
@@ -109,35 +132,12 @@ export default {
                         minWidth: 100
                     },
                     {
-                        title: '性别',
-                        key: 'gender',
+                        title: '末次赠送明星',
+                        key: 'lastStar',
                         align: 'center',
-                        minWidth: 80, // todo  男女值分别为什么
-                        render: (h, params) => {
-                            let { gender } = params.row;
-                            let text = '无';
-                            if (gender === 0) {
-                                text = '女';
-                            } else if (gender === 1) {
-                                text = '男';
-                            }
+                        minWidth: 100
+                    },
 
-                            return h('div', text);
-                        }
-                    },
-                    {
-                        title: '手机号',
-                        key: 'phone',
-                        align: 'center',
-                        minWidth: 150
-                    },
-                    {
-                        title: '累计活力值',
-                        key: 'totalVigourVal',
-                        align: 'center',
-                        sortable: true,
-                        minWidth: 130
-                    },
                     {
                         title: '消耗活力值',
                         key: 'consumeVigourVal',
@@ -154,24 +154,13 @@ export default {
                     },
 
                     {
-                        title: '注册时间',
+                        title: '新增时间',
                         key: 'addTime',
                         align: 'center',
                         minWidth: 150,
                         render: (h, params) => {
                             let { addTime } = params.row;
                             let clickBtn = h('div', timeChange(addTime) || '无');
-                            return h('div', [clickBtn]);
-                        }
-                    },
-                    {
-                        title: '最后登录时间',
-                        key: 'lastVisitTime', //todo 时间需要格式化
-                        align: 'center',
-                        minWidth: 180,
-                        render: (h, params) => {
-                            let { lastVisitTime } = params.row;
-                            let clickBtn = h('div', timeChange(lastVisitTime) || '无');
                             return h('div', [clickBtn]);
                         }
                     },
@@ -217,29 +206,66 @@ export default {
         this.loadData();
     },
     methods: {
-        changeStarName() {
-            if(!this.starName){
-                this.starList = []
-                return false
+        updateCarouselimgHeader(data) {
+            this.avatar = data;
+        },
+        changeStarName(starName) {
+            this.starName = starName;
+            if (starName && starName.length < 2) {
+                this.starList = [];
+                this.modelStar = '';
+                this.starName = '';
+                return false;
             }
-            if (this.starName && this.starName.length > 1) {
+            if (!starName) {
+                this.starList = [];
+                this.modelStar = '';
+                this.starName = '';
+                return false;
+            }
+
+            if (starName && starName.length > 1) {
                 this.axios
                     .get('/fens/selectStarByName', {
                         params: {
-                            starName: this.starName
+                            starName: starName
                         }
                     })
-                    .then((res) => {
+                    .then(res => {
                         this.starList = res.data;
                     })
-                    .catch((err) => {
+                    .catch(err => {
                         this.$Message.error(err);
                     });
             }
         },
+        // changenickName() {
+        //     if (!this.nickName) {
+        //         this.nickNameList = [];
+        //         return false;
+        //     }
+        //     if (this.nickName && this.nickName.length > 1) {
+        //         this.axios
+        //             .get('/fens/selectStarByName', {
+        //                 params: {
+        //                     starName: this.nickName
+        //                 }
+        //             })
+        //             .then(res => {
+        //                 this.nickNameList = res.data;
+        //             })
+        //             .catch(err => {
+        //                 this.$Message.error(err);
+        //             });
+        //     }
+        // },
         // 赠送活力值
         showModalOne() {
             this.modalOne = true;
+        },
+        // 新增粉丝
+        addfensModal() {
+            this.modalfens = true;
         },
         // 批量赠送
         batchModal() {
@@ -270,20 +296,65 @@ export default {
                 name: 'givRecord'
             });
         },
-        // 单个提交
+        // 打榜
         submitOne() {
-            let id = this.modalOneData.id,
-                vigourVal = this.vigourVal;
+            if (!this.starName) {
+                this.$Message.error('请选择明星');
+                return false;
+            }
+            if (!this.vigourVal) {
+                this.$Message.error('请输入热力值');
+                return false;
+            }
+
             this.axios
-                .post(`/fens/giveVigourVal?id=${id}&vigourVal=${vigourVal}`)
-                .then((res) => {
+                .post(`/fens/bulidFensHit`, {
+                    id: this.modalOneData.id, //粉丝id
+                    starId: this.modelStar, //明星id
+                    starName: this.starName, //明星名称
+                    vigourVal: this.vigourVal && Number(this.vigourVal) //热力值
+                })
+                .then(res => {
                     this.$Message.success('赠送成功');
                     this.loadData();
                     this.modalOneData = {};
                     this.vigourVal = '';
+                    this.starId = '';
+
+                    this.starName = '';
+                    this.modelStar = '';
                     this.modalOne = false;
                 })
-                .catch((err) => {
+                .catch(err => {
+                    this.$Message.error(err);
+                });
+        },
+        // 新增粉丝
+        submitOnefens() {
+            if (!this.nickName) {
+                this.$Message.error('请输入昵称');
+                return false;
+            }
+            if (!this.avatar) {
+                this.$Message.error('请上传头像');
+                return false;
+            }
+            let nickName = this.nickName,
+                avatarUrl = this.avatar;
+            this.axios
+                .post(`/fens/addBulidFens`, {
+                    nickName: nickName,
+                    avatarUrl: avatarUrl
+                })
+                .then(res => {
+                    this.$Message.success('新增成功');
+
+                    this.nickName = '';
+                    this.avatar = '';
+                    this.modalfens = false;
+                    this.loadData();
+                })
+                .catch(err => {
                     this.$Message.error(err);
                 });
         },
@@ -300,26 +371,12 @@ export default {
                     pageNum: this.pagination.pageNum,
                     pageSize: this.pagination.pageSize
                 })
-                .then((res) => {
-                    // this.table.data = res.data.lis;
-                    this.table.data = [
-                        {
-                            addTime: '2021-01-14T18:43:21.646Z',
-                            consumeVigourVal: 0,
-                            fensId: 0,
-                            gender: 0,
-                            id: 0,
-                            lastStar: 'string',
-                            lastVisitTime: '2021-01-14T18:43:21.646Z',
-                            nickName: 'string',
-                            phone: 'string',
-                            totalVigourVal: 0,
-                            vigourVal: 10
-                        }
-                    ];
+                .then(res => {
+                    this.table.data = res.data.list;
+
                     this.pagination.total = res.data.total;
                 })
-                .catch((err) => {
+                .catch(err => {
                     this.$Message.error(err);
                 });
         },

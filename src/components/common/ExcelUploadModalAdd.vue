@@ -1,8 +1,8 @@
 <template>
-    <Modal v-model="visible" title="批量赠送活力值">
+    <Modal v-model="visible" title="批量打榜">
         <div>
             <div>
-                <div>下载表格并在表格输入粉丝ID及赠送数量，之后导入系统。</div>
+                <div>下载模板，并在模板输入粉丝ID、明星ID及打榜热力值， 之后导入系统。</div>
                 <div>
                     <span @click="downModel" class="tip-text">下载模板</span>
                 </div>

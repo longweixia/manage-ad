@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="container">
+       <div class="container" style="border:none">
             <div class="card-area">
                 <div class="row-text">分享微信获得热力值</div>
                 <div style="margin-top:10px;margin-bottom:10px">需对方点击分享内容进入小程序才算完成</div>

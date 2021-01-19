@@ -1,7 +1,7 @@
 <template>
     <div>
   
-        <div class="container">
+          <div class="container" style="border:none">
             <div class="card-area">
                 <div class="row-text">每日看视频次数</div>
                  每日最高

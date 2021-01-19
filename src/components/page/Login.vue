@@ -76,27 +76,40 @@ export default {
 <style scoped lang="less">
 .img-area-text{
     position: absolute;
-    margin-left: -20px;
-    margin-top: -100px;
-    width: 271.8*2px;
-    height: 63.2*2px;
+    margin-left: -40px;
+    margin-top: -150px;
+    width: 271.8*3px;
+    height: 63.2*3px;
 }
 .login-wrap {
     position: relative;
-    width: 100%;
-    height: 100%;
+    // width: 100%;
+    // height: 100%;
     min-width: 1375px;
-    min-height: 755px;
+    min-height: 1000px;
+    overflow: hidden;
     /* background-image: url(../../assets/img/login-bg.jpg); */
-    background-size: 100%;
+    background-size: cover;
     background: linear-gradient(to right, #8eaeb3, #aac4c8, #8eaeb3);
     display: flex;
     justify-content: center;
     align-items: center;
+   @media screen and (max-width: 1800px) {
+    min-height: 770px;
+}
+   @media screen and (max-width: 1700px) {
+    min-height: 970px;
+}
+   @media screen and (max-width: 1700px) {
+    min-height: 850px;
+}
+   @media screen and (max-width: 1500px) {
+    min-height: 780px;
+}
 }
 .bg-video {
-    // height: 100%;
     width: 100%;
+    height: 100%;
     transform: translateX(-50%);
     position: relative;
     left: 50%;
@@ -122,7 +135,7 @@ export default {
     width: 350px;
     // margin: -190px 0 0 -250px;
     // border-radius: 5px;
-    margin-left: -100px;
+    margin-left: -200px;
     background: rgba(255, 255, 255, 0.3);
     overflow: hidden;
     z-index: 1000;
@@ -147,5 +160,8 @@ export default {
 .el-button--primary {
     background-color: #b1c8cb;
     border-color: #b1c8cb;
+}
+/deep/ .el-input-group__prepend,/deep/ .el-input__inner{
+    background-color: rgba(255, 255, 255, .5)!important;
 }
 </style>

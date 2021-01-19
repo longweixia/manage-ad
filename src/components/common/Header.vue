@@ -1,34 +1,33 @@
 <template>
-    <div class="header">
-        <!-- 折叠按钮 -->
-        <!-- <div class="collapse-btn" @click="collapseChage">
+    <!-- <div class="header"> -->
+    <!-- 折叠按钮 -->
+    <!-- <div class="collapse-btn" @click="collapseChage">
             <i v-if="!collapse" class="el-icon-s-fold"></i>
             <i v-else class="el-icon-s-unfold"></i>
         </div> -->
-        <!-- <div class="logo">打榜小程序</div> -->
-        <!-- <div class="logo">
+    <!-- <div class="logo">打榜小程序</div> -->
+    <!-- <div class="logo">
             <img src="./logo.png" />
         </div> -->
-        <div class="header-right" >
-                 <el-dropdown class="user-name" trigger="click" @command="handleCommand">
-                    <span class="el-dropdown-link">
-                        {{username}}
-                        <i class="el-icon-caret-bottom"></i>
-                    </span>
-                    <el-dropdown-menu slot="dropdown">
-               
-                        <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
-            <div class="header-user-con" v-if="false">
-                <!-- 全屏显示 -->
-                <div class="btn-fullscreen" @click="handleFullScreen">
-                    <el-tooltip effect="dark" :content="fullscreen?`取消全屏`:`全屏`" placement="bottom">
-                        <i class="el-icon-rank"></i>
-                    </el-tooltip>
-                </div>
-                <!-- 消息中心 -->
-                <!-- <div class="btn-bell">
+    <div class="header-right">
+        <el-dropdown class="user-name" trigger="click" @command="handleCommand">
+            <span class="el-dropdown-link">
+                {{ username }}
+                <i class="el-icon-caret-bottom"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
+            </el-dropdown-menu>
+        </el-dropdown>
+        <div class="header-user-con" v-if="false">
+            <!-- 全屏显示 -->
+            <div class="btn-fullscreen" @click="handleFullScreen">
+                <el-tooltip effect="dark" :content="fullscreen ? `取消全屏` : `全屏`" placement="bottom">
+                    <i class="el-icon-rank"></i>
+                </el-tooltip>
+            </div>
+            <!-- 消息中心 -->
+            <!-- <div class="btn-bell">
                     <el-tooltip
                         effect="dark"
                         :content="message?`有${message}条未读消息`:`消息中心`"
@@ -40,12 +39,12 @@
                     </el-tooltip>
                     <span class="btn-bell-badge" v-if="message"></span>
                 </div> -->
-                <!-- 用户头像 -->
-                <!-- <div class="user-avator">
+            <!-- 用户头像 -->
+            <!-- <div class="user-avator">
                     <img src="../../assets/img/img.jpg" />
                 </div> -->
-                <!-- 用户名下拉菜单 -->
-                <!-- <el-dropdown class="user-name" trigger="click" @command="handleCommand">
+            <!-- 用户名下拉菜单 -->
+            <!-- <el-dropdown class="user-name" trigger="click" @command="handleCommand">
                     <span class="el-dropdown-link">
                         {{username}}
                         <i class="el-icon-caret-bottom"></i>
@@ -55,9 +54,9 @@
                         <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown> -->
-            </div>
         </div>
     </div>
+    <!-- </div> -->
 </template>
 <script>
 import bus from '../common/bus';
@@ -132,10 +131,11 @@ export default {
     height: 70px;
     font-size: 22px;
     color: #fff;
+    background: #fff;
     /* top:10px; */
 }
 .collapse-btn {
-    float: left;
+    /* float: left; */
     padding: 0 21px;
     cursor: pointer;
     line-height: 70px;
@@ -146,12 +146,17 @@ export default {
     float: left;
     width: 250px;
     line-height: 70px;
-    background: url("./logo.png");
+    background: url('./logo.png');
     /* background:url("./logo.png") no-repeat 4px 5px */
 }
 .header-right {
-    float: right;
-    padding-right: 50px;
+    text-align: right;
+    /* padding-right: 50px; */
+    /* position: absolute; */
+    top: 20px;
+    right: 27px;
+    padding-top: 15px;
+    background: #fff;
 }
 .header-user-con {
     display: flex;
@@ -188,7 +193,8 @@ export default {
 .user-name {
     margin-left: 10px;
     z-index: 1000;
-    
+        position: relative;
+    top: -5px;
 }
 .user-avator {
     margin-left: 20px;

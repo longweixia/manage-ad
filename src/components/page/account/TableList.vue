@@ -1,5 +1,10 @@
 <template>
     <div class="account-TableList">
+             <div class="crumbs">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item>账号管理</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
         <div class="container">
             <div class="handle-box">
                 <Form inline :model="query" class="demo-form-inline" ref="ruleForm">

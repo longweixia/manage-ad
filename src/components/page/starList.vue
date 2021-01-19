@@ -2,7 +2,7 @@
     <div class="star-list-table">
         <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item> <i class="el-icon-s-check"></i> 明星列表 </el-breadcrumb-item>
+                <el-breadcrumb-item> 明星列表 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <!-- <Button type="primary" @click="getToken">获取token</Button> -->
@@ -30,29 +30,30 @@
             <Pagination :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></Pagination>
         </div>
 
-        <Modal class="card-area" v-model="modalImg" title="查看图片" @on-ok="ok" @on-cancel="cancel" width="700">
-            <div>
+        <Modal class="card-area" v-model="modalImg" title="查看图片" @on-ok="ok" @on-cancel="cancel" width="600">
+            <div style="margin-bottom:20px;">
                 <div class="card-content-starlist" v-if="homeImg">
-                    <div class="card">
-                        <div class="text">首页轮播图预览</div>
-                        <viewer :images="[homeImg]">
-                            <img :src="homeImg" class="img" />
-                        </viewer>
+                       <div class="card card-aventer" >
+                        <div class="text">头像</div>
+                        <!-- <viewer :images="[avatar]"> -->
+                            <img :src="avatar" class="img img-aventer" />
+                        <!-- </viewer> -->
+                      
+                    </div>
+                    <div class="card crad-lunbo">
+                        <div class="text">首页轮播图</div>
+                        <!-- <viewer :images="[homeImg]"> -->
+                            <img :src="homeImg" class="img img-lunbo" />
+                        <!-- </viewer> -->
                         <!-- <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" /> -->
                     </div>
 
-                    <div class="card">
-                        <div class="text">明星详细页预览</div>
-                        <viewer :images="[detailImg]">
-                            <img :src="detailImg" class="img" />
-                        </viewer>
-                        <!-- <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" /> -->
-                    </div>
-                    <div class="card">
-                        <div class="text">打榜弹窗预览</div>
-                        <div class="img-modal-area">
-                            <div class="img-modal" :style="style1"></div>
-                        </div>
+                 
+                    <div class="card card-kaizhan">
+                        <div class="text">小程序开展</div>
+                        <!-- <div class="img-modal-area"> -->
+                                <img :src="openImg" class="img"/>
+                        <!-- </div> -->
                     </div>
                 </div>
             </div>
@@ -73,8 +74,8 @@
                     </div>
                     <div class="card">
                         <div class="text">明星详细页预览</div>
-                        <viewer :images="[hitPopupImg]">
-                            <img :src="hitPopupImg" class="img" />
+                        <viewer :images="[openImg]">
+                            <img :src="openImg" class="img" />
                         </viewer>
                     </div>
                 
@@ -95,9 +96,9 @@ export default {
         Pagination
     },
     watch: {
-        hitPopupImg: {
+        openImg: {
             handler(newval, oldval) {
-                this.style1 = `background:url(${newval}) center center / cover no-repeat;`;
+                // this.style1 = `background:url(${newval}) center center / cover no-repeat;`;
             },
             immediate: true
         }
@@ -108,8 +109,8 @@ export default {
             pagination: Object.assign({}, PAGE_PARAMS),
             modalImg: false,
             homeImg: '', //首页轮播图
-            detailImg: '', //详情页
-            hitPopupImg: '', //打榜弹窗图
+            avatar: '', //详情页
+            openImg: '', //打榜弹窗图
             query: {
                 id: '',
                 name: ''
@@ -137,9 +138,9 @@ export default {
                         minWidth: 80,
                         render: (h, params) => {
                             //  homeImg 首页轮播图
-                            //  detailImg 详情页
-                            //  hitPopupImg  打榜弹窗图
-                            let { homeImg, detailImg, hitPopupImg } = params.row,
+                            //  avatar 详情页
+                            //  openImg  打榜弹窗图
+                            let { homeImg, avatar, openImg } = params.row,
                                 text;
                             //  avatar?text = '查看':text = '无'
 
@@ -154,8 +155,8 @@ export default {
                                         click: () => {
                                             this.modalImg = true;
                                             this.homeImg = homeImg;
-                                            this.detailImg = detailImg;
-                                            this.hitPopupImg = hitPopupImg;
+                                            this.avatar = avatar;
+                                            this.openImg = openImg;
                                         }
                                     }
                                 },
@@ -336,11 +337,11 @@ export default {
 <style lang="less">
 .card-content-starlist {
     display: flex;
-    justify-content: left;
+    justify-content: center;
     // align-items: center;
     // min-height: 200px;
     .card {
-        width: 200px;
+        width: 100px;
         // height: 200px;
         margin-right: 20px;
         .text {
@@ -352,7 +353,7 @@ export default {
         img {
             width: 100%;
             height: 100%;
-            padding: 5px;
+            // padding: 5px;
             background: #ddd;
         }
          .img-modal-area {
@@ -366,6 +367,33 @@ export default {
             }
         }
     }
+    .card-aventer{
+         width: 100px;
+         height:100px;
+           img {
+            width: 100%;
+            height: 100%;
+            // padding: 5px;
+            background: #ddd;
+        }
+    }
+    .crad-lunbo{
+        width:150px;
+         height: 738/938*150px;
+    }
+    .card-kaizhan{
+        width:100px;
+         height: 355.6/200*100px;
+          img {
+            width: 100%;
+            height: 100%;
+            // padding: 5px;
+            background: #ddd;
+        }
+    }
+}
+.img-aventer{
+    border-radius: 100px;
 }
 .star-list-table {
     .card-area {

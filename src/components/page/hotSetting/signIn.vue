@@ -1,7 +1,7 @@
 <template>
     <div>
   
-        <div class="container">
+           <div class="container" style="border:none">
             <div class="card-area">
                 <div class="row-text">每日签到次数</div>
                  每日最高

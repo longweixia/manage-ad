@@ -29,13 +29,16 @@
                                     threeItem.title
                                 }}</el-menu-item>
                             </el-submenu>
-                            <el-menu-item :style="flag==subItem.title?'color:#409EFF':''" class="has-sub"  v-else :index="subItem.index" :key="subItem.index">{{ subItem.title }}</el-menu-item>
+                          
+                            <el-menu-item  class="has-sub" :class="flag==subItem.title?'is-active':''"  v-else :index="subItem.index" :key="subItem.index">{{ subItem.title }}
+                      
+                            </el-menu-item>
                         </template>
                     </el-submenu>
                 </template>
                 <template v-else>
-                    <el-menu-item :index="item.index" :key="item.index"  :style="flag==item.title?'color:#409EFF':''">
-                        <i :class="item.icon" :style="flag==item.title?'color:#409EFF':''"></i>
+                    <el-menu-item :index="item.index" :key="item.index">
+                        <i :class="item.icon"></i>
                         <span slot="title">{{ item.title }}</span>
                     </el-menu-item>
                 </template>
@@ -297,6 +300,10 @@ export default {
     background-color: #2d8cf0!important;
     color:#fff!important;
 }
+// /deep/ .is-active:hover{
+//     background-color: #2d8cf0!important;
+//     color:#fff!important;
+// }
 //  .logo {
 //     // z-index: 10000;
 //     // float: left;
@@ -345,8 +352,9 @@ export default {
 /deep/ .el-submenu__title{
 // margin-left: 10px!important;
 }
-/deep/ .el-submenu__title{
+/deep/ .has-sub{
 // padding:0!important;
+padding-left: 45px!important;
 }
 .el-menu-item{
     min-width: 0;

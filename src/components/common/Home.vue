@@ -1,15 +1,18 @@
 <template>
     <div class="wrapper">
+        
         <div class="top-logo">
             <div class="logo"></div>
 
             <!-- <img src="./logosider.png" /> -->
         </div>
-        <v-head></v-head>
+       
         <v-sidebar></v-sidebar>
         <div class="content-box" :class="{ 'content-collapse': collapse }">
+           
             <!-- <v-tags></v-tags> -->
             <div class="content">
+                  <v-head></v-head>
                 <transition name="move" mode="out-in">
                     <keep-alive :include="tagsList">
                         <router-view></router-view>
@@ -58,8 +61,8 @@ export default {
 .top-logo {
     width: 202px;
     height: 70px;
-    padding: 5px 20px;
-    background-color: #3d4a5d;
+    padding: 10px 20px;
+    background-color: rgb(50, 65, 87);
     .logo {
         width: 167px;
         height: 48px;
@@ -70,7 +73,7 @@ export default {
         // background: url("./logosider.png");
         // background:url("./logosider.png") no-repeat 4px 5px ;
         background: url(./logosider.png) center center / cover no-repeat;
-        background-color: #3d4a5d;
+        background-color: rgb(50, 65, 87);
         // background-size: cover;
         // img{
         //     width:100%;

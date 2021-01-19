@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="container">
+          <div class="container" style="border:none">
        
             <div class="card-area inp-top">
                 <div class="row-text">数值设置</div>

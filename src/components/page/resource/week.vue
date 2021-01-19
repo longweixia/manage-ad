@@ -1,6 +1,7 @@
 <template>
-    <div class="resource-week">
-        <div class="container">
+   
+          <div class="container" style="border:none">
+             <div class="resource-week">
             <div class="card-area">
                 <div class="row-text">
                 

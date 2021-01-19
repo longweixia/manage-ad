@@ -25,10 +25,11 @@ a {
     position: absolute;
     left: 203px;
     right: 0;
+    /* border-left: 10px solid #ddd; */
     top: 0;
     bottom: 0;
-    padding-bottom: 30px;
-    padding-top: 10px;
+    /* padding-bottom: 30px; */
+    /* padding-top: 10px; */
     -webkit-transition: left .3s ease-in-out;
     transition: left .3s ease-in-out;
     background: #f0f0f0;
@@ -37,7 +38,7 @@ a {
 .content {
     width: auto;
     height: 100%;
-    padding: 10px;
+    /* padding: 10px; */
     padding-top: 0;
     overflow-y: scroll;
     box-sizing: border-box;
@@ -49,9 +50,11 @@ a {
 
 .container {
     padding: 30px;
+
     background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    /* border: 1px solid #ddd;
+    border-radius: 5px; */
+    border-left: 5px solid #f0f0f0;
 }
 
 .crumbs {

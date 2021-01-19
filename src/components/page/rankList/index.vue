@@ -2,9 +2,10 @@
     <div>
            <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item> <i class="el-icon-s-check"></i> 榜单排名 </el-breadcrumb-item>
+                <el-breadcrumb-item>  榜单排名 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
+         <div class="container">
         <Button
             class="btn"
             :type="activeIndex == i ? 'primary' : 'default'"
@@ -18,6 +19,7 @@
         <WeekList v-if="activeIndex === 0"></WeekList>
         <MonthList v-if="activeIndex === 1"></MonthList>
         <Total v-if="activeIndex === 2"></Total>
+         </div>
     </div>
 </template>
 

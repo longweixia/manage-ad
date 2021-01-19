@@ -1,5 +1,10 @@
 <template>
     <div>
+            <div class="crumbs">
+            <el-breadcrumb separator="/">
+                <el-breadcrumb-item>轮播设置</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
         <div class="container">
             <div class="card-area">
                 <div class="row-text">

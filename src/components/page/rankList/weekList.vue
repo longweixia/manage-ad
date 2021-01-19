@@ -1,6 +1,6 @@
 <template>
     <div class="rank-list-week-tablelist">
-        <div class="container">
+    <div class="container" style="border:none">
             <div class="handle-box">
                 <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
                     <FormItem label="周列表" prop="time">
@@ -73,7 +73,7 @@ export default {
                         title: '周时间段',
                         key: 'weekTime',
                         align: 'center',
-                        minWidth: 100
+                        minWidth: 150
                     },
                     {
                         title: '明星',
@@ -85,7 +85,7 @@ export default {
                         title: '明星ID',
                         key: 'starId',
                         align: 'center',
-                        minWidth: 100
+                        minWidth: 150
                     },
                     {
                         title: '排名',
@@ -99,14 +99,15 @@ export default {
                         title: '操作',
                         key: 'name',
                         align: 'center',
-                        minWidth: 100,
+                        minWidth: 200,
                         render: (h, params) => {
                             let clickBtn = h(
-                                'div',
+                                'span',
                                 {
                                     style: {
                                         color: '#2d8cf0',
-                                        cursor: 'pointer'
+                                        cursor: 'pointer',
+                                        margin:'10px'
                                     },
                                     on: {
                                         click: () => {
@@ -117,7 +118,7 @@ export default {
                                 '明星详情'
                             );
                             let fensBtn = h(
-                                'div',
+                                'span',
                                 {
                                     style: {
                                         color: '#2d8cf0',

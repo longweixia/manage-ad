@@ -1,6 +1,6 @@
 <template>
     <div class="rank-list-month-tablelist">
-        <div class="container">
+        <div class="container" style="border:none">
             <div class="handle-box">
                 <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
                     <FormItem label="选择月">

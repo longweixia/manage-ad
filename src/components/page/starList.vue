@@ -30,7 +30,7 @@
             <Pagination :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></Pagination>
         </div>
 
-        <Modal class="card-area" v-model="modalImg" title="查看图片" @on-ok="ok" @on-cancel="cancel" width="600">
+        <Modal class="card-area card-bottom-border" v-model="modalImg" title="查看图片" @on-ok="ok" @on-cancel="cancel" width="450">
             <div style="margin-bottom:20px;">
                 <div class="card-content-starlist" v-if="homeImg">
                        <div class="card card-aventer" >
@@ -335,7 +335,13 @@ export default {
 </script>
 
 <style lang="less">
+.card-bottom-border{
+        /deep/ .ivu-modal-footer{
+        border: none!important;
+    }
+}
 .card-content-starlist {
+  
     display: flex;
     justify-content: center;
     // align-items: center;
@@ -398,6 +404,8 @@ export default {
 .star-list-table {
     .card-area {
         margin-bottom: 20px;
+   
+        
     }
     .handle-box {
         margin-bottom: 20px;
@@ -463,7 +471,7 @@ export default {
 
         //     height: calc(145 / 347 * 200px);
         // }
-      
     }
+   
 }
 </style>

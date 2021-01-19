@@ -4,7 +4,7 @@
             <div class="handle-box">
                 <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
                     <FormItem label="选择月">
-                        <Select v-model="query.monthNum" style="width: 150px" clearable @on-clear="clearDate">
+                        <Select v-model="monthNum" style="width: 150px" clearable @on-clear="clearDate">
                             <Option v-for="item in TimeList" :value="item.value" :key="item.value">{{ item.value }}</Option>
                         </Select>
                     </FormItem>
@@ -70,14 +70,15 @@ export default {
                 //     label: '2'
                 // }
             ],
+             monthNum: '', //具体月份值
             query: {
                 endTime: '', //周结束时间
 
                 hitListType: 1, //榜单类型 0：周榜；1：月榜；2：总榜
 
-                listType: 2, //列表类型 默认空， 0：本周；1：近三个月周时间段；2：具体某个月份
+                listType: 1, //列表类型 默认空， 0：本周；1：近三个月周时间段；2：具体某个月份
 
-                monthNum: '', //具体月份值
+               
 
                 // pageNum: 1, //当前页码
 
@@ -96,26 +97,26 @@ export default {
                 columns: [
                     {
                         title: '月',
-                        key: 'id',
+                        key: 'weekTime',
                         align: 'center',
                         minWidth: 100
                     },
                     {
                         title: '明星',
-                        key: 'name',
+                        key: 'starName',
                         align: 'center',
                         minWidth: 100
                     },
                     {
                         title: 'ID',
-                        key: 'ID',
+                        key: 'starId',
                         sortable: true,
                         align: 'center',
                         minWidth: 100
                     },
                     {
                         title: '排名',
-                        key: 'address',
+                        key: 'rank',
                         align: 'center',
                         sortable: true,
                         minWidth: 150
@@ -126,24 +127,25 @@ export default {
                         key: 'name',
                         align: 'center',
                         minWidth: 100,
-                        render: (h, params) => {
-                            let detail = h(
-                                'div',
+                      render: (h, params) => {
+                            let clickBtn = h(
+                                'span',
                                 {
                                     style: {
                                         color: '#2d8cf0',
-                                        cursor: 'pointer'
+                                        cursor: 'pointer',
+                                        margin:'10px'
                                     },
                                     on: {
                                         click: () => {
-                                            this.goDetail();
+                                            this.goDetail('star', params.row);
                                         }
                                     }
                                 },
                                 '明星详情'
                             );
-                            let fens = h(
-                                'div',
+                            let fensBtn = h(
+                                'span',
                                 {
                                     style: {
                                         color: '#2d8cf0',
@@ -151,13 +153,13 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.goDetail();
+                                            this.goDetail('fensGive', params.row);
                                         }
                                     }
                                 },
                                 '粉丝贡献'
                             );
-                            return h('div', [detail, fens]);
+                            return h('div', [clickBtn, fensBtn]);
                         }
                     }
                 ]
@@ -178,66 +180,93 @@ export default {
     methods: {
         // 清除日期
         clearDate() {
-            this.query.monthNum = '';
+            this.monthNum = '';
         },
         // 获取近三个月的周时间表
         getTimeList() {
-            let current = new Date().getMonth(); //当前月
+            // let current = new Date().getMonth(); //当前月
 
-            let month1 = current - 1 <= 0 ? 12 : current - 1;
+            // let month1 = current - 1 <= 0 ? 12 : current - 1;
 
-            let month2 = month1 - 1 <= 0 ? 12 : month1 - 1;
-            console.log(current, month1, month2);
-            let month3 = month2 - 1 <= 0 ? 12 : month2 - 1;
-            let month4 = month3 - 1 <= 0 ? 12 : month3 - 1;
-            let month5 = month4 - 1 <= 0 ? 12 : month4 - 1;
-            if (current === 0) {
-                current = 1;
-            }
-            if (month1 === 0) {
-                month1 = 1;
-            }
-            if (month2 === 0) {
-                month2 = 1;
-            }
-            if (month3 === 0) {
-                month3 = 1;
-            }
-            if (month4 === 0) {
-                month4 = 1;
-            }
-            if (month5 === 0) {
-                month5 = 1;
-            }
+            // let month2 = month1 - 1 <= 0 ? 12 : month1 - 1;
+            // console.log(current, month1, month2);
+            // let month3 = month2 - 1 <= 0 ? 12 : month2 - 1;
+            // let month4 = month3 - 1 <= 0 ? 12 : month3 - 1;
+            // let month5 = month4 - 1 <= 0 ? 12 : month4 - 1;
+            // if (current === 0) {
+            //     current = 1;
+            // }
+            // if (month1 === 0) {
+            //     month1 = 1;
+            // }
+            // if (month2 === 0) {
+            //     month2 = 1;
+            // }
+            // if (month3 === 0) {
+            //     month3 = 1;
+            // }
+            // if (month4 === 0) {
+            //     month4 = 1;
+            // }
+            // if (month5 === 0) {
+            //     month5 = 1;
+            // }
+    this.TimeList = [];
+    var data = new Date();
+    var year = data.getFullYear();
+    data.setMonth(data.getMonth()+1, 1)//获取到当前月份,设置月份
+    for (var i = 0; i < 12; i++) {
+        data.setMonth(data.getMonth() - 1);//每次循环一次 月份值减1
+        var m = data.getMonth() + 1;
+        m = m < 10 ? "0" + m : m;
+        this.TimeList.push({value:data.getFullYear() + "/" + (m)})
+    }
+ this.query.startTime = this.TimeList[0].value+"/01"
+                this.query.endTime = this.TimeList[0].value+"/31"
 
-            this.TimeList = [
-                {
-                    value: current
-                },
-                {
-                    value: month1
-                },
-                {
-                    value: month2
-                },
-                {
-                    value: month3
-                },
-                {
-                    value: month4
-                },
-                {
-                    value: month5
-                }
-            ];
+            // this.TimeList = [
+            //     {
+            //         value: current
+            //     },
+            //     {
+            //         value: month1
+            //     },
+            //     {
+            //         value: month2
+            //     },
+            //     {
+            //         value: month3
+            //     },
+            //     {
+            //         value: month4
+            //     },
+            //     {
+            //         value: month5
+            //     }
+            // ];
         },
         ok() {},
         cancel() {},
         //去详情
-        goDetail() {
+      //去详情-粉丝贡献
+        goDetail(name, data) {
+            if (name == 'star') {
+                this.$router.push({
+                    name: `${name}Detail`,
+                    query: {
+                        id: data.id
+                    }
+                });
+            } else { //贡献榜
+            
             this.$router.push({
-                name: 'starDetail'
+                name: `${name}Detail`,
+                query: {
+                    // id: data.starId,
+                    data: encodeURIComponent(JSON.stringify(data))
+                }
             });
+            }
         },
 
         // 重置
@@ -245,11 +274,18 @@ export default {
             // this.$refs[formName].resetFields();
             this.query.starId = '';
             this.query.starName = '';
+            this.query.startTime = '';
+            this.query.endTime = '';
             this.clearDate();
         },
         loadData() {
             this.query.pageNum = this.pagination.pageNum;
             this.query.pageSize = this.pagination.pageSize;
+            // 处理开始结束时间
+            if(this.monthNum){
+                this.query.startTime = this.monthNum+"/01"
+                this.query.endTime = this.monthNum+"/31"
+            }
             this.axios
                 .post(`/star/hitList/rankList`, this.query)
                 .then((res) => {

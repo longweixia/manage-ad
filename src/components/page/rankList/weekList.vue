@@ -162,87 +162,162 @@ export default {
         this.query.startTime = date.startTime
         this.query.endTime = date.endTime
         },
+        getWeekDate(){
+            
+            let nowData = new Date();
+                //获取今天的是周几
+                let currentDay = nowData.getDay();
+                //把currentDay == 0赋值给周日
+                if(currentDay == 0){
+                    currentDay = 7
+                }
+                // 获取周一的时间戳
+                let monDayTime = nowData.getTime() - (currentDay - 1) * 24 * 60 * 60 * 1000;
+                console.log("周一是" + new Date(monDayTime).getDate() + "号");
+                // 获取周日的时间戳
+                let sunDayTime = nowData.getTime() + (7 - currentDay) * 24 * 60 * 60 * 1000;
+                console.log("周日是" + new Date(sunDayTime).getDate() + "号");
+            
+            //   return new Date(monDayTime).getDate()
+              return monDayTime
+        },
+        getWeekDateint(){
+            
+            let nowData = new Date();
+                //获取今天的是周几
+                let currentDay = nowData.getDay();
+                //把currentDay == 0赋值给周日
+                if(currentDay == 0){
+                    currentDay = 7
+                }
+                // 获取周一的时间戳
+                let monDayTime = nowData.getTime() - (currentDay - 1) * 24 * 60 * 60 * 1000;
+                console.log("周一是" + new Date(monDayTime).getDate() + "号");
+                // 获取周日的时间戳
+                let sunDayTime = nowData.getTime() + (7 - currentDay) * 24 * 60 * 60 * 1000;
+                console.log("周日是" + new Date(sunDayTime).getDate() + "号");
+            
+                        // 获取本周周一的具体时间
+                console.log("周一 " + new Date(monDayTime).toLocaleDateString());
+                // 获取本周周日的具体时间
+                console.log("周末" + new Date(sunDayTime).toLocaleDateString());
+                // 获取当前时间的具体时间
+                // console.log("当前时间" +new Date(monDayTime).toLocaleTimeString());
+ 
+              return [yearDay(monDayTime),yearDay(sunDayTime)]
+        },
         // 获取近三个月的周时间表
         getTimeList(){
-            // 今天
-            let today = new Date().getTime()
-            let Week0 = yearDay(today)
-            // 一周前
+        
+            // 判断今天在哪一周，拿到今天所在的周开始时间安和结束时间
+            let today = this.getWeekDate()
+            // 拿到
+            let Week0 = yearDay(today)  //周一
+            let Weekend =yearDay(today-1*24*3600*1000) //上周日
+            // 一周前周一
             let Week1 = yearDay(today-7*24*3600*1000)
+            let Week1end = yearDay(today-8*24*3600*1000)
 
             let Week2 = yearDay(today-7*24*3600*1000*2)
+            let Week2end = yearDay(today-7*24*3600*1000*2-24*3600*1000)
   
             let Week3 = yearDay(today-7*24*3600*1000*3)
+            let Week3end = yearDay(today-7*24*3600*1000*3-24*3600*1000)
+
             let Week4 = yearDay(today-7*24*3600*1000*4)
+            let Week4end = yearDay(today-7*24*3600*1000*4-24*3600*1000)
+
             let Week5 = yearDay(today-7*24*3600*1000*5)
+            let Week5end = yearDay(today-7*24*3600*1000*5-24*3600*1000)
+
             let Week6 = yearDay(today-7*24*3600*1000*6)
+            let Week6end = yearDay(today-7*24*3600*1000*6-24*3600*1000)
+
             let Week7 = yearDay(today-7*24*3600*1000*7)
+            let Week7end = yearDay(today-7*24*3600*1000*7-24*3600*1000)
+
             let Week8 = yearDay(today-7*24*3600*1000*8)
+            let Week8end = yearDay(today-7*24*3600*1000*8-24*3600*1000)
+
             let Week9 = yearDay(today-7*24*3600*1000*9)
+            let Week9end = yearDay(today-7*24*3600*1000*9-24*3600*1000)
+
             let Week10 = yearDay(today-7*24*3600*1000*10)
+            let Week10end = yearDay(today-7*24*3600*1000*10-24*3600*1000)
+
             let Week11 = yearDay(today-7*24*3600*1000*11)
+            let Week11end = yearDay(today-7*24*3600*1000*11-24*3600*1000)
+
             let Week12 = yearDay(today-7*24*3600*1000*12)
+            let Week12end = yearDay(today-7*24*3600*1000*12-24*3600*1000)
+
+            let weekArryCurrent = this.getWeekDateint()
             this.TimeList = [
                 {
-                    label: Week1+"-"+Week0,
+                    label: weekArryCurrent[0]+"-"+weekArryCurrent[1],
+                    startTime: weekArryCurrent[0],
+                    endTime: weekArryCurrent[1]
+                },
+                {
+                    label: Week1+"-"+Weekend,
                     startTime: Week1,
-                    endTime: Week0
+                    endTime: Weekend
                 },
                 {
-                    label: Week2+"-"+Week1,
+                    label: Week2+"-"+Week1end,
                     startTime: Week2,
-                    endTime: Week1
+                    endTime: Week1end
                 },
                 {
-                    label: Week3+"-"+Week2,
+                    label: Week3+"-"+Week2end,
                     startTime: Week3,
-                    endTime: Week2
+                    endTime: Week2end
                 },
                 
                 {
-                    label: Week4+"-"+Week3,
+                    label: Week4+"-"+Week3end,
                     startTime: Week4,
-                    endTime: Week3
+                    endTime: Week3end
                 },
                 {
-                    label: Week5+"-"+Week4,
+                    label: Week5+"-"+Week4end,
                     startTime: Week5,
-                    endTime: Week4
+                    endTime: Week4end
                 },
                 {
-                    label: Week6+"-"+Week5,
+                    label: Week6+"-"+Week5end,
                     startTime: Week6,
-                    endTime: Week5
+                    endTime: Week5end
                 },
                 {
-                    label: Week7+"-"+Week6,
+                    label: Week7+"-"+Week6end,
                     startTime: Week7,
-                    endTime: Week6
+                    endTime: Week6end
                 },
                 {
-                    label: Week8+"-"+Week7,
+                    label: Week8+"-"+Week7end,
                     startTime: Week8,
-                    endTime: Week7
+                    endTime: Week7end
                 },
                 {
-                    label: Week9+"-"+Week8,
+                    label: Week9+"-"+Week8end,
                     startTime: Week9,
-                    endTime: Week8
+                    endTime: Week8end
                 },
                 {
-                    label: Week10+"-"+Week9,
+                    label: Week10+"-"+Week9end,
                     startTime: Week10,
-                    endTime: Week9
+                    endTime: Week9end
                 },
                 {
-                    label: Week11+"-"+Week10,
+                    label: Week11+"-"+Week10end,
                     startTime: Week11,
-                    endTime: Week10
+                    endTime: Week10end
                 },
                 {
-                    label: Week12+"-"+Week11,
+                    label: Week12+"-"+Week11end,
                     startTime: Week12,
-                    endTime: Week11
+                    endTime: Week11end
                 },
                 
             ]
@@ -260,7 +335,7 @@ export default {
                 this.$router.push({
                     name: `${name}Detail`,
                     query: {
-                        id: data.starId
+                        id: data.id
                     }
                 });
             } else { //贡献榜

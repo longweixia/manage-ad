@@ -33,26 +33,24 @@
         <Modal class="card-area" v-model="modalImg" title="查看图片" @on-ok="ok" @on-cancel="cancel" width="600">
             <div style="margin-bottom:20px;">
                 <div class="card-content-starlist" v-if="homeImg">
-                       <div class="card card-aventer" >
+                    <div class="card card-aventer">
                         <div class="text">头像</div>
                         <!-- <viewer :images="[avatar]"> -->
-                            <img :src="avatar" class="img img-aventer" />
+                        <img :src="avatar" class="img img-aventer" />
                         <!-- </viewer> -->
-                      
                     </div>
                     <div class="card crad-lunbo">
                         <div class="text">首页轮播图</div>
                         <!-- <viewer :images="[homeImg]"> -->
-                            <img :src="homeImg" class="img img-lunbo" />
+                        <img :src="homeImg" class="img img-lunbo" />
                         <!-- </viewer> -->
                         <!-- <img v-if="!homeImg" src="../../assets/img/NullPic.png" style="border:2px solid #ddd" /> -->
                     </div>
 
-                 
                     <div class="card card-kaizhan">
                         <div class="text">小程序开展</div>
                         <!-- <div class="img-modal-area"> -->
-                                <img :src="openImg" class="img"/>
+                        <img :src="openImg" class="img" />
                         <!-- </div> -->
                     </div>
                 </div>
@@ -293,11 +291,11 @@ export default {
         getToken() {
             this.axios
                 .post(`/common/testLogin?id=1`)
-                .then((res) => {
+                .then(res => {
                     let token = res.data.token;
                     localStorage.setItem('Authorization', token);
                 })
-                .catch((err) => {
+                .catch(err => {
                     this.$Message.error(err);
                 });
         },
@@ -314,12 +312,12 @@ export default {
                     pageNum: this.pagination.pageNum,
                     pageSize: this.pagination.pageSize
                 })
-                .then((res) => {
+                .then(res => {
                     this.table.data = res.data.list;
                     this.pagination.total = res.data.total && Number(res.data.total);
                     this.table.loading = false;
                 })
-                .catch((err) => {
+                .catch(err => {
                     this.$Message.error(err);
                     this.table.loading = false;
                 });
@@ -356,7 +354,7 @@ export default {
             // padding: 5px;
             background: #ddd;
         }
-         .img-modal-area {
+        .img-modal-area {
             width: 200px;
             height: 89px;
             background: #ddd;
@@ -367,24 +365,24 @@ export default {
             }
         }
     }
-    .card-aventer{
-         width: 100px;
-         height:100px;
-           img {
+    .card-aventer {
+        width: 100px;
+        height: 100px;
+        img {
             width: 100%;
             height: 100%;
             // padding: 5px;
             background: #ddd;
         }
     }
-    .crad-lunbo{
-        width:150px;
-         height: 738/938*150px;
+    .crad-lunbo {
+        width: 150px;
+        height: 738/938 * 150px;
     }
-    .card-kaizhan{
-        width:100px;
-         height: 355.6/200*100px;
-          img {
+    .card-kaizhan {
+        width: 100px;
+        height: 355.6/200 * 100px;
+        img {
             width: 100%;
             height: 100%;
             // padding: 5px;
@@ -392,7 +390,7 @@ export default {
         }
     }
 }
-.img-aventer{
+.img-aventer {
     border-radius: 100px;
 }
 .star-list-table {
@@ -463,7 +461,6 @@ export default {
 
         //     height: calc(145 / 347 * 200px);
         // }
-      
     }
 }
 </style>

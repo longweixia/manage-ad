@@ -2,8 +2,10 @@
     <div>
         <div class="container">
             <div class="card-area">
-                <div class="row-text">
-                    资源类型
+                <div class="crumbs">
+                    <el-breadcrumb separator="/">
+                        <el-breadcrumb-item>{{ titles == 'add' ? '添加资源' : '资源详情' }}</el-breadcrumb-item>
+                    </el-breadcrumb>
                 </div>
                 <div>
                     <Select v-model="selectHotVal" style="width: 150px" clearable>
@@ -45,7 +47,7 @@
                 <div>
                     选择明星标签
                 </div>
-                <div class="tag-area">
+                <!-- <div class="tag-area">
                     <Tag
                         class="tag"
                         checkable
@@ -56,6 +58,19 @@
                         @on-change="item.checked = !item.checked"
                     >
                         {{ item.name }}
+                    </Tag>
+                </div> -->
+                <div class="tag-area">
+                    <!-- <Tag class="tag" checkable color="primary">热门明星</Tag> -->
+                    <Tag
+                        :class="item.checked ? 'tagTrue' : 'tag'"
+                        :checked="false"
+                        color="primary"
+                        v-for="(item, index) in tagList"
+                        :key="index"
+                        @click.native="changeTag(item)"
+                    >
+                        <span class="tag-text">{{ item.name }}</span>
                     </Tag>
                 </div>
             </div>
@@ -96,22 +111,65 @@ export default {
                 { name: '户外大屏', value: 4, checked: false }
             ],
             tagList: [
-                { name: '小程序开屏', value: 2, checked: false },
-                { name: '首页轮播', value: 3, checked: false },
-                { name: '后援金', value: 1, checked: false },
-                { name: '户外大屏', value: 4, checked: false }
+                // { name: '小程序开屏', value: 2, checked: false },
+                // { name: '首页轮播', value: 3, checked: false },
+                // { name: '后援金', value: 1, checked: false },
+                // { name: '户外大屏', value: 4, checked: false }
             ], //标签集合
             selectDate: {
                 disabledDate(date) {
                     return date && date.valueOf() < Date.now() - 86400000;
                 }
-            }
+            },
+            titles: '资源详情', //详情标题
+            id: ''
         };
     },
+
+    mounted() {
+        this.titles = this.$route.query.add;
+        this.id = this.$route.query.id;
+        if (this.id) {
+            this.axios
+                .post(`/star/tags/list`)
+                .then(res => {
+                    this.tagList = res.data;
+                    this.loadData();
+                })
+                .catch(err => {
+                    this.$Message.error(err);
+                    this.loadData();
+                });
+        } else {
+            this.getTags();
+        }
+    },
     methods: {
+        getTags() {
+            this.axios
+                .post(`/star/tags/list`)
+                .then(res => {
+                    this.tagList = res.data;
+                })
+                .catch(err => {
+                    this.$Message.error(err);
+                });
+        },
+        changeTag(data) {
+            for (var i = 0; i < this.tagList.length; i++) {
+                if (this.tagList[i].id == data.id) {
+                    console.log(data);
+                    this.tagList[i].checked = !data.checked;
+                }
+            }
+            this.$forceUpdate(this.tagList);
+            //    this.tagList.find((item,index)=>{
+            //        return item.id = data.id
+            //    }).checked = !data.checked
+        },
         // 预览
         preview() {
-            this.uploadImgModel = true
+            this.uploadImgModel = true;
         },
 
         // 保存

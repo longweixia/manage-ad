@@ -1,6 +1,6 @@
 <template>
     <div class="resource-table-list">
-         <div class="container" style="border:none">
+        <div class="container" style="border:none">
             <div class="handle-box">
                 <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
                     <FormItem label="有效期" prop="time">
@@ -24,13 +24,12 @@
                 </Form>
             </div>
             <div class="addBtn">
-                    <Button type="primary" @click="addResouce">添加资源</Button>
+                <Button type="primary" @click="addResouce()">添加资源</Button>
             </div>
 
-            <Table border :columns="table.columns" :data="table.data" style="width: 100%"></Table>
+            <Table border :columns="table.columns" :data="table.data" style="width: 100%" :loading="table.loading"></Table>
             <!-- <Page class="page-content" :total="total" show-elevator show-sizer /> -->
-            <pagination  :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></pagination>
-
+            <pagination :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></pagination>
         </div>
         <!-- <Modal v-model="modalImg" title="查看图片" @on-ok="ok" @on-cancel="cancel" width="1000">
             <div class="card-content">
@@ -52,20 +51,18 @@
 </template>
 
 <script>
-import {timeChange,yearDay, filterDeadline} from '../../../utils/helper.js'
-import Pagination from './../../common/Pagination.vue'
-import { PAGE_PARAMS } from '../../../utils/constants.js'
+import { timeChange, yearDay, filterDeadline } from '../../../utils/helper.js';
+import Pagination from './../../common/Pagination.vue';
+import { PAGE_PARAMS } from '../../../utils/constants.js';
 
 export default {
     name: 'myArticle',
-      components: {
-
-    Pagination,
-
-  },
+    components: {
+        Pagination
+    },
     data() {
         return {
-      pagination: Object.assign({}, PAGE_PARAMS),
+            pagination: Object.assign({}, PAGE_PARAMS),
             modalImg: false,
             homeImg: '', //首页轮播图
             detailImg: '', //详情页
@@ -80,7 +77,7 @@ export default {
                     value: 2,
                     label: '小程序开屏'
                 },
-                 {
+                {
                     value: 3,
                     label: '首页轮播'
                 },
@@ -104,14 +101,15 @@ export default {
                 }
             ],
             query: {
-                beginTime: '',//开始时间
-                endTime: '',//结束时间
+                beginTime: '', //开始时间
+                endTime: '', //结束时间
                 pageNum: 1,
                 pageSize: 20,
-                status: '',//1-待开始 2-进行中 3-已结束
-                type: ''//资源类型(1-后援金 2-小程序开屏 3-首页轮播 4-户外大屏)
+                status: '', //1-待开始 2-进行中 3-已结束
+                type: '' //资源类型(1-后援金 2-小程序开屏 3-首页轮播 4-户外大屏)
             },
             table: {
+                loading: false,
                 data: [
                     // {type:2,target:2,beginTime:'2020/11/16',endTime:'2020/12/27',
                     // relationStar:['邓超','小王','小li'],completeStar:['邓超','小王','小搞'],status:2,
@@ -125,11 +123,14 @@ export default {
                         align: 'center',
                         minWidth: 120,
                         render: (h, params) => {
-                            let { type } = params.row, text;
-                            if(type){
-                              text = this.typeList.find((item) => {return item.value == type}).label
-                            }else{
-                                text = "无"
+                            let { type } = params.row,
+                                text;
+                            if (type) {
+                                text = this.typeList.find(item => {
+                                    return item.value == type;
+                                }).label;
+                            } else {
+                                text = '无';
                             }
                             return h('div', text);
                         }
@@ -147,58 +148,57 @@ export default {
                         align: 'center',
                         minWidth: 280,
                         render: (h, params) => {
-                            let { beginTime, endTime } = params.row, text;
+                            let { beginTime, endTime } = params.row,
+                                text;
                             let time = h(
                                 'div',
                                 {
                                     style: {
-                                        fontSize: '12px',
-                                    },
-                                 
+                                        fontSize: '12px'
+                                    }
                                 },
-                               (yearDay(beginTime)||'无')+"—"+(yearDay(endTime)||'无')
+                                (yearDay(beginTime) || '无') + '—' + (yearDay(endTime) || '无')
                             );
                             // 计算倒计时
                             let countDownText;
-                            countDownText = filterDeadline(endTime)
+                            countDownText = filterDeadline(endTime);
 
                             let countDown = h(
                                 'div',
                                 {
                                     style: {
                                         color: 'red',
-                                      
-                                        fontSize: '12px',
-                                    },
-                                 
+
+                                        fontSize: '12px'
+                                    }
                                 },
-                               `${countDownText}`
+                                `${countDownText}`
                             );
-                            return h('div', [time,countDown]);
+                            return h('div', [time, countDown]);
                         }
                     },
                     {
                         title: '关联明星',
                         key: 'relationStar',
                         align: 'center',
-                     
+
                         minWidth: 150,
                         render: (h, params) => {
                             let { relationStar } = params.row;
-                            let text='';
-                              if(!relationStar||relationStar.length==0){
-                                text = "无"
-                            }else{
-                                relationStar&&relationStar.forEach((item,i)=>{
-                                if(!text){
-                                    text = text+item
-                                }else{
-                                     text = text+'，'+item
-                                }
-                    
-                            })
+                            let text = '';
+                            if (!relationStar || relationStar.length == 0) {
+                                text = '无';
+                            } else {
+                                relationStar &&
+                                    relationStar.forEach((item, i) => {
+                                        if (!text) {
+                                            text = text + item;
+                                        } else {
+                                            text = text + '，' + item;
+                                        }
+                                    });
                             }
-                            
+
                             let countDown = h(
                                 'div',
                                 {
@@ -206,11 +206,10 @@ export default {
                                     //     color: 'blue',
                                     //     cursor: 'pointer'
                                     // },
-                                 
                                 },
-                               text
+                                text
                             );
-                       
+
                             return h('div', [countDown]);
                         }
                     },
@@ -218,24 +217,24 @@ export default {
                         title: '已完成',
                         key: 'completeStar',
                         align: 'center',
-                  
+
                         minWidth: 150,
                         render: (h, params) => {
                             let { completeStar } = params.row;
-                            let text='';
-                            if(!completeStar||completeStar.length==0){
-                                text = "无"
-                            }else{
-                                 completeStar&&completeStar.forEach((item,i)=>{
-                                if(!text){
-                                    text = text+item
-                                }else{
-                                     text = text+'，'+item
-                                }
-                    
-                            })
+                            let text = '';
+                            if (!completeStar || completeStar.length == 0) {
+                                text = '无';
+                            } else {
+                                completeStar &&
+                                    completeStar.forEach((item, i) => {
+                                        if (!text) {
+                                            text = text + item;
+                                        } else {
+                                            text = text + '，' + item;
+                                        }
+                                    });
                             }
-                           
+
                             let countDown = h(
                                 'div',
                                 {
@@ -243,11 +242,10 @@ export default {
                                     //     color: 'blue',
                                     //     cursor: 'pointer'
                                     // },
-                                 
                                 },
-                               text
+                                text
                             );
-                       
+
                             return h('div', [countDown]);
                         }
                     },
@@ -255,26 +253,27 @@ export default {
                         title: '状态',
                         key: 'status',
                         align: 'center',
-                 
+
                         minWidth: 150,
                         render: (h, params) => {
                             // 1-待开始 2-进行中 3-已结束
-                            let { status} = params.row,text;
+                            let { status } = params.row,
+                                text;
                             switch (status) {
                                 case 1:
-                                    text = '待开始'
+                                    text = '待开始';
                                     break;
                                 case 2:
-                                    text = '进行中'
+                                    text = '进行中';
                                     break;
                                 case 3:
-                                    text = '已结束'
+                                    text = '已结束';
                                     break;
-                            
+
                                 default:
                                     break;
                             }
-                            
+
                             return h('div', text);
                         }
                     },
@@ -284,14 +283,12 @@ export default {
                         align: 'center',
                         sortable: true,
                         minWidth: 150,
-                            render: (h, params) => {
-                    
-                            let { addTime} = params.row,text;
-                            
-                       
-                            return h('div', addTime||'无');
+                        render: (h, params) => {
+                            let { addTime } = params.row,
+                                text;
+
+                            return h('div', addTime || '无');
                         }
-                   
                     },
 
                     {
@@ -309,7 +306,7 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.goDetail();
+                                            this.addResouce(params.row.id);
                                         }
                                     }
                                 },
@@ -331,21 +328,24 @@ export default {
     created() {},
     mounted() {
         // 页面没刷新
-        console.log(this.$route.params.loadPage)
+        console.log(this.$route.params.loadPage);
         this.loadData();
     },
     methods: {
         // 添加资源
-        addResouce(){
-            this.$router.push({
-                name:'addResouce'
-            })
 
+        addResouce(id) {
+            this.$router.push({
+                name: 'addResouce',
+                query: {
+                    id: id
+                }
+            });
         },
         // 改变时间
-        changeDate(e){
-            this.query.beginTime = e[0]+" 00:00:00"
-            this.query.endTime = e[1]+" 23:59:59"
+        changeDate(e) {
+            this.query.beginTime = e[0] + ' 00:00:00';
+            this.query.endTime = e[1] + ' 23:59:59';
         },
         ok() {},
         cancel() {},
@@ -360,23 +360,25 @@ export default {
             this.$refs[formName].resetFields();
         },
         loadData() {
-             this.query.pageNum =   this.pagination.pageNum
-            this.query.pageSize = this.pagination.pageSize
+            this.table.loading = true;
+            this.query.pageNum = this.pagination.pageNum;
+            this.query.pageSize = this.pagination.pageSize;
             this.axios
                 .post(`/resources/selectResourcesPage`, this.query)
-                .then((res) => {
+                .then(res => {
                     this.table.data = res.data.list;
                     // this.total = res.data.total;
-                    this.pagination.total = res.data.total
+                    this.pagination.total = res.data.total;
+                    this.table.loading = false;
                 })
-                .catch((err) => {
-                
-                        this.$Message.error(err);
+                .catch(err => {
+                    this.table.loading = false;
+                    this.$Message.error(err);
                 });
         },
         // 触发搜索按钮
         handleSearch() {
-               this.pagination.pageNum = 1
+            this.pagination.pageNum = 1;
             // this.$set(this.query, 'pageIndex', 1);
             this.loadData(true);
         }
@@ -385,70 +387,68 @@ export default {
 </script>
 
 <style lang="less">
-.resource-table-list{
+.resource-table-list {
+    .handle-box {
+        // margin-bottom: 20px;
+    }
 
+    .handle-select {
+        width: 120px;
+    }
 
-.handle-box {
-    // margin-bottom: 20px;
-}
-
-.handle-select {
-    width: 120px;
-}
-
-.handle-input {
-    width: 300px;
-    display: inline-block;
-}
-.table {
-    width: 100%;
-    font-size: 14px;
-}
-.red {
-    color: #ff0000;
-}
-.mr10 {
-    margin-right: 10px;
-}
-.table-td-thumb {
-    display: block;
-    margin: auto;
-    width: 40px;
-    height: 40px;
-}
-.card-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 350px;
-    .card {
+    .handle-input {
         width: 300px;
-        height: 300px;
-        margin-right: 20px;
-        .text {
-            text-align: center;
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        img {
-            width: 100%;
-            height: 100%;
-            padding: 5px;
-            background: #ddd;
+        display: inline-block;
+    }
+    .table {
+        width: 100%;
+        font-size: 14px;
+    }
+    .red {
+        color: #ff0000;
+    }
+    .mr10 {
+        margin-right: 10px;
+    }
+    .table-td-thumb {
+        display: block;
+        margin: auto;
+        width: 40px;
+        height: 40px;
+    }
+    .card-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 350px;
+        .card {
+            width: 300px;
+            height: 300px;
+            margin-right: 20px;
+            .text {
+                text-align: center;
+                font-size: 14px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            img {
+                width: 100%;
+                height: 100%;
+                padding: 5px;
+                background: #ddd;
+            }
         }
     }
-}
-.page-content {
-    text-align: right;
-    margin-top: 40px;
-}
-.addBtn{
-    margin-bottom: 10px;
-}
-.ivu-form .ivu-form-item-label,
-.ivu-form-item-content{
-    display: inline-block;
-}
+    .page-content {
+        text-align: right;
+        margin-top: 40px;
+    }
+    .addBtn {
+        margin-bottom: 10px;
+    }
+    .ivu-form .ivu-form-item-label,
+    .ivu-form-item-content {
+        display: inline-block;
+    }
 }
 </style>

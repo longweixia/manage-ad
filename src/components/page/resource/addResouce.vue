@@ -5,7 +5,7 @@
                 <el-breadcrumb-item>{{ id ? '资源详情' : '添加资源' }}</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="container">
+        <div class="containerManage">
             <div class="card-area">
                 <div class="row-text">资源类型</div>
                 <div>
@@ -290,7 +290,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.container {
+.containerManage {
     .card-area {
         margin-bottom: 20px;
         .row-text {

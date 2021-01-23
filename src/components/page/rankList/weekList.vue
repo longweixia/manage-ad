@@ -1,6 +1,6 @@
 <template>
     <div class="rank-list-week-tablelist">
-    <div class="container" style="border:none">
+    <div  style="border:none">
             <div class="handle-box">
                 <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
                     <FormItem label="周列表" prop="time">
@@ -381,7 +381,7 @@ export default {
 <style lang="less">
 .rank-list-week-tablelist {
     .handle-box {
-        margin-bottom: 20px;
+        // margin-bottom: 20px;
     }
 
     .handle-select {

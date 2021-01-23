@@ -1,17 +1,18 @@
 <template>
     <div>
   
-           <div class="container" style="border:none">
+           <div class="containerhot" style="border:none">
             <div class="card-area">
                 <div class="row-text">每日签到次数</div>
                  每日最高
-                     <Input v-model="form.signMaxNum" placeholder="数值" style="width:200px" clearable></Input>次
+                     <Input v-model="form.signMaxNum" placeholder="数值" style="width:200px" clearable></Input><span class="ml5">次</span>
                 
             </div>
             <div class="card-area">
                 <div class="row-text">签到获得热力值</div>
                  每次获得
-                     <Input v-model="form.vigourSignNum" placeholder="数值" style="width:200px" clearable></Input>热力值
+                     <Input v-model="form.vigourSignNum" placeholder="数值" style="width:200px" clearable></Input>
+                     <span class="ml5">热力值</span>
 
                 
             </div>
@@ -73,7 +74,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.container {
+.containerhot {
     .card-area {
         margin-bottom: 20px;    
         .row-text {

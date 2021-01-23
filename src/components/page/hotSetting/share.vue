@@ -1,18 +1,18 @@
 <template>
     <div>
-       <div class="container" style="border:none">
+       <div class="containerhot" style="border:none">
             <div class="card-area">
                 <div class="row-text">分享微信获得热力值</div>
-                <div style="margin-top:10px;margin-bottom:10px">需对方点击分享内容进入小程序才算完成</div>
+                <div style="margin-top:10px;margin-bottom:10px;color:#a7a7a7">需对方点击分享内容进入小程序才算完成</div>
 
                 <div>
                     每日最高
-                    <Input v-model="form.shareMaxNum" placeholder="数值" style="width: 200px" clearable></Input>次
+                    <Input v-model="form.shareMaxNum" placeholder="数值" style="width: 200px" clearable></Input><span class="ml5">次</span>
                 </div>
 
                 <div style="margin-top:20px">
                     每次获得
-                    <Input v-model="form.vigourShareNum" placeholder="数值" style="width: 200px" clearable></Input>热力值
+                    <Input v-model="form.vigourShareNum" placeholder="数值" style="width: 200px" clearable></Input> <span class="ml5">热力值</span>
                 </div>
             </div>
 
@@ -73,7 +73,7 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.container {
+.containerhot {
     .card-area {
         margin-bottom: 20px;
         .row-text {

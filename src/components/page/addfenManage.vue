@@ -5,7 +5,7 @@
                 <el-breadcrumb-item> 自建粉丝 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="container">
+        <div class="containerManage">
             <div class="handle-box">
                 <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
                     <FormItem label="ID" prop="id">

@@ -5,7 +5,7 @@
                 <el-breadcrumb-item>资源管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="container">
+        <div class="containerManage">
             <Button
                 class="btn"
                 :type="activeIndex == i ? 'primary' : 'default'"
@@ -16,9 +16,11 @@
             >
             <!-- 表格区 -->
             <!-- 周榜 -->
+                  <div class="table-area">
             <StarList v-if="activeIndex === 0"></StarList>
             <Week v-if="activeIndex === 1"></Week>
             <Month v-if="activeIndex === 2"></Month>
+                  </div>
         </div>
     </div>
 </template>
@@ -59,6 +61,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
+.table-area{
+    // margin-left: -30px;
+    // margin-top: -30px;
+}
 .btn {
     margin-right: 10px;
     margin-bottom: 20px;

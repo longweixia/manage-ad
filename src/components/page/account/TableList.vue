@@ -1,11 +1,11 @@
 <template>
     <div class="account-TableList">
-             <div class="crumbs">
+        <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>账号管理</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <div class="container">
+        <div class="containerManage">
             <div class="handle-box">
                 <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
                     <FormItem label="姓名" prop="name">
@@ -30,8 +30,8 @@
                 <Button type="primary" @click="addResouce">新增账号</Button>
             </div>
 
-            <Table border :columns="table.columns" :data="table.data" style="width: 100%"></Table>
-                <pagination  :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></pagination>
+            <Table ref="tableStation" border :columns="table.columns" :data="table.data" style="width: 100%"></Table>
+            <pagination :pagination="pagination" @on-page-size-change="loadData" @on-page-change="loadData"></pagination>
         </div>
         <!-- 新增账号弹窗 -->
         <Modal v-model="modalImg" title="新增账号" @on-ok="ok" @on-cancel="cancel" width="600">
@@ -91,16 +91,14 @@
 </template>
 
 <script>
-import {timeChange,yearDay, filterDeadline} from '../../../utils/helper.js'
-import Pagination from './../../common/Pagination.vue'
-import { PAGE_PARAMS } from '../../../utils/constants.js'
+import { timeChange, yearDay, filterDeadline } from '../../../utils/helper.js';
+import Pagination from './../../common/Pagination.vue';
+import { PAGE_PARAMS } from '../../../utils/constants.js';
 export default {
     name: 'myArticle',
-         components: {
-
-    Pagination,
-
-  },
+    components: {
+        Pagination
+    },
     data() {
         const validateName = (rule, value, callback) => {
             if (value === '') {
@@ -155,6 +153,7 @@ export default {
             // }, 1000);
         };
         return {
+            tableHeight: 450,
             pagination: Object.assign({}, PAGE_PARAMS),
             // 弹窗的数据
             formCustom: {
@@ -223,7 +222,7 @@ export default {
                 name: '',
                 pageNum: 1,
                 pageSize: 20,
-                status: '', 
+                status: ''
             },
             table: {
                 data: [],
@@ -271,12 +270,10 @@ export default {
                         align: 'center',
 
                         minWidth: 150,
-                             render: (h, params) => {
-                    
-                            let { addTime} = params.row
-                         
-                            return h('div', addTime||'无');
-                            
+                        render: (h, params) => {
+                            let { addTime } = params.row;
+
+                            return h('div', addTime || '无');
                         }
                     },
                     {
@@ -285,7 +282,7 @@ export default {
                         align: 'center',
                         minWidth: 100,
                         render: (h, params) => {
-                            let { status,id } = params.row;
+                            let { status, id } = params.row;
                             let firstBTn;
                             // 使用
                             if (status === 1) {
@@ -302,7 +299,6 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                        
                                             this.showdelModal(params.row, status == 1 ? 'prohibit' : 'enable');
                                         }
                                     }
@@ -316,7 +312,7 @@ export default {
                                     style: {
                                         color: '#409EFF',
                                         cursor: 'pointer',
-                                        margin:'10px'
+                                        margin: '10px'
                                     },
                                     on: {
                                         click: () => {
@@ -344,7 +340,7 @@ export default {
                                 '修改'
                             );
 
-                            return h('div', [id!=1?disableBtn:'', id!=1?deleteBtn:'', detail]);
+                            return h('div', [id != 1 ? disableBtn : '', id != 1 ? deleteBtn : '', detail]);
                         }
                     }
                 ]
@@ -360,6 +356,14 @@ export default {
     created() {},
     mounted() {
         this.loadData();
+        this.tableHeight = document.body.clientHeight-258;
+        // 监听浏览器窗口大小变化从而改变table高度
+        window.onresize = () => {
+            return (() => {
+                this.tableHeight = document.body.clientHeight-158;
+             
+            })();
+        };
     },
     methods: {
         showdelModal(data, name) {
@@ -385,8 +389,7 @@ export default {
         },
         del() {
             // this.modal_loading = true;
-            if (this.modalType == 'prohibit'||this.modalType == 'enable') {
-              
+            if (this.modalType == 'prohibit' || this.modalType == 'enable') {
                 this.prohibit(this.modalData);
             } else if (this.modalType == 'del') {
                 this.delete(this.modalData);
@@ -487,21 +490,21 @@ export default {
             this.$refs[formName].resetFields();
         },
         loadData(search) {
-               this.query.pageNum =   this.pagination.pageNum
-            this.query.pageSize = this.pagination.pageSize
+            this.query.pageNum = this.pagination.pageNum;
+            this.query.pageSize = this.pagination.pageSize;
             this.axios
                 .post(`/user/selectPage`, this.query)
                 .then((res) => {
                     this.table.data = res.data.list;
-                     this.pagination.total = res.data.total
+                    this.pagination.total = res.data.total;
                 })
                 .catch((err) => {
-                      this.$Message.error(err);
+                    this.$Message.error(err);
                 });
         },
         // 触发搜索按钮
         handleSearch() {
-              this.pagination.pageNum = 1
+            this.pagination.pageNum = 1;
             // this.$set(this.query, 'pageIndex', 1);
             this.loadData(true);
         }

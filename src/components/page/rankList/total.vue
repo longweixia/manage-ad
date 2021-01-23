@@ -1,6 +1,6 @@
 <template>
     <div class="rank-list-month-tablelist">
-           <div class="container" style="border:none">
+           <div style="border:none">
             <div class="handle-box">
                 <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
                     <FormItem label="明星" prop="starName">
@@ -200,7 +200,7 @@ export default {
 <style lang="less" scoped>
 .rank-list-month-tablelist {
     .handle-box {
-        margin-bottom: 20px;
+        // margin-bottom: 20px;
     }
 
     .handle-select {

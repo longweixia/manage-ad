@@ -77,7 +77,7 @@ export default {
 .img-area-text{
     position: absolute;
     margin-left: -40px;
-    margin-top: -150px;
+    margin-top: -145px;
     width: 271.8*3px;
     height: 63.2*3px;
 }
@@ -134,11 +134,16 @@ export default {
     // top: 50%;
     width: 350px;
     // margin: -190px 0 0 -250px;
-    // border-radius: 5px;
-    margin-left: -200px;
+    border-radius: 5px;
+    margin-left: -701px;
     background: rgba(255, 255, 255, 0.3);
     overflow: hidden;
     z-index: 1000;
+    ::-webkit-input-placeholder { /* WebKit browsers */
+    color: #999;
+    font-size: 16px;
+}
+
 }
 .ms-content {
     padding: 30px 30px;
@@ -162,6 +167,6 @@ export default {
     border-color: #b1c8cb;
 }
 /deep/ .el-input-group__prepend,/deep/ .el-input__inner{
-    background-color: rgba(255, 255, 255, .5)!important;
+    background-color: rgba(255, 255, 255, .9)!important;
 }
 </style>

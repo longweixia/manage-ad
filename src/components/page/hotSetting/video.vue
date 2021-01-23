@@ -1,37 +1,29 @@
 <template>
     <div>
-  
-          <div class="container" style="border:none">
+        <div class="containerhot" style="border: none">
             <div class="card-area">
                 <div class="row-text">每日看视频次数</div>
-                 每日最高
-                     <Input v-model="form.videoMaxNum" placeholder="数值" style="width:200px" clearable></Input>次
-                
+                每日最高
+                <Input v-model="form.videoMaxNum" placeholder="数值" style="width: 200px" clearable></Input> <span class="ml5">次</span>
             </div>
             <div class="card-area">
                 <div class="row-text">看视频获得热力值</div>
-                 每次获得
-                     <Input v-model="form.vigourVideoNum" placeholder="数值" style="width:200px" clearable></Input>热力值
-
-                
+                每次获得
+                <Input v-model="form.vigourVideoNum" placeholder="数值" style="width: 200px" clearable></Input><span class="ml5">热力值</span>
             </div>
             <div>
                 <Button type="primary" @click="save">保存</Button>
             </div>
-            
-          
-       
-             
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    data: function() {
+    data: function () {
         return {
-            selectHotVal:"",//选择的热力下拉框的值
-              selectHotList: [
+            selectHotVal: '', //选择的热力下拉框的值
+            selectHotList: [
                 {
                     value: '2020/12/22',
                     label: '2020/12/29'
@@ -41,27 +33,22 @@ export default {
                     label: '2021/01/05'
                 }
             ],
-            numList:[
-                {name:"",value:""},
-                {name:"",value:""},
+            numList: [
+                { name: '', value: '' },
+                { name: '', value: '' }
             ],
-          
+
             form: {
-             
-                  videoMaxNum:"",//每日限制次数
-            vigourVideoNum:"",//每日限制次数
+                videoMaxNum: '', //每日限制次数
+                vigourVideoNum: '' //每日限制次数
             },
-            imgObj:{
-                homeImg:"", //首页轮播图
-                detailImg:"", //详情页
-                hitPopupImg:"",  //打榜弹窗图
-            },//轮播图等
-            imgHeader:"",//头像url
-            tagList:[
-                {name:'标签2'},
-                {name:'标签3'},
-                {name:'标签4'},
-            ],//标签集合
+            imgObj: {
+                homeImg: '', //首页轮播图
+                detailImg: '', //详情页
+                hitPopupImg: '' //打榜弹窗图
+            }, //轮播图等
+            imgHeader: '', //头像url
+            tagList: [{ name: '标签2' }, { name: '标签3' }, { name: '标签4' }] //标签集合
         };
     },
     mounted() {
@@ -72,17 +59,17 @@ export default {
             this.axios
                 .get(`/hitSettings/select`)
                 .then((res) => {
-                     this.form = res.data
+                    this.form = res.data;
                 })
                 .catch((err) => {
                     this.$Message.error(err);
                 });
         },
-          save() {
+        save() {
             let pramas = {
                 videoMaxNum: Number(this.form.videoMaxNum),
                 vigourVideoNum: Number(this.form.vigourVideoNum),
-                id:this.form.id
+                id: this.form.id
             };
             this.axios
                 .post(`/hitSettings/edit`, pramas)
@@ -97,9 +84,9 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.container {
+.containerhot {
     .card-area {
-        margin-bottom: 20px;    
+        margin-bottom: 20px;
         .row-text {
             margin-top: 10px;
             margin-bottom: 10px;
@@ -129,56 +116,52 @@ export default {
                 }
             }
         }
-        .card-header{
-            width:100px;
+        .card-header {
+            width: 100px;
             height: 100px;
-           border-radius: 50px;
-           margin-top: 10px;
-            img{
-                width:100%;
+            border-radius: 50px;
+            margin-top: 10px;
+            img {
+                width: 100%;
                 height: 100%;
                 border-radius: 50px;
             }
         }
-        .tag-text{
+        .tag-text {
             display: inline-block;
-            margin-bottom:5px;
-            
+            margin-bottom: 5px;
         }
-        .addTag-text{
+        .addTag-text {
             color: blue;
             cursor: pointer;
             margin-left: 20px;
         }
         // 标签
-        .tag-area{
-            .tag{
+        .tag-area {
+            .tag {
                 cursor: pointer;
                 margin-right: 10px;
             }
-
         }
         // 开屏
-        .card-screen{
-              width:200px;
+        .card-screen {
+            width: 200px;
             height: 200px;
-           margin-top: 10px;
-            img{
-                width:100%;
+            margin-top: 10px;
+            img {
+                width: 100%;
                 height: 100%;
             }
-
         }
-        .card-screen-btn{
+        .card-screen-btn {
             margin-top: 5px;
         }
-
     }
 }
-.tips{
+.tips {
     color: #a7a7a7;
 }
-.num-list{
+.num-list {
     display: inline-block;
     margin-right: 10px;
 }

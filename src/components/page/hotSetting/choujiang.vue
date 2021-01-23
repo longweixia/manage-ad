@@ -1,6 +1,6 @@
 <template>
     <div>
-          <div class="container" style="border:none">
+          <div class="containerhot" style="border:none">
        
             <div class="card-area inp-top">
                 <div class="row-text">数值设置</div>
@@ -10,7 +10,8 @@
             </div>
             <div class="card-area">
                 <div class="row-text">每日限制次数</div>
-                <Input v-model="form.deawMaxNum" placeholder="数值" style="width: 200px" clearable></Input>次
+                <Input v-model="form.deawMaxNum" placeholder="数值" style="width: 200px" clearable></Input>
+                <span class="ml5">次</span>
             </div>
             <div class="card-area">
                 <div class="row-text">
@@ -22,13 +23,13 @@
                 </div>
                 <div>
                     单个粉丝累计抽奖
-                    <Input v-model="form.strategyDeawMinNum" placeholder="数值" style="width: 200px" clearable></Input>次， 获得超过（含）
+                    <Input v-model="form.strategyDeawMinNum" placeholder="数值" style="width: 200px" clearable></Input><span class="ml5">次</span>， 获得超过（含）
                     <Select v-model="form.vigourSendNum" style="width: 150px" clearable>
                         <Option v-for="(item,index) in drawFieldNums" :value="item" :key="item" @click.native="selectvigourSendNum(item, index)">{{
                             item
                         }}</Option>
                     </Select>
-                    以上的随机热力值
+                    <span class="ml5">以上的随机热力值</span>
                 </div>
             </div>
             <div>
@@ -144,7 +145,8 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.container {
+
+.containerhot {
     .card-area {
         margin-bottom: 20px;
         .row-text {

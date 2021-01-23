@@ -150,12 +150,13 @@ export default {
     /* background:url("./logo.png") no-repeat 4px 5px */
 }
 .header-right {
-    text-align: right;
+       text-align: right;
     /* padding-right: 50px; */
     /* position: absolute; */
     top: 20px;
     right: 27px;
-    padding-top: 15px;
+    padding-top: 20px;
+    padding-bottom: 10px;
     background: #fff;
 }
 .header-user-con {

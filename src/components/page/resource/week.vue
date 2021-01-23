@@ -1,11 +1,8 @@
 <template>
-   
-    
-             <div class="resource-week">
-                       <div class="container" style="border:none">
+    <div class="resource-week">
+        <div class="containerresouce" style="border: none">
             <div class="card-area">
                 <div class="row-text">
-                
                     周榜奖励
                     <i-Switch size="large" v-model="switchValWeek">
                         <span slot="open">开启</span>
@@ -45,7 +42,6 @@
             </div>
             <div class="card-area">
                 <div class="row-text">
-                 
                     最低热力值
                     <i-Switch size="large" v-model="switchValHot">
                         <span slot="open">开启</span>
@@ -66,7 +62,7 @@
 
 <script>
 import upload from '../../common/upload/index.vue';
-import {timeChange} from '../../../utils/helper.js'
+import { timeChange } from '../../../utils/helper.js';
 export default {
     components: {
         upload
@@ -136,7 +132,7 @@ export default {
         getImageUrl(data) {
             this.imgUrl = data[0];
             this.flieData = data[1];
-             this.uploadFile()
+            this.uploadFile();
         },
         // 上传文件，保存时才上传
         uploadFile() {
@@ -160,34 +156,33 @@ export default {
                 this.$Message.error('输入热力值前，需要先开启最低热力值按钮');
                 return false;
             }
-          
+
             let type; //选中的tag
             this.tagList.forEach((item, index) => {
                 if (item.checked) {
-                    type = item.value
+                    type = item.value;
                 }
             });
             this.axios
                 .post(`/resources/addOrUpdateListAward`, {
                     code: 'WEEK', //WEEK:周榜 MONTH-月榜
-                    img: this.uploadCompleteImg?this.uploadCompleteImg:this.imgUrl, //宣传页
+                    img: this.uploadCompleteImg ? this.uploadCompleteImg : this.imgUrl, //宣传页
                     minVal: this.minVal, //最低热力值
-                    open: this.switchValWeek?1:0, //是否开启
-                    openMin: this.switchValHot?1:0, //是否开启最低热力值
+                    open: this.switchValWeek ? 1 : 0, //是否开启
+                    openMin: this.switchValHot ? 1 : 0, //是否开启最低热力值
                     type: type //1-后援金 2-小程序开屏 3-首页轮播 4-户外大屏  todo type应该是一个数组
                 })
                 .then((res) => {
-                      this.$Message.success('提交成功');
-                      this.loadData()
+                    this.$Message.success('提交成功');
+                    this.loadData();
                 })
                 .catch((err) => {
-                      this.$Message.error(err);
+                    this.$Message.error(err);
                 });
         },
         // 上传图片
         uploadImg() {
             this.$refs.upload.clickFile();
-           
         },
         //新增标签
         addTag() {},
@@ -219,8 +214,8 @@ export default {
                     this.tagList.find((item, index) => {
                         return item.value == res.data.type;
                     }).checked = true;
-                    this.imgUrl = res.data.img
-                    this.minVal = res.data.minVal
+                    this.imgUrl = res.data.img;
+                    this.minVal = res.data.minVal;
                 })
                 .catch((err) => {
                     this.$Message.error(err);
@@ -231,7 +226,10 @@ export default {
 </script>
 <style lang="less" >
 .resource-week {
-    .container {
+    .containerresouce {
+        
+    padding-top: 0;
+
         .card-area {
             margin-bottom: 20px;
             .row-text {

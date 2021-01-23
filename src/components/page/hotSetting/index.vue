@@ -16,10 +16,12 @@
             >
             <!-- 表格区 -->
             <!-- 周榜 -->
+            <div class="table-area">
             <Choujiang v-if="activeIndex === 0"></Choujiang>
             <SignIn v-if="activeIndex === 1"></SignIn>
             <Video v-if="activeIndex === 2"></Video>
             <Share v-if="activeIndex === 3"></Share>
+            </div>
         </div>
     </div>
 </template>
@@ -65,5 +67,9 @@ export default {
 .btn {
     margin-right: 10px;
     margin-bottom: 20px;
+}
+.table-area{
+    margin-left: -30px;
+    margin-top: -30px;
 }
 </style>

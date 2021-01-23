@@ -1,6 +1,6 @@
 <template>
     <div class="resource-week">
-        <div class="container" style="border:none">
+        <div class="containerresouce" style="border:none">
             <div class="card-area">
                 <div class="row-text">
             
@@ -228,7 +228,7 @@ export default {
 </script>
 <style lang="less" >
 .resource-week {
-    .container {
+    .containerresouce {
         .card-area {
             margin-bottom: 20px;
             .row-text {

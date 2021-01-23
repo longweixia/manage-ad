@@ -1,6 +1,6 @@
 <template>
     <div class="resource-table-list">
-        <div class="container" style="border:none">
+        <div style="border:none">
             <div class="handle-box">
                 <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
                     <FormItem label="有效期" prop="time">
@@ -388,9 +388,7 @@ export default {
 
 <style lang="less">
 .resource-table-list {
-    .handle-box {
-        // margin-bottom: 20px;
-    }
+ 
 
     .handle-select {
         width: 120px;

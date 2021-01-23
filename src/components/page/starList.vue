@@ -6,7 +6,7 @@
             </el-breadcrumb>
         </div>
         <!-- <Button type="primary" @click="getToken">获取token</Button> -->
-        <div class="container">
+        <div class="containerManage">
             <div class="handle-box">
                 <Form inline :model="query" class="demo-form-inline" ref="ruleForm">
                     <FormItem label="姓名" prop="name">

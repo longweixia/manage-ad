@@ -5,6 +5,6 @@ export const JWT_EXPIRES_CODE = ["110002", "110003", "110004", "110103"];
 export const PAGE_PARAMS = {
   pageNum: 1,
   total: 0,
-  pageSize: 10,
+  pageSize: 50,
   pageSizeOpts: [10, 50, 100, 200, 500]
 }

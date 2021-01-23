@@ -231,6 +231,8 @@ export default {
     font-weight: bold;
 }
 .container {
+
+    padding-top: 10px;
     .card-area {
         margin-bottom: 20px;
 

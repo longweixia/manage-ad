@@ -5,7 +5,8 @@
                 <el-breadcrumb-item>  榜单排名 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-         <div class="container">
+         <div class="containerManage">
+             <div class="btn-area">
         <Button
             class="btn"
             :type="activeIndex == i ? 'primary' : 'default'"
@@ -14,11 +15,14 @@
             :key="i"
             >{{ item.name }}</Button
         >
+        </div>
         <!-- 表格区 -->
         <!-- 周榜 -->
+        <div class="table-area">
         <WeekList v-if="activeIndex === 0"></WeekList>
         <MonthList v-if="activeIndex === 1"></MonthList>
         <Total v-if="activeIndex === 2"></Total>
+        </div>
          </div>
     </div>
 </template>
@@ -54,8 +58,16 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.btn-area{
+// margin-left: 30px;
+}
 .btn {
     margin-right: 10px;
     margin-bottom: 20px;
+    
+}
+.table-area{
+    // margin-top: -30px;
+    // margin-top: -30px;
 }
 </style>

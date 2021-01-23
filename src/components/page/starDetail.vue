@@ -6,7 +6,7 @@
             </el-breadcrumb>
         </div>
 
-        <div class="container">
+        <div class="containerManage">
             <Form ref="formInline" :rules="rules" inline :model="form">
                 <FormItem prop="name">
                     <div class="card-area">
@@ -411,7 +411,7 @@ export default {
             height:  79px;
         }
     }
-    .container {
+    .containerManage {
         .card-area {
             margin-bottom: 20px;
             .row-text {

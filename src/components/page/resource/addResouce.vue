@@ -1,8 +1,8 @@
 <template>
     <div>
-          <div class="crumbs">
+        <div class="crumbs">
             <el-breadcrumb separator="/">
-                <el-breadcrumb-item>添加资源</el-breadcrumb-item>
+                <el-breadcrumb-item>{{ id ? '资源详情' : '添加资源' }}</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
@@ -42,7 +42,7 @@
 
                 <div style="margin-top: 20px">
                     从<DatePicker
-                        type="date"
+                        type="date" v-model="startTime"
                         @on-change="changeDate"
                         :options="selectDate"
                         placeholder="选择开始日"
@@ -94,9 +94,11 @@ export default {
     },
     data() {
         return {
+            id: '',
+            startTime:"",
             uploadImgModel: false,
             typeVal: null, //当前选择的类型
-            target: '', //目标人数
+            target: null, //目标人数
             beginTime: '', //开始时间
             day: null, //开始时间往后几天
             markMoney: '', //后援金额
@@ -113,19 +115,71 @@ export default {
                 { name: '户外大屏', value: 4, checked: false }
             ],
             tagList: [
-                { name: '小程序开屏', value: 2, checked: false },
-                { name: '首页轮播', value: 3, checked: false },
-                { name: '后援金', value: 1, checked: false },
-                { name: '户外大屏', value: 4, checked: false }
+                // { name: '小程序开屏', value: 2, checked: false },
+                // { name: '首页轮播', value: 3, checked: false },
+                // { name: '后援金', value: 1, checked: false },
+                // { name: '户外大屏', value: 4, checked: false }
             ], //标签集合
             selectDate: {
                 disabledDate(date) {
                     return date && date.valueOf() < Date.now() - 86400000;
                 }
-            }
+            },
+            resouseData:{},
+            changetime:false, //是否改变了时间，如果没有改变原时间的格式没有问题直接提交，否则拼接时分秒
         };
     },
+    mounted() {
+        this.id = this.$route.query.id || '';
+        if (this.id) {
+            this.axios
+                .post(`/star/tags/list`)
+                .then(res => {
+                    this.tagList = res.data;
+                    this.loadData();
+                })
+                .catch(err => {
+                    this.$Message.error(err);
+                });
+        } else {
+            this.getTags();
+        }
+    },
     methods: {
+        loadData() {
+            this.axios
+                .get(`/resources/selectResources?id=${this.id}`)
+                .then(res => {
+                    
+                    // this.tagList = res.data;
+                    this.resouseData= res.data
+                    this.starIdstext  = this.resouseData.starIds.toString()
+                    this.target = this.resouseData.target
+                    this.type = this.resouseData.type
+                    this.beginTime = this.resouseData.beginTime
+                    let obj = Object.assign({},this.resouseData)
+                    // 这个值仅仅用来回显
+                    this.startTime = obj.beginTime
+
+                    let start = new Date(this.resouseData.beginTime).getTime()
+                    let end = new Date(this.resouseData.endTime).getTime()
+                    this.day = ((end-start)/(24*3600*1000)).toFixed()
+                    // this.type = this.resouseData.type
+                })
+                .catch(err => {
+                    this.$Message.error(err);
+                });
+        },
+        getTags() {
+            this.axios
+                .post(`/star/tags/list`)
+                .then(res => {
+                    this.tagList = res.data;
+                })
+                .catch(err => {
+                    this.$Message.error(err);
+                });
+        },
         // 改变资源类型
         changeType(name) {
             this.typeVal = name;
@@ -139,6 +193,7 @@ export default {
             this.uploadImgModel = true;
         },
         changeDate(data) {
+            this.changetime = true
             this.beginTime = data;
         },
         getMyDate(str) {
@@ -169,7 +224,7 @@ export default {
             let tagArry = []; //选中的tag
             this.tagList.forEach((item, index) => {
                 if (item.checked) {
-                    tagArry.push({ name: item.name, id: item.value });
+                    tagArry.push({ name: item.name, id: item.id });
                 }
             });
             // 处理明星id
@@ -189,20 +244,20 @@ export default {
             endTime = this.getMyDate(nextDate);
             this.axios
                 .post(`/resources/addOrUpdateResources`, {
-                    beginTime: this.beginTime,
-                    endTime: endTime,
-                    id: '', //这个是什么 todo
+                    beginTime: this.changetime?this.beginTime + ' 00:00:01':this.beginTime,
+                    endTime: endTime + ' 23:59:59',
+                    id: this.id, //这个是什么 todo
 
                     mark: this.typeVal == 1 ? this.markMoney : this.screenName, //金额和大屏名称
 
                     starIds: starIds, // 数组格式
 
                     tags: tagArry, // tags应该是一个数组
-                    target: this.target, //目标人数
+                    target: Number(this.target), //目标人数
 
                     type: this.type //1-后援金 2-小程序开屏 3-首页轮播 4-户外大屏
                 })
-                .then((res) => {
+                .then(res => {
                     this.$Message.success('添加成功');
 
                     this.$router.push({
@@ -212,7 +267,7 @@ export default {
                         }
                     });
                 })
-                .catch((err) => {
+                .catch(err => {
                     this.$Message.error(err);
                 });
         },
@@ -225,12 +280,12 @@ export default {
             this.tagList.splice(index, 1);
         }
     },
-    beforeRouteLeave (to, from, next) {
-             bus.$emit('getFlag', '');
-             next()
-        },
-    created(){
-         bus.$emit('getFlag', '资源管理');
+    beforeRouteLeave(to, from, next) {
+        bus.$emit('getFlag', '');
+        next();
+    },
+    created() {
+        bus.$emit('getFlag', '资源管理');
     }
 };
 </script>

@@ -124,7 +124,8 @@ export default {
             total: 0
         };
     },
-    created() {},
+
+     
     mounted() {
        let data = JSON.parse(decodeURIComponent(this.$route.query.data))
         this.query.starId = data.starId

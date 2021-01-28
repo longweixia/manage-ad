@@ -92,6 +92,7 @@
 
 <script>
 import Preview from './preview.vue';
+
 export default {
     components: {
         Preview
@@ -125,6 +126,7 @@ export default {
             id: ''
         };
     },
+   
 
     mounted() {
         this.titles = this.$route.query.add;
@@ -145,6 +147,7 @@ export default {
         }
     },
     methods: {
+        
         getTags() {
             this.axios
                 .post(`/star/tags/list`)

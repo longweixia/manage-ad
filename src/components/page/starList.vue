@@ -23,6 +23,7 @@
                 </Form>
                 <div>
                     <Button type="primary" style="width: 100px" @click="goDetail('add')">添加明星</Button>
+                    <Button type="primary" style="width: 100px;margin-left:10px" @click="exportFile">导出明星</Button>
                 </div>
             </div>
 
@@ -168,7 +169,7 @@ export default {
                         key: 'address',
                         align: 'center',
                         sortable: true,
-                        minWidth: 100,
+                        minWidth: 150,
                         render: (h, params) => {
                             let { rankWeekChampionNum, rankMonthChampionNum } = params.row;
                             let week = h('span', rankWeekChampionNum + '/');
@@ -181,7 +182,7 @@ export default {
                         key: 'name',
                         align: 'center',
                         sortable: true,
-                        minWidth: 100,
+                        minWidth: 150,
                         render: (h, params) => {
                             let { rankWeekSecondNum, rankMonthSecondNum } = params.row;
                             let week = h('span', rankWeekSecondNum + '/');
@@ -194,7 +195,7 @@ export default {
                         key: 'name',
                         sortable: true,
                         align: 'center',
-                        minWidth: 100,
+                        minWidth: 150,
                         render: (h, params) => {
                             let { rankWeekThirdNum, rankWeekChampionNum } = params.row;
                             let week = h('span', rankWeekThirdNum + '/');
@@ -225,6 +226,7 @@ export default {
                     {
                         title: '添加时间',
                         key: 'createTime',
+                         sortable: true,
                         align: 'center',
                         minWidth: 180,
                         render: (h, params) => {
@@ -275,6 +277,24 @@ export default {
         this.loadData();
     },
     methods: {
+        exportFile(){
+                 this.axios
+                .get(`/star/downStarList`, { responseType: 'arraybuffer' })
+                .then((res) => {
+                    let data = res;
+                    let blob = new Blob([data], { type: 'application/vnd.ms-excel' }); //res 就是文件流了
+                    let a = document.createElement('a');
+                    a.download = '导出明星';
+                    a.href = URL.createObjectURL(blob);
+                    a.click();
+
+                    // window.location.href = objectUrl;
+                })
+                .catch((err) => {
+                    console.log('err', err);
+                });
+
+        },
         ok() {},
         cancel() {},
         //去详情
@@ -333,13 +353,12 @@ export default {
 </script>
 
 <style lang="less">
-.card-bottom-border{
-        /deep/ .ivu-modal-footer{
-        border: none!important;
+.card-bottom-border {
+    /deep/ .ivu-modal-footer {
+        border: none !important;
     }
 }
 .card-content-starlist {
-  
     display: flex;
     justify-content: center;
     // align-items: center;
@@ -402,8 +421,6 @@ export default {
 .star-list-table {
     .card-area {
         margin-bottom: 20px;
-   
-        
     }
     .handle-box {
         margin-bottom: 20px;
@@ -470,6 +487,5 @@ export default {
         //     height: calc(145 / 347 * 200px);
         // }
     }
-   
 }
 </style>

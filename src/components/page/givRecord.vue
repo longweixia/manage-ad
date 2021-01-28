@@ -122,7 +122,7 @@ export default {
              next()
         },
     created(){
-         bus.$emit('getFlag', '粉丝管理');
+         bus.$emit('getFlag', '注册粉丝');
     },
     mounted() {
         this.loadData();

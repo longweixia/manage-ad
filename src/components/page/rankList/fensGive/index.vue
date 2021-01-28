@@ -20,6 +20,7 @@
 import WeekList from './weekList';
 import MonthList from './monthList';
 import Total from './total';
+import bus from '../../../common/bus'
 export default {
     name: 'myArticle',
     components: {
@@ -35,7 +36,13 @@ export default {
             activeIndex: 0
         };
     },
-    created() {},
+    beforeRouteLeave(to, from, next) {
+        bus.$emit('getFlag', '');
+        next();
+    },
+    created() {
+        bus.$emit('getFlag', '榜单排名');
+    },
     mounted() {},
     methods: {
         // 切换表格

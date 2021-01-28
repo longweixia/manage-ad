@@ -42,7 +42,8 @@
 
                 <div style="margin-top: 20px">
                     从<DatePicker
-                        type="date" v-model="startTime"
+                        type="date"
+                        v-model="startTime"
                         @on-change="changeDate"
                         :options="selectDate"
                         placeholder="选择开始日"
@@ -74,14 +75,14 @@
             <div class="card-area">
                 <div class="row-text">输入明星ID</div>
 
-                <div><Input placeholder="输入数字" style="width: 200px" v-model="starIdstext" /></div>
+                <div><Input placeholder="输入数字" style="width: 600px" type="textarea" v-model="starIdstext" :rows="1" /></div>
             </div>
             <div>
                 <Button type="primary" @click="save">保存</Button>
                 <Button type="primary" @click="preview" style="margin-left: 20px">样式预览</Button>
             </div>
         </div>
-        <Preview :uploadImgModel.sync="uploadImgModel"></Preview>
+        <Preview :uploadImgModel.sync="uploadImgModel" :list="list"></Preview>
     </div>
 </template>
 
@@ -94,8 +95,9 @@ export default {
     },
     data() {
         return {
+            list: {}, //预览数据
             id: '',
-            startTime:"",
+            startTime: '',
             uploadImgModel: false,
             typeVal: null, //当前选择的类型
             target: null, //目标人数
@@ -125,8 +127,8 @@ export default {
                     return date && date.valueOf() < Date.now() - 86400000;
                 }
             },
-            resouseData:{},
-            changetime:false, //是否改变了时间，如果没有改变原时间的格式没有问题直接提交，否则拼接时分秒
+            resouseData: {},
+            changetime: false //是否改变了时间，如果没有改变原时间的格式没有问题直接提交，否则拼接时分秒
         };
     },
     mounted() {
@@ -145,25 +147,25 @@ export default {
             this.getTags();
         }
     },
+
     methods: {
         loadData() {
             this.axios
                 .get(`/resources/selectResources?id=${this.id}`)
                 .then(res => {
-                    
                     // this.tagList = res.data;
-                    this.resouseData= res.data
-                    this.starIdstext  = this.resouseData.starIds.toString()
-                    this.target = this.resouseData.target
-                    this.type = this.resouseData.type
-                    this.beginTime = this.resouseData.beginTime
-                    let obj = Object.assign({},this.resouseData)
+                    this.resouseData = res.data;
+                    this.starIdstext = this.resouseData.starIds.toString();
+                    this.target = this.resouseData.target;
+                    this.type = this.resouseData.type;
+                    this.beginTime = this.resouseData.beginTime;
+                    let obj = Object.assign({}, this.resouseData);
                     // 这个值仅仅用来回显
-                    this.startTime = obj.beginTime
+                    this.startTime = obj.beginTime;
 
-                    let start = new Date(this.resouseData.beginTime).getTime()
-                    let end = new Date(this.resouseData.endTime).getTime()
-                    this.day = ((end-start)/(24*3600*1000)).toFixed()
+                    let start = new Date(this.resouseData.beginTime).getTime();
+                    let end = new Date(this.resouseData.endTime).getTime();
+                    this.day = ((end - start) / (24 * 3600 * 1000)).toFixed();
                     // this.type = this.resouseData.type
                 })
                 .catch(err => {
@@ -190,10 +192,43 @@ export default {
         },
         // 预览
         preview() {
+            if(!this.type||!this.target||!this.beginTime||!this.day){
+                this.$Message.error("请设置资源类型、目标人数和倒计时）")
+                return false
+            }
+            let endTime;
+            // 7天以后
+            let nextDate = new Date(this.beginTime).getTime() + 24 * 60 * 60 * 1000 * this.day;
+            endTime = this.getMyDate(nextDate);
+            // 处理标题
+            let titles;
+            this.mark = (this.typeVal == 1 ? this.markMoney : this.screenName) || '';
+            if (this.type == 1) {
+                titles = `解锁${this.mark}应援金`;
+            } else if (this.type == 2) {
+                titles = `解锁${this.mark}小程序开展`;
+            } else if (this.type == 3) {
+                titles = `解锁${this.mark}首页轮播`;
+            } else if (this.type == 4) {
+                titles = `解锁${this.mark}`;
+            }
+
+            this.list = {
+                beginTime: this.changetime ? this.beginTime + ' 00:00:01' : this.beginTime,
+                endTime: endTime + ' 23:59:59',
+                id: this.starIdstext,
+                titles: titles,
+                mark: this.typeVal == 1 ? this.markMoney : this.screenName, //金额和大屏名称
+                day: this.day,
+                target: this.target, //目标人数
+
+                type: this.type //1-后援金 2-小程序开屏 3-首页轮播 4-户外大屏
+            };
+
             this.uploadImgModel = true;
         },
         changeDate(data) {
-            this.changetime = true
+            this.changetime = true;
             this.beginTime = data;
         },
         getMyDate(str) {
@@ -244,7 +279,7 @@ export default {
             endTime = this.getMyDate(nextDate);
             this.axios
                 .post(`/resources/addOrUpdateResources`, {
-                    beginTime: this.changetime?this.beginTime + ' 00:00:01':this.beginTime,
+                    beginTime: this.changetime ? this.beginTime + ' 00:00:01' : this.beginTime,
                     endTime: endTime + ' 23:59:59',
                     id: this.id, //这个是什么 todo
 

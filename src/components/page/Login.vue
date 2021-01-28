@@ -1,10 +1,11 @@
 <template>
 <div :class="classNames">
     <div class="login-wrap">
-        <video src="./bgvide.mp4" autoplay="autoplay" muted="muted" loop="loop" class="bg-video"></video>
-
+        <video src="./bgvide.mp4" autoplay="autoplay" muted="muted" loop="loop"   class="bg-video"></video>
+       <div  class="img-area-text" v-if="classNames=='sanliulin'"></div>
         <div class="ms-login">
-            <img src="./logoText.png" class="img-area-text" />
+            <img v-if="classNames=='Chromes'" src="./logoText.png" class="img-area-text" />
+       
             <div class="ms-title"></div>
             <el-form :model="param" ref="login" label-width="0px" class="ms-content">
                 <el-form-item prop="account">
@@ -186,19 +187,29 @@ export default {
 }
 // 360浏览器
 .sanliulin {
+
     .img-area-text {
         position: absolute;
-        margin-left: -40px;
-        margin-top: -145px;
+        top: 50%;
+        left: 25%;
+        margin-top: -300px;
+        margin-left:-30px;
         width: 271.8 * 3px;
         height: 63.2 * 3px;
+        background: url(./logoText.png);
+        background-size: cover;
+        z-index: 1000000;
+         @media screen and (max-width: 1500px) {
+            left: 10%;
+        }
     }
     .login-wrap {
         position: relative;
+ 
         // width: 100%;
         // height: 100%;
-        width: 1375px;
-        height: 700px;
+        min-width: 1375px;
+        min-height: 700px;
         overflow: hidden;
         /* background-image: url(../../assets/img/login-bg.jpg); */
         background-size: cover;
@@ -206,18 +217,17 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        @media screen and (max-width: 1800px) {
-            min-height: 770px;
-        }
-        @media screen and (max-width: 1700px) {
-            min-height: 970px;
-        }
-        @media screen and (max-width: 1700px) {
-            min-height: 850px;
-        }
-        @media screen and (max-width: 1500px) {
-            min-height: 780px;
-        }
+        
+        // @media screen and (max-width: 1800px) {
+        //     min-height: 770px;
+        // }
+        // @media screen and (max-width: 1700px) {
+        //     min-height: 970px;
+        // }
+        // @media screen and (max-width: 1700px) {
+        //     min-height: 850px;
+        // }
+      
     }
     .bg-video {
         width: 100%;
@@ -225,8 +235,6 @@ export default {
         // transform: translateX(-50%);
         position: relative;
         left:0;
-        // top: -100px;
-        // position: absolute;
     }
     .ms-title {
         transform: scale(0.5, 0.5);
@@ -242,9 +250,15 @@ export default {
     }
     .ms-login {
         position: absolute;
-        transform: translate(50%,50%);
+        
+        // transform: translate(50%,50%);
         // left: 50%;
-        // top: 50%;
+        top: 50%;
+        left: 25%;
+        margin-top: -150px;
+   
+        // top:  240px;
+        // left:  280px;
         // height: 300px;
         width: 350px;
         // margin: -190px 0 0 -250px;
@@ -257,6 +271,9 @@ export default {
             /* WebKit browsers */
             color: #999;
             font-size: 16px;
+        }
+        @media screen and (max-width: 1500px) {
+            left: 10%;
         }
     }
     .ms-content {

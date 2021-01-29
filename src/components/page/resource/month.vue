@@ -12,6 +12,7 @@
                 </div>
                 <div class="tips">开启后在小程序-个人中心显示“榜单奖励”按钮，点击按钮显示宣传页</div>
             </div>
+                       <div v-if="switchValWeek">
             <div class="card-area">
                 <div>
                     <div class="row-text tag-text">使用资源</div>
@@ -56,7 +57,9 @@
                     低于 <Input placeholder="输入数字，最多8位" style="width: 200px" v-model="minVal" /> 热力值无法获得奖励
                 </div>
             </div>
-            <div>
+            
+                       </div>
+                       <div>
                 <Button type="primary" @click="save">保存</Button>
             </div>
         </div>
@@ -119,7 +122,19 @@ export default {
         this.loadData();
     },
     methods: {
-        // 选择tag，单选
+        // // 选择tag，单选
+        // changeTags(data) {
+        //     console.log(data);
+        //     // this.tagList.find((item,index)=>item.name == data.name).checked = !data.checked
+        //     // 如果点击项为false,设置当前点击项取反，其他的都是false
+        //     if (!data.checked) {
+        //         this.tagList.forEach((item, index) => {
+        //             this.tagList[index].checked = false;
+        //         });
+        //     }
+        //     this.tagList.find((item, index) => item.name == data.name).checked = !data.checked;
+        // },
+        // 选择tag，多选
         changeTags(data) {
             console.log(data);
             // this.tagList.find((item,index)=>item.name == data.name).checked = !data.checked

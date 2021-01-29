@@ -78,6 +78,7 @@
                 <div><Input placeholder="输入数字" style="width: 600px" type="textarea" v-model="starIdstext" :rows="1" /></div>
             </div>
             <div>
+                 <Button @click="$router.go(-1)" style="margin-right:10px">返回</Button>
                 <Button type="primary" @click="save">保存</Button>
                 <Button type="primary" @click="preview" style="margin-left: 20px">样式预览</Button>
             </div>

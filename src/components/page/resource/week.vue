@@ -11,6 +11,7 @@
                 </div>
                 <div class="tips">开启后在小程序-个人中心显示“榜单奖励”按钮，点击按钮显示宣传页</div>
             </div>
+            <div v-if="switchValWeek">
             <div class="card-area">
                 <div>
                     <div class="row-text tag-text">使用资源</div>
@@ -53,9 +54,12 @@
                     低于 <Input placeholder="输入数字，最多8位" style="width: 200px" v-model="minVal" /> 热力值无法获得奖励
                 </div>
             </div>
-            <div>
+            
+            </div>
+             <div>
                 <Button type="primary" @click="save">保存</Button>
             </div>
+           
         </div>
     </div>
 </template>
@@ -67,6 +71,7 @@ export default {
     components: {
         upload
     },
+
     data() {
         return {
             switchValWeek: false, //周榜奖励默认关闭
